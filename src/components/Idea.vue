@@ -1,6 +1,6 @@
 <template>
   <vContainer>
-    <h1>{{ msg }}</h1>
+    <h1>Idee</h1>
     <p></p>
 
     <v-btn
@@ -19,39 +19,10 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({
   components: {},
-  name: 'ShowCaseComponent',
+  name: 'Idea',
 })
-export default class ShowCaseComponent extends Vue {
-  @Prop(String) readonly msg: String | undefined;
+export default class Idea extends Vue {
 
-  // lifecycle hook
-  mounted() {
-  }
-
-  created() {
-  }
-
-  beforeCreate() {
-  }
-
-  updated() {
-  }
-
-  destroyed() {
-  }
-
-  // you can write data just like this (no data() needed )
-  message: String = 'nice String';
-
-
-  // write methods for use inside this component just like this. static only needed when you do not use any class variables.
-  static niceMethod(message: String = 'test') {
-    return `test ${message}`;
-  }
-
-  static get randomString() {
-    return 'hallo';
-  }
 }
 </script>
 
