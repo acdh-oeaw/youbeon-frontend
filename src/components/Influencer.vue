@@ -1,16 +1,7 @@
 <template>
   <vContainer>
-    <h1>{{ msg }}</h1>
+    <h1>Influencer</h1>
     <p></p>
-
-    <v-btn
-      text
-      href="https://gitlab.com/acdh-oeaw/dboe/recherchetool-frontend"
-      target="_blank"
-    >
-      <span class="mr-2">gitlab</span>
-      <v-icon>mdi-open-in-new</v-icon>
-    </v-btn>
   </vContainer>
 </template>
 
