@@ -1,19 +1,86 @@
 <template>
   <vContainer>
-    <h1>Ort</h1>
-    <p></p>
+    <l-map
+      style="z-index: 0; position: absolute; left: 0; top: 0; right: 0"
+      ref="map"
+      :options="mapOptions"
+      :zoom.sync="zoom"
+      :center.sync="center"
+    >
+      <l-tile-layer
+        v-if="tileSetUrl != ''"
+        :url="tileSetUrl"
+        :attribution="
+          tileSets[selectedTileSet] && tileSets[selectedTileSet].attribution
+            ? tileSets[selectedTileSet].attribution
+            : ''
+        "
+      />
+    </l-map>
   </vContainer>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from "vue-property-decorator";
+import {
+  LMap,
+  LTileLayer,
+  LMarker,
+  LGeoJson,
+  LWMSTileLayer as LWmsTileLayer,
+} from "vue2-leaflet";
+//@ts-ignore
+import * as L from "leaflet";
+
+const defaultCenter = [47.64318610543658, 13.53515625];
+const defaultZoom = 8;
 
 @Component({
-  components: {},
-  name: 'Place',
+  components: {
+    LMap,
+    LTileLayer,
+    LGeoJson,
+    LMarker,
+    LWmsTileLayer,
+  },
+  name: "Place",
 })
 export default class Place extends Vue {
+  mapOptions = {
+    scrollWheelZoom: true,
+    zoomControl: false,
+    renderer: L.canvas(),
+  };
+  zoom: number = defaultZoom;
+  center: number[] = defaultCenter;
 
+  tileSets = [
+    {
+      name: "Humanitarian Open Tiles",
+      url: "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png ",
+    },
+    {
+      name: "Minimal Ländergrenzen (hell)",
+      url: "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+      attribution: "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ",
+    },
+    {
+      name: "Minimal Ländergrenzen (dunkel)",
+      url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: "abcd",
+    },
+    {
+      name: "Leer",
+      url: "",
+    },
+  ];
+  selectedTileSet = 0;
+
+  get tileSetUrl(): string {
+    return this.tileSets[this.selectedTileSet].url;
+  }
 }
 </script>
 

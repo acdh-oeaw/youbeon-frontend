@@ -3,22 +3,28 @@
     <v-main>
       <v-container fill-height fill-width class="pa-0 ma-0" app>
         <v-layout column>
-            <v-flex>
-              <v-spacer></v-spacer>
-              <v-tabs
-                active-class="active-tab"
-                grow
-                class="tabs-top"
-                centered
-                background-color="ci"
-                dark
-                color="accent"
-                hide-slider>
-                <v-tab to="/"><div><v-icon color="white">mdi-home-outline</v-icon>Influencer</div></v-tab>
-                <v-tab to="/idea"><div><v-icon color="white">mdi-newspaper</v-icon>Ideen</div></v-tab>
-                <v-tab to="/place"><div><v-icon color="white">mdi-database</v-icon>Orte</div></v-tab>
-              </v-tabs>
-            </v-flex>
+            <v-row>
+              <v-col md="1">
+              </v-col>
+              <v-col md="5">
+                <v-spacer></v-spacer>
+              </v-col>
+              <v-col md="6">
+                <v-tabs
+                  active-class="active-tab"
+                  grow
+                  background-color="ci"
+                  class="tabs-top"
+                  centered
+                  dark
+                  color="accent"
+                  hide-slider>
+                  <v-tab to="/"><div><v-icon color="white">mdi-home-outline</v-icon>Influencer</div></v-tab>
+                  <v-tab to="/idea"><div><v-icon color="white">mdi-newspaper</v-icon>Ideen</div></v-tab>
+                  <v-tab to="/place"><div><v-icon color="white">mdi-database</v-icon>Orte</div></v-tab>
+                </v-tabs>
+              </v-col>
+            </v-row>
           <v-flex xs12 fill-height class="pa-0 ma-0">
             <keep-alive>
               <router-view />
