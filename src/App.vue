@@ -3,11 +3,11 @@
     <v-main>
       <v-container fill-height fill-width class="pa-0 ma-0" app>
         <v-layout column>
-            <v-row>
+            <v-row class="header_navigation">
               <v-col md="1">
               </v-col>
               <v-col md="5">
-                <v-spacer></v-spacer>
+                <v-spacer background-color="ci"></v-spacer>
               </v-col>
               <v-col md="6">
                 <v-tabs
@@ -43,6 +43,10 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
+  }
+
+  .header_navigation{
+    z-index: 8;
   }
 
 
