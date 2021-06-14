@@ -1,7 +1,7 @@
 <template>
   <vContainer>
     <l-map
-      style="z-index: 0; position: absolute; left: 0; top: 0; right: 0"
+      style="z-index: 1; position: absolute; left: 0; top: 0; right: 0"
       ref="map"
       :options="mapOptions"
       :zoom.sync="zoom"
@@ -53,6 +53,7 @@ export default class Place extends Vue {
   };
   zoom: number = defaultZoom;
   center: number[] = defaultCenter;
+  map: any = null;
 
   tileSets = [
     {
@@ -86,6 +87,7 @@ export default class Place extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../../node_modules/leaflet/dist/leaflet.css";
 h3 {
   margin: 40px 0 0;
 }
