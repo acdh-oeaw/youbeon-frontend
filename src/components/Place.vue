@@ -78,10 +78,40 @@ export default class Place extends Vue {
     },
   ];
   selectedTileSet = 0;
+  geojson:any[] = [];
 
   get tileSetUrl(): string {
     return this.tileSets[this.selectedTileSet].url;
   }
+
+  created() {
+    const headers = { "Content-Type": "application/json" };
+    fetch("https://db.youbeon.eu/test/ort/", { headers })
+      .then(response => response.json())
+      .then(data => (this.handleData(data.total)));
+  }
+
+  //receives the content of the json, with the places
+  handleData(data:any) {
+    let tempGeo:any[] = []
+    data.forEach((item:any) => {
+      let coord_l_array = item.koordinate_l.split(',');
+      let coord_b_array = item.koordinate_b.split(',');
+      let tempPlace = {
+        id: item.id,
+        bezeichnung: item.bezeichnung,
+        bemerkung: item.bemerkung,
+        coordinates: [this.translateCoordinates(coord_b_array), this.translateCoordinates(coord_l_array)]
+      }
+      tempGeo.push(tempPlace)
+    });
+    this.geojson = tempGeo;
+  }
+
+  translateCoordinates(coord:string[]) {
+    return ((Number(coord[2])/60)+Number(coord[1]))/60+Number(coord[0]);
+  }
+
 }
 </script>
 
