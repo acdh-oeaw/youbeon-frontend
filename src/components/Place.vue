@@ -1,7 +1,13 @@
 <template>
   <vContainer>
+    <v-btn fab small class="zoom" @click="zoom = zoom - 1">
+      <v-icon>remove</v-icon>
+    </v-btn>
+    <v-btn fab small class="zoom" @click="zoom = zoom + 1">
+      <v-icon>add</v-icon>
+    </v-btn>
     <l-map
-      style="z-index: 1; position: absolute; left: 0; top: 0; right: 0"
+      style="z-index: 0; position: absolute; left: 0; top: 0; right: 0"
       ref="map"
       :options="mapOptions"
       :zoom.sync="zoom"
@@ -78,7 +84,7 @@ export default class Place extends Vue {
     },
   ];
   selectedTileSet = 0;
-  geojson:any[] = [];
+  geojson: any[] = [];
 
   get tileSetUrl(): string {
     return this.tileSets[this.selectedTileSet].url;
@@ -87,49 +93,45 @@ export default class Place extends Vue {
   created() {
     const headers = { "Content-Type": "application/json" };
     fetch("https://db.youbeon.eu/test/ort/", { headers })
-      .then(response => response.json())
-      .then(data => (this.handleData(data.total)));
+      .then((response) => response.json())
+      .then((data) => this.handleData(data.total));
   }
 
   //receives the content of the json, with the places
-  handleData(data:any) {
-    let tempGeo:any[] = []
-    data.forEach((item:any) => {
-      let coord_l_array = item.koordinate_l.split(',');
-      let coord_b_array = item.koordinate_b.split(',');
+  handleData(data: any) {
+    let tempGeo: any[] = [];
+    data.forEach((item: any) => {
+      let coord_l_array = item.koordinate_l.split(",");
+      let coord_b_array = item.koordinate_b.split(",");
       let tempPlace = {
         id: item.id,
         bezeichnung: item.bezeichnung,
         bemerkung: item.bemerkung,
-        coordinates: [this.translateCoordinates(coord_b_array), this.translateCoordinates(coord_l_array)]
-      }
-      tempGeo.push(tempPlace)
+        coordinates: [
+          this.translateCoordinates(coord_b_array),
+          this.translateCoordinates(coord_l_array),
+        ],
+      };
+      tempGeo.push(tempPlace);
     });
     this.geojson = tempGeo;
   }
 
-  translateCoordinates(coord:string[]) {
-    return ((Number(coord[2])/60)+Number(coord[1]))/60+Number(coord[0]);
+  translateCoordinates(coord: string[]) {
+    return (Number(coord[2]) / 60 + Number(coord[1])) / 60 + Number(coord[0]);
   }
-
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 @import "../../node_modules/leaflet/dist/leaflet.css";
-h3 {
-  margin: 40px 0 0;
+
+.zoom {
+  margin: 5px;
+  z-index: 1;
+  clear:both;
+  float:left;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>
