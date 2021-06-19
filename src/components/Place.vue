@@ -1,5 +1,24 @@
 <template>
   <vContainer>
+    <v-flex style="margin: 1% 5%" xs12>
+      <v-autocomplete
+        class="searchbar"
+        chips
+        :items="geojson"
+        item-text="bezeichnung"
+        item-value="id"
+        clearable
+        deletable-chips
+        flat
+        multiple
+        solo
+        text
+        hide-details
+        elevation="0"
+        label="Suche..."
+      >
+      </v-autocomplete>
+    </v-flex>
     <v-btn fab small class="zoom" @click="zoom = zoom - 1">
       <v-icon>remove</v-icon>
     </v-btn>
@@ -130,8 +149,11 @@ export default class Place extends Vue {
 .zoom {
   margin: 5px;
   z-index: 1;
-  clear:both;
-  float:left;
+  clear: both;
+  float: left;
 }
 
+.searchbar {
+  z-index: 1;
+}
 </style>

@@ -9,7 +9,7 @@ Vue.use(VueRouter)
 const routes: Array<RouteConfig> = [
   {
     path: '/',
-    name: 'Influencer',
+    name: 'influencer',
     component: Influencer
   },
   {
