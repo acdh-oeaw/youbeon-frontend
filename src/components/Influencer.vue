@@ -1,6 +1,6 @@
 <template>
   <vContainer>
-    <v-card class="sticky-card mt-2">
+    <v-card class="sticky-card mt-10">
       <v-row no-gutters>
         <v-col class="pa-0 flex-grow-1">
           <v-autocomplete
