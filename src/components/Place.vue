@@ -4,11 +4,11 @@
       <v-autocomplete
         class="searchbar"
         chips
-        :items="geojson"
-        item-text="bezeichnung"
+        v-model="selectedPlaces"
+        :items="placesJSON"
+        item-text="properties.bezeichnung"
         item-value="id"
         clearable
-        deletable-chips
         flat
         multiple
         solo
@@ -41,12 +41,17 @@
             : ''
         "
       />
+
+        <l-geo-json
+          :geojson="geoPlaces"
+          :options="options"
+        />
     </l-map>
   </vContainer>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import {
   LMap,
   LTileLayer,
@@ -57,8 +62,8 @@ import {
 //@ts-ignore
 import * as L from "leaflet";
 
-const defaultCenter = [47.64318610543658, 13.53515625];
-const defaultZoom = 8;
+const defaultCenter = [48.2084900, 16.3720800];
+const defaultZoom = 11;
 
 @Component({
   components: {
@@ -91,19 +96,46 @@ export default class Place extends Vue {
       attribution: "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ",
     },
     {
-      name: "Minimal Ländergrenzen (dunkel)",
-      url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: "abcd",
-    },
-    {
       name: "Leer",
       url: "",
     },
   ];
   selectedTileSet = 0;
-  geojson: any[] = [];
+  geoPlaces: any[] = [];
+  placesJSON: any[] = [];
+  selectedPlaces:any[] = [];
+
+  options = {
+    onEachFeature: this.bindPopUpPlace(),
+    pointToLayer: (feature: any, latlng: any) => {
+      return L.circleMarker(latlng, {
+        radius: 4,
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.5,
+      });
+    },
+  };
+
+  bindPopUpPlace() {
+    return async (feature: any, layer: L.Layer): Promise<void> => {
+      console.log(feature)
+      layer.bindPopup(
+        `<div>  <u>${feature.properties.bezeichnung}</u>  </div>`
+      );
+    }
+  }
+
+  @Watch('selectedPlaces')
+  displayPlaces() {
+    this.geoPlaces = [];
+    this.placesJSON.forEach(place => {
+      if(this.selectedPlaces.includes(place.properties.bezeichnung)) {
+        this.geoPlaces.push(place)
+      }
+    });
+  }
+
 
   get tileSetUrl(): string {
     return this.tileSets[this.selectedTileSet].url;
@@ -113,8 +145,9 @@ export default class Place extends Vue {
     const headers = { "Content-Type": "application/json" };
     fetch("https://db.youbeon.eu/test/ort/", { headers })
       .then((response) => response.json())
-      .then((data) => this.handleData(data.total));
+      .then((data) => this.handleData(data));
   }
+
 
   //receives the content of the json, with the places
   handleData(data: any) {
@@ -123,17 +156,23 @@ export default class Place extends Vue {
       let coord_l_array = item.koordinate_l.split(",");
       let coord_b_array = item.koordinate_b.split(",");
       let tempPlace = {
-        id: item.id,
-        bezeichnung: item.bezeichnung,
-        bemerkung: item.bemerkung,
-        coordinates: [
-          this.translateCoordinates(coord_b_array),
-          this.translateCoordinates(coord_l_array),
-        ],
+        type: "Feature",
+        properties: {
+          id: item.id,
+          bezeichnung: item.bezeichnung,
+          bemerkung: item.bemerkung,
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [
+            this.translateCoordinates(coord_l_array),
+            this.translateCoordinates(coord_b_array),
+          ]
+        }
       };
       tempGeo.push(tempPlace);
     });
-    this.geojson = tempGeo;
+    this.placesJSON = tempGeo;
   }
 
   translateCoordinates(coord: string[]) {

@@ -79,14 +79,14 @@
 
 <style lang="scss">
 #app {
-  font-family: "ChicagoFLF", Helvetica, Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #000;
 }
 
 .header_navigation {
+  font-family: "ChicagoFLF", Helvetica, Arial, sans-serif;
   z-index: 8;
   transition: 0.5s;
   background-color: #e9e9e9;
@@ -98,8 +98,8 @@
 }
 
 .logo {
+  margin-left: 10px;
   height: 76px;
-  margin-left: -30px;
 }
 
 .underline {
