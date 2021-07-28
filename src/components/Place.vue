@@ -42,10 +42,7 @@
         "
       />
 
-        <l-geo-json
-          :geojson="geoPlaces"
-          :options="options"
-        />
+      <l-geo-json :geojson="geoPlaces" :options="options" />
     </l-map>
   </vContainer>
 </template>
@@ -61,8 +58,9 @@ import {
 } from "vue2-leaflet";
 //@ts-ignore
 import * as L from "leaflet";
+import * as _ from "lodash";
 
-const defaultCenter = [48.2084900, 16.3720800];
+const defaultCenter = [48.20849, 16.37208];
 const defaultZoom = 11;
 
 @Component({
@@ -103,7 +101,7 @@ export default class Place extends Vue {
   selectedTileSet = 0;
   geoPlaces: any[] = [];
   placesJSON: any[] = [];
-  selectedPlaces:any[] = [];
+  selectedPlaces: any[] = [];
 
   options = {
     onEachFeature: this.bindPopUpPlace(),
@@ -119,40 +117,66 @@ export default class Place extends Vue {
 
   bindPopUpPlace() {
     return async (feature: any, layer: L.Layer): Promise<void> => {
-      console.log(feature)
       layer.bindPopup(
-        `<div>  <u>${feature.properties.bezeichnung}</u>  </div>`
+        `<div>  <u>${feature.properties.bezeichnung}</u>  </div>
+        ${_(feature.properties.kategorie)
+            .take(feature.properties.kategorie.length)
+            .map((d) => `<div style="margin:3px; text-align:center;" >${d}</div>`)
+            .value()
+            .join("")}
+        `
       );
-    }
+    };
   }
 
-  @Watch('selectedPlaces')
+  @Watch("selectedPlaces")
   displayPlaces() {
     this.geoPlaces = [];
-    this.placesJSON.forEach(place => {
-      if(this.selectedPlaces.includes(place.properties.bezeichnung)) {
-        this.geoPlaces.push(place)
+    this.placesJSON.forEach((place) => {
+      if (this.selectedPlaces.includes(place.properties.bezeichnung)) {
+        this.geoPlaces.push(place);
       }
     });
   }
-
 
   get tileSetUrl(): string {
     return this.tileSets[this.selectedTileSet].url;
   }
 
-  created() {
-    const headers = { "Content-Type": "application/json" };
-    fetch("https://db.youbeon.eu/test/ort/", { headers })
-      .then((response) => response.json())
-      .then((data) => this.handleData(data));
+  async created() {
+    let fetchedData = await this.getDataFromServerAtCreated();
+    this.handlePlaceData(fetchedData[0], fetchedData[1]);
   }
 
+  async getDataFromServerAtCreated() {
+    const headers = { "Content-Type": "application/json" };
+    let placesFetched;
+    await fetch("https://db.youbeon.eu/test/ort/", { headers })
+      .then((response) => response.json())
+      .then((data) => {
+        placesFetched = data;
+      });
+
+
+
+    let categoriesFetched;
+    await fetch("https://db.youbeon.eu/test/kategorie/", { headers })
+      .then((response) => response.json())
+      .then((data) => {
+        categoriesFetched = data;
+      });
+
+    return [placesFetched, categoriesFetched];
+  }
 
   //receives the content of the json, with the places
-  handleData(data: any) {
+  handlePlaceData(allPlaces, allCategories) {
     let tempGeo: any[] = [];
-    data.forEach((item: any) => {
+    allPlaces.forEach((item: any) => {
+      let categories = this.getCorrespondingCategories(
+        item.kategorie,
+        allCategories
+      );
       let coord_l_array = item.koordinate_l.split(",");
       let coord_b_array = item.koordinate_b.split(",");
       let tempPlace = {
@@ -161,18 +185,29 @@ export default class Place extends Vue {
           id: item.id,
           bezeichnung: item.bezeichnung,
           bemerkung: item.bemerkung,
+          kategorie: categories,
         },
         geometry: {
           type: "Point",
           coordinates: [
             this.translateCoordinates(coord_l_array),
             this.translateCoordinates(coord_b_array),
-          ]
-        }
+          ],
+        },
       };
       tempGeo.push(tempPlace);
     });
     this.placesJSON = tempGeo;
+  }
+
+  getCorrespondingCategories(categoryIDs: string[], allCategories: string[]) {
+    let returnedCategories: any[] = [];
+    allCategories.forEach((cat: any) => {
+      if (String(cat.id) === String(categoryIDs)) {
+        returnedCategories.push(cat.name);
+      }
+    });
+    return returnedCategories;
   }
 
   translateCoordinates(coord: string[]) {
@@ -190,6 +225,11 @@ export default class Place extends Vue {
   z-index: 1;
   clear: both;
   float: left;
+}
+
+.categoryPopUps{
+  margin:3px;
+  text-align: center;
 }
 
 .searchbar {
