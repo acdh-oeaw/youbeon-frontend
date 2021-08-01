@@ -4,7 +4,11 @@
         <v-col class="pa-0 flex-grow-1 mr-7">
           <v-autocomplete
             clearable
-            deletable-chips
+            v-model="selectedIdea"
+            :items="allIdeas"
+            elevation="0"
+            item-text="name"
+            item-value="id"
             solo
             text
             hide-details
@@ -15,7 +19,11 @@
         <v-col  class="pa-0 flex-grow-1 ml-7">
            <v-autocomplete
             clearable
-            deletable-chips
+            :items="allIdeas"
+            v-model="selectedComparison"
+            elevation="0"
+            item-text="name"
+            item-value="id"
             solo
             text
             hide-details
@@ -35,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 // eslint-disable-next-line
 import D3Network from "vue-d3-network";
 
@@ -53,6 +61,36 @@ export default class Idea extends Vue {
     force: 2000,
     nodeLabels: true,
   };
+  allIdeas: any[] = [];
+  headers = { "Content-Type": "application/json" };
+  selectedIdea: any = [];
+  selectedComparison: any = [];
+
+  @Watch('selectedIdea')
+  buildCompleteIdea() {
+    return this.getCategoriesForIdea(this.selectedIdea)
+  }
+
+  @Watch('selectedComparison')
+  buildCompleteComparison() {
+    return this.getCategoriesForIdea(this.selectedComparison)
+  }
+
+  getCategoriesForIdea(idea: any) {
+    const headers = { "Content-Type": "application/json" };
+    //HERE IS WORK TO BE DONE
+    let tempIdea = 0;
+    return tempIdea
+  }
+
+  mounted() {
+    const headers = { "Content-Type": "application/json" };
+    fetch("https://db.youbeon.eu/test/idee/", { headers })
+      .then((response) => response.json())
+      .then((data) => {
+        this.allIdeas = data
+      });
+  }
 }
 </script>
 
