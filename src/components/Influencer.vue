@@ -11,6 +11,7 @@
             clearable
             deletable-chips
             solo
+            multiple
             text
             flat
             hide-details
@@ -36,7 +37,12 @@
               </v-btn>
             </template>
             <v-list dense>
-              <v-list-item dense v-bind:key="item.id" v-for="item in religions" @click="selectedReligion = item">
+              <v-list-item
+                dense
+                v-bind:key="item.id"
+                v-for="item in religions"
+                @click="selectedReligion = item"
+              >
                 <v-list-item-title>{{ item.name }}</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -46,7 +52,7 @@
     </v-card>
     <d3-network
       id="network"
-      :net-nodes="nodes"
+      :net-nodes="networkInfluencer"
       :net-links="links"
       :options="options"
     >
@@ -66,43 +72,76 @@ import D3Network from "vue-d3-network";
   name: "Influencer",
 })
 export default class Influencer extends Vue {
-
   //Religion Variables
   religions: any = [];
-  selectedReligion: any = {id:0,name: 'Keine Religion'};
+  selectedReligion: any = { id: 0, name: "Alle Influencer" };
 
   //Influencer Variables
   allInfluencer: any = [];
   listInfluencer: any = [];
-  selectedInfluencer: any = []
+  selectedInfluencer: any = [];
 
   //network diagram
-  nodes: any = [];
+  networkInfluencer: any = [];
   links: any = [];
   options = {
-    force: 2000,
+    force: 20000,
+    nodeSize: 50,
+    linkWidth: 7,
     nodeLabels: true,
   };
 
+  //takes the selected Influences and transfroms them into an Object D3Network understands
+  //see https://www.npmjs.com/package/vue-d3-network for clarification
+  @Watch("selectedInfluencer")
+  buildInfluencerNetworkObject() {
+    this.networkInfluencer = []
+    this.links = []
+    let centerNode = {
+      id: 0,
+      name: this.selectedReligion.name,
+      _size: 100,
+      _color: "#b0dcd9",
+    };
+    if (this.selectedReligion.id != 0) {
+      this.networkInfluencer = [centerNode];
+    }
+    this.listInfluencer.forEach((influencer) => {
+      if (
+        this.selectedInfluencer.includes(influencer.id) ||
+        this.selectedInfluencer[0] === undefined
+      ) {
+        if (this.networkInfluencer.includes(centerNode))
+          this.links.push({
+            sid: 0,
+            tid: influencer.id,
+          });
+        this.networkInfluencer.push(influencer);
+      }
+    });
+  }
 
-  @Watch('selectedReligion')
+  @Watch("selectedReligion")
   modifyInfluencerList() {
-    console.log(this.selectedReligion)
-    if(this.selectedReligion === {id:0 ,name: 'Keine Religion'}) {
-      this.listInfluencer === this.allInfluencer
+    this.selectedInfluencer = [];
+    if (this.selectedReligion.id === 0) {
+      this.listInfluencer = this.allInfluencer;
     } else {
-      this.allInfluencer.forEach(influencer => {
-        if(influencer.religion.includes(this.selectedReligion.id)) {
-          this.listInfluencer.pop(influencer)
+      this.listInfluencer = [];
+      this.allInfluencer.forEach((influencer) => {
+        if (influencer.religion.includes(this.selectedReligion.id)) {
+          this.listInfluencer.push(influencer);
         }
       });
     }
+    this.buildInfluencerNetworkObject()
   }
 
   async created() {
     let fetchedData = await this.getDataFromServerAtCreated();
     this.allInfluencer = fetchedData[0];
     this.listInfluencer = this.allInfluencer;
+    this.buildInfluencerNetworkObject();
     this.religions = fetchedData[1];
   }
 
@@ -113,7 +152,6 @@ export default class Influencer extends Vue {
       .then((response) => response.json())
       .then((data) => {
         influencer = data;
-
       });
 
     let religions;
@@ -121,7 +159,7 @@ export default class Influencer extends Vue {
       .then((response) => response.json())
       .then((data) => {
         religions = data;
-        data.splice(0, 0, {id:0,name: 'Keine Religion'})
+        data.splice(0, 0, { id: 0, name: "Alle Influencer" });
       });
 
     return [influencer, religions];
