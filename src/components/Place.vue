@@ -151,7 +151,7 @@ export default class Place extends Vue {
   async getDataFromServerAtCreated() {
     const headers = { "Content-Type": "application/json" };
     let placesFetched;
-    await fetch("https://db.youbeon.eu/test/ort/", { headers })
+    await fetch("https://db.youbeon.eu/ort/", { headers })
       .then((response) => response.json())
       .then((data) => {
         placesFetched = data;
@@ -160,7 +160,7 @@ export default class Place extends Vue {
 
 
     let categoriesFetched;
-    await fetch("https://db.youbeon.eu/test/kategorie/", { headers })
+    await fetch("https://db.youbeon.eu/kategorie/", { headers })
       .then((response) => response.json())
       .then((data) => {
         categoriesFetched = data;

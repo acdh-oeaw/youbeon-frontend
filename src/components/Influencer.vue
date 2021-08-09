@@ -148,14 +148,14 @@ export default class Influencer extends Vue {
   async getDataFromServerAtCreated() {
     const headers = { "Content-Type": "application/json" };
     let influencer;
-    await fetch("https://db.youbeon.eu/test/influencer/", { headers })
+    await fetch("https://db.youbeon.eu/influencer/", { headers })
       .then((response) => response.json())
       .then((data) => {
         influencer = data;
       });
 
     let religions;
-    await fetch("https://db.youbeon.eu/test/religion/", { headers })
+    await fetch("https://db.youbeon.eu/religion/", { headers })
       .then((response) => response.json())
       .then((data) => {
         religions = data;

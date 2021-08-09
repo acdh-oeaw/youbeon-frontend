@@ -4,22 +4,22 @@
         <v-col class="pa-0 flex-grow-1 mr-7">
           <v-autocomplete
             clearable
-            v-model="selectedIdea"
-            :items="allIdeas"
+            v-model="selectedReligion"
+            :items="allReligions"
             elevation="0"
             item-text="name"
             item-value="id"
             solo
             text
             hide-details
-            label="Ideen filtern nach..."
+            label="Religionen filtern nach..."
           >
           </v-autocomplete>
         </v-col>
         <v-col  class="pa-0 flex-grow-1 ml-7">
            <v-autocomplete
             clearable
-            :items="allIdeas"
+            :items="allReligions"
             v-model="selectedComparison"
             elevation="0"
             item-text="name"
@@ -61,34 +61,17 @@ export default class Idea extends Vue {
     force: 2000,
     nodeLabels: true,
   };
-  allIdeas: any[] = [];
+  allReligions: any[] = [];
   headers = { "Content-Type": "application/json" };
-  selectedIdea: any = [];
+  selectedReligion: any = [];
   selectedComparison: any = [];
-
-  @Watch('selectedIdea')
-  buildCompleteIdea() {
-    return this.getCategoriesForIdea(this.selectedIdea)
-  }
-
-  @Watch('selectedComparison')
-  buildCompleteComparison() {
-    return this.getCategoriesForIdea(this.selectedComparison)
-  }
-
-  getCategoriesForIdea(idea: any) {
-    const headers = { "Content-Type": "application/json" };
-    //HERE IS WORK TO BE DONE
-    let tempIdea = 0;
-    return tempIdea
-  }
 
   mounted() {
     const headers = { "Content-Type": "application/json" };
-    fetch("https://db.youbeon.eu/test/idee/", { headers })
+    fetch("https://db.youbeon.eu/religion/", { headers })
       .then((response) => response.json())
       .then((data) => {
-        this.allIdeas = data
+        this.allReligions = data
       });
   }
 }
