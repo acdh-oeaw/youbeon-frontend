@@ -157,36 +157,38 @@ export default class Influencer extends Vue {
   async onNodeClick(event, node) {
     const headers = { "Content-Type": "application/json" };
     let tempInfluencerDetailed = node;
-    await fetch(
-      "https://db.youbeon.eu/kategorie/filter/?ids=" +
-        node.kategorie.toString(),
-      { headers }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        let tempKategorie: any[] = [];
-        data.forEach((kategorie: any) => {
-          if (kategorie.name) {
-            tempKategorie.push(kategorie.name);
-          }
+    if (!isNaN(Number(tempInfluencerDetailed.kategorie[0]))) {
+      await fetch(
+        "https://db.youbeon.eu/kategorie/filter/?ids=" +
+          node.kategorie.toString(),
+        { headers }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          let tempKategorie: any[] = [];
+          data.forEach((kategorie: any) => {
+            if (kategorie.name) {
+              tempKategorie.push(kategorie.name);
+            }
+          });
+          tempInfluencerDetailed.kategorie = tempKategorie;
         });
-        tempInfluencerDetailed.kategorie = tempKategorie;
-      });
 
-    await fetch(
-      "https://db.youbeon.eu/idee/filter/?ids=" + node.idee.toString(),
-      { headers }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        let tempIdee: any[] = [];
-        data.forEach((idee: any) => {
-          if (idee.name) {
-            tempIdee.push(idee.name);
-          }
+      await fetch(
+        "https://db.youbeon.eu/idee/filter/?ids=" + node.idee.toString(),
+        { headers }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          let tempIdee: any[] = [];
+          data.forEach((idee: any) => {
+            if (idee.name) {
+              tempIdee.push(idee.name);
+            }
+          });
+          tempInfluencerDetailed.idee = tempIdee;
         });
-        tempInfluencerDetailed.idee = tempIdee;
-      });
+    }
     this.influencerDetailed = tempInfluencerDetailed;
   }
 
