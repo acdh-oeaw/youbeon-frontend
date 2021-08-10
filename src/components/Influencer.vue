@@ -52,6 +52,7 @@
       </v-row>
     </v-card>
     <d3-network
+      @node-click="onNodeClick"
       id="network"
       :net-nodes="networkInfluencer"
       :net-links="links"
@@ -121,6 +122,10 @@ export default class Influencer extends Vue {
         this.networkInfluencer.push(influencer);
       }
     });
+  }
+
+  onNodeClick() {
+    console.log('AAAAAAAAAAAAA')
   }
 
   @Watch("selectedReligion")
