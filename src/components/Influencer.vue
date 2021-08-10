@@ -86,7 +86,7 @@ export default class Influencer extends Vue {
   networkInfluencer: any = [];
   links: any = [];
   options = {
-    force: 5000,
+    force: 4000,
     nodeSize: 50,
     linkWidth: 7,
     nodeLabels: true,
@@ -101,11 +101,12 @@ export default class Influencer extends Vue {
     let centerNode = {
       id: 0,
       name: this.selectedReligion.name,
-      _size: 100,
+      _size: 70,
       _color: "#b0dcd9",
     };
     if (this.selectedReligion.id != 0) {
       this.networkInfluencer = [centerNode];
+      this.options.force = 100000;
     }
     this.listInfluencer.forEach((influencer) => {
       if (

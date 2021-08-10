@@ -111,18 +111,24 @@ export default class Place extends Vue {
         radius: 4,
         weight: 2,
         opacity: 1,
-        fillOpacity: 0.5,
+        fillOpacity: 0.8,
+        fillColor: '#b0dcd9',
+        color: 'black'
       });
     },
   };
 
   bindPopUpPlace() {
     return async (feature: any, layer: L.Layer): Promise<void> => {
+      console.log(feature)
       layer.bindPopup(
-        `<div>  <u>${feature.properties.bezeichnung}</u>  </div>
+        `<div style="text-align:center;"> 
+            ${feature.properties.bezeichnung}
+            <hr style="margin-bottom: 5px"></hr>
+         </div>
         ${_(feature.properties.kategorie)
             .take(feature.properties.kategorie.length)
-            .map((d) => `<div style="margin:3px; text-align:center;" >${d}</div>`)
+            .map((d) => `<div >${d}</div>`)
             .value()
             .join("")}
         `
@@ -204,7 +210,7 @@ export default class Place extends Vue {
   getCorrespondingCategories(categoryIDs: string[], allCategories: string[]) {
     let returnedCategories: any[] = [];
     allCategories.forEach((cat: any) => {
-      if (String(cat.id) === String(categoryIDs)) {
+      if (categoryIDs.includes(cat.id)) {
         returnedCategories.push(cat.name);
       }
     });
