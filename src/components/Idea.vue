@@ -1,37 +1,39 @@
 <template>
   <vContainer>
-      <v-row no-gutters class="mt-10">
-        <v-col class="pa-0 flex-grow-1 mr-7">
-          <v-autocomplete
-            clearable
-            v-model="selectedReligion"
-            :items="allReligions"
-            elevation="0"
-            item-text="name"
-            item-value="id"
-            solo
-            text
-            hide-details
-            label="Religionen filtern nach..."
-          >
-          </v-autocomplete>
-        </v-col>
-        <v-col  class="pa-0 flex-grow-1 ml-7">
-           <v-autocomplete
-            clearable
-            :items="allReligions"
-            v-model="selectedComparison"
-            elevation="0"
-            item-text="name"
-            item-value="id"
-            solo
-            text
-            hide-details
-            label="Vergleichen mit..."
-          >
-          </v-autocomplete>
-        </v-col>
-      </v-row>
+    <v-row no-gutters class="mt-10">
+      <v-col class="pa-0 flex-grow-1 mr-7">
+        <v-autocomplete
+          clearable
+          v-model="selectedReligion"
+          :items="allReligions"
+          elevation="0"
+          item-text="name"
+          item-value="id"
+          :filter="filterSelectedReligions"
+          solo
+          text
+          hide-details
+          label="Religionen filtern nach..."
+        >
+        </v-autocomplete>
+      </v-col>
+      <v-col class="pa-0 flex-grow-1 ml-7">
+        <v-autocomplete
+          clearable
+          :items="allReligions"
+          v-model="selectedComparison"
+          elevation="0"
+          item-text="name"
+          item-value="id"
+          :filter="filterSelectedReligions"
+          solo
+          text
+          hide-details
+          label="Vergleichen mit..."
+        >
+        </v-autocomplete>
+      </v-col>
+    </v-row>
     <d3-network
       id="network"
       :net-nodes="nodes"
@@ -58,20 +60,79 @@ export default class Idea extends Vue {
   nodes: any = [];
   links: any = [];
   options = {
-    force: 2000,
+    force: 5000,
     nodeLabels: true,
   };
   allReligions: any[] = [];
-  headers = { "Content-Type": "application/json" };
   selectedReligion: any = [];
   selectedComparison: any = [];
+  religionIdeas: any[] = [];
+  comparisonIdeas: any[] = [];
+
+  @Watch("selectedReligion")
+  getSelectedReligion() {
+    this.getIdeasForReligions(false);
+  }
+
+  filterSelectedReligions(item, queryText, itemText) {
+    console.log(item)
+    if(item !== this.selectedReligion && item !== this.selectedComparison) {
+      return false
+    } else {
+      return true
+    }
+  }
+
+  @Watch("selectedComparison")
+  getComparisonReligion() {
+    this.getIdeasForReligions(true);
+  }
+
+  async getIdeasForReligions(comparison: boolean) {
+    let tempIdeas: any;
+    let tempIdeasCount: any;
+    const headers = { "Content-Type": "application/json" };
+    await fetch(
+      "https://db.youbeon.eu/idee/menge/?religion=" +
+        String(comparison === true ? this.selectedComparison : this.selectedReligion),
+      { headers }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        tempIdeasCount = data;
+      });
+      await fetch(
+        "https://db.youbeon.eu/idee/filter/?ids=" + Object.getOwnPropertyNames(tempIdeasCount).toString(),
+      { headers }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        tempIdeas = data;
+      });
+      let color = comparison === true ? '#FF8D06' : '#B0DCD9'
+      tempIdeas.forEach(idea => {
+        idea._color = color
+        idea._size = tempIdeasCount[idea.id]*15
+      });
+      if(comparison === true) {
+        this.comparisonIdeas = tempIdeas
+      } else {
+        this.religionIdeas = tempIdeas
+      }
+  }
+
+  @Watch('religionIdeas')
+  @Watch('comparisonIdeas')
+  combineIntoNodeObject() {
+    this.nodes = this.religionIdeas.concat(this.comparisonIdeas)
+  }
 
   mounted() {
     const headers = { "Content-Type": "application/json" };
     fetch("https://db.youbeon.eu/religion/", { headers })
       .then((response) => response.json())
       .then((data) => {
-        this.allReligions = data
+        this.allReligions = data;
       });
   }
 }
