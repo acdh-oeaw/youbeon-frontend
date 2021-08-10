@@ -34,7 +34,7 @@
                 <template>
                   {{ selectedReligion.name }}
                 </template>
-                <v-icon>mdi-menu-down</v-icon>
+                <v-icon style="margin-left: 10px">expand_more</v-icon>
               </v-btn>
             </template>
             <v-list dense>
@@ -59,6 +59,27 @@
       :options="options"
     >
     </d3-network>
+    <v-card v-if="influencerDetailed !== null" class="detailedView">
+      <v-card-title>
+        <div class="hoverLink" @click="openLinktoInsta">
+        {{ influencerDetailed.name }}
+        <v-icon style="margin-left:5px">link</v-icon>
+        </div>
+        <v-icon style="position:absolute; right:20px; top:20px;" @click="influencerDetailed = null">
+          close
+        </v-icon></v-card-title
+      >
+      <v-card-subtitle> {{ influencerDetailed.bemerkung }} </v-card-subtitle>
+      <v-card-text>
+        <u>Verbundene Kategorien:</u>
+        <br />
+        {{ influencerDetailed.kategorie.toString() }}
+        <br />
+        <u>Verbundene Ideen:</u>
+        <br />
+        {{ influencerDetailed.idee.toString() }}
+      </v-card-text>
+    </v-card>
   </vContainer>
 </template>
 
@@ -82,6 +103,7 @@ export default class Influencer extends Vue {
   allInfluencer: any = [];
   listInfluencer: any = [];
   selectedInfluencer: any = [];
+  influencerDetailed: any = null;
 
   //network diagram
   networkInfluencer: any = [];
@@ -97,8 +119,8 @@ export default class Influencer extends Vue {
   //see https://www.npmjs.com/package/vue-d3-network for clarification
   @Watch("selectedInfluencer")
   buildInfluencerNetworkObject() {
-    this.networkInfluencer = []
-    this.links = []
+    this.networkInfluencer = [];
+    this.links = [];
     let centerNode = {
       id: 0,
       name: this.selectedReligion.name,
@@ -124,8 +146,45 @@ export default class Influencer extends Vue {
     });
   }
 
-  onNodeClick() {
-    console.log('AAAAAAAAAAAAA')
+  openLinktoInsta() {
+    window.open("https://www.instagram.com", "_blank")
+  }
+
+  async onNodeClick(event, node) {
+    const headers = { "Content-Type": "application/json" };
+    let tempInfluencerDetailed = node
+    await fetch(
+      "https://db.youbeon.eu/kategorie/filter/?ids=" +
+        node.kategorie.toString(),
+      { headers }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        let tempKategorie: any[] = [];
+        data.forEach((kategorie: any) => {
+          if (kategorie.name) {
+            tempKategorie.push(kategorie.name);
+          }
+        });
+        tempInfluencerDetailed.kategorie = tempKategorie;
+      });
+
+      await fetch(
+      "https://db.youbeon.eu/idee/filter/?ids=" +
+        node.idee.toString(),
+      { headers }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        let tempIdee: any[] = [];
+        data.forEach((idee: any) => {
+          if (idee.name) {
+            tempIdee.push(idee.name);
+          }
+        });
+        tempInfluencerDetailed.idee = tempIdee;
+      });
+      this.influencerDetailed = tempInfluencerDetailed;
   }
 
   @Watch("selectedReligion")
@@ -141,7 +200,7 @@ export default class Influencer extends Vue {
         }
       });
     }
-    this.buildInfluencerNetworkObject()
+    this.buildInfluencerNetworkObject();
   }
 
   async created() {
@@ -188,5 +247,17 @@ export default class Influencer extends Vue {
   border-left: 2px solid #e5e5e5;
   height: 30px;
   margin-top: 7px;
+}
+
+.detailedView {
+  border: 4px solid #b0dcd9 !important;
+  position: absolute;
+  width: 400px;
+  right: 30px;
+  bottom: 30px;
+}
+
+.hoverLink:hover {
+  cursor: pointer;
 }
 </style>
