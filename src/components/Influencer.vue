@@ -173,7 +173,8 @@ export default class Influencer extends Vue {
           });
           tempInfluencerDetailed.kategorie = tempKategorie;
         });
-
+    }
+    if (!isNaN(Number(tempInfluencerDetailed.idee[0]))) {
       await fetch(
         "https://db.youbeon.eu/idee/filter/?ids=" + node.idee.toString(),
         { headers }
