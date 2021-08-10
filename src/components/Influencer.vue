@@ -9,9 +9,10 @@
             item-text="name"
             item-value="id"
             clearable
-            deletable-chips
+            chips
             solo
             multiple
+            deletable-chips
             text
             flat
             hide-details
@@ -62,10 +63,13 @@
     <v-card v-if="influencerDetailed !== null" class="detailedView">
       <v-card-title>
         <div class="hoverLink" @click="openLinktoInsta">
-        {{ influencerDetailed.name }}
-        <v-icon style="margin-left:5px">link</v-icon>
+          {{ influencerDetailed.name }}
+          <v-icon style="margin-left: 5px">link</v-icon>
         </div>
-        <v-icon style="position:absolute; right:20px; top:20px;" @click="influencerDetailed = null">
+        <v-icon
+          style="position: absolute; right: 20px; top: 20px"
+          @click="influencerDetailed = null"
+        >
           close
         </v-icon></v-card-title
       >
@@ -147,12 +151,12 @@ export default class Influencer extends Vue {
   }
 
   openLinktoInsta() {
-    window.open("https://www.instagram.com", "_blank")
+    window.open("https://www.instagram.com", "_blank");
   }
 
   async onNodeClick(event, node) {
     const headers = { "Content-Type": "application/json" };
-    let tempInfluencerDetailed = node
+    let tempInfluencerDetailed = node;
     await fetch(
       "https://db.youbeon.eu/kategorie/filter/?ids=" +
         node.kategorie.toString(),
@@ -169,9 +173,8 @@ export default class Influencer extends Vue {
         tempInfluencerDetailed.kategorie = tempKategorie;
       });
 
-      await fetch(
-      "https://db.youbeon.eu/idee/filter/?ids=" +
-        node.idee.toString(),
+    await fetch(
+      "https://db.youbeon.eu/idee/filter/?ids=" + node.idee.toString(),
       { headers }
     )
       .then((response) => response.json())
@@ -184,7 +187,7 @@ export default class Influencer extends Vue {
         });
         tempInfluencerDetailed.idee = tempIdee;
       });
-      this.influencerDetailed = tempInfluencerDetailed;
+    this.influencerDetailed = tempInfluencerDetailed;
   }
 
   @Watch("selectedReligion")
