@@ -117,6 +117,7 @@ export default class Idea extends Vue {
       });
     let color = comparison === true ? "#FF8D06" : "#B0DCD9";
     tempIdeas.forEach((idea) => {
+      idea._labelClass = 'stuff';
       idea._color = color;
       idea._size = tempIdeasCount[idea.id] * 15;
     });
@@ -157,6 +158,10 @@ export default class Idea extends Vue {
   border-left: 2px solid #e5e5e5;
   height: 30px;
   margin-top: 7px;
+}
+
+.stuff {
+  color:rgb(0, 0, 0);
 }
 
 .colorDisplay {
