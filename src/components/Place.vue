@@ -16,6 +16,7 @@
         hide-details
         elevation="0"
         label="Suche..."
+        prepend-inner-icon="search"
       >
       </v-autocomplete>
     </v-flex>

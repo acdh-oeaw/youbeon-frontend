@@ -16,6 +16,7 @@
             flat
             hide-details
             label="Suche..."
+            prepend-inner-icon="search"
           >
           </v-autocomplete>
         </v-col>
@@ -85,7 +86,7 @@ export default class Influencer extends Vue {
   networkInfluencer: any = [];
   links: any = [];
   options = {
-    force: 20000,
+    force: 5000,
     nodeSize: 50,
     linkWidth: 7,
     nodeLabels: true,
