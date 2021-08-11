@@ -1,6 +1,6 @@
 <template>
   <vContainer>
-    <v-flex style="margin: 1% 5%" xs12>
+    <v-col class="pa-0 flex-grow-1 mr-7" style="margin-top: 40px">
       <v-autocomplete
         class="searchbar"
         chips
@@ -19,8 +19,14 @@
         prepend-inner-icon="search"
       >
       </v-autocomplete>
-    </v-flex>
-    <v-btn fab small class="zoom" @click="zoom = zoom - 1">
+    </v-col>
+    <v-btn
+      fab
+      small
+      class="zoom"
+      @click="zoom = zoom - 1"
+      style="margin-top: 30px"
+    >
       <v-icon>remove</v-icon>
     </v-btn>
     <v-btn fab small class="zoom" @click="zoom = zoom + 1">
@@ -53,12 +59,10 @@
         />
       </div>
     </l-map>
-    <map-legende
-      id="legende"
-      :religions="religionJSON"
-      :places="geoPlaces">
-
-    </map-legende>
+    <v-col class="pa-0 flex-grow-1 mr-7 listHeight">
+      <map-legende id="legende" :religions="religionJSON" :places="geoPlaces">
+      </map-legende>
+    </v-col>
   </vContainer>
 </template>
 
@@ -71,7 +75,7 @@ import {
   LGeoJson,
   LWMSTileLayer as LWmsTileLayer,
 } from "vue2-leaflet";
-import MapLegende from "./MapLegende.vue"
+import MapLegende from "./MapLegende.vue";
 //@ts-ignore
 import * as L from "leaflet";
 import * as _ from "lodash";
@@ -309,12 +313,37 @@ export default class Place extends Vue {
 
 #legende {
   transition: 0.5s;
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
+  position: relative;
+  max-width: 350px;
+  margin-right: -12px;
+  float: right;
   z-index: 1;
   width: auto;
 }
+
+.listHeight {
+  margin-top: 62vh;
+}
+
+/*
+@media only screen and (max-width: 800px) {
+  .listHeight {
+    margin-top: 63vh;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .listHeight {
+    max-height: 63vh;
+  }
+}
+
+@media only screen and (max-width: 2000px) {
+  .listHeight {
+    max-height: 80vh;
+  }
+}
+*/
 
 .searchbar {
   z-index: 1;
