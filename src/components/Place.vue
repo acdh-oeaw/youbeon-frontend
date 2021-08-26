@@ -253,8 +253,6 @@ export default class Place extends Vue {
         item.kategorie,
         allCategories
       );
-      let coord_l_array = item.koordinate_l.split(",");
-      let coord_b_array = item.koordinate_b.split(",");
       let tempPlace = {
         type: "Feature",
         properties: {
@@ -267,8 +265,8 @@ export default class Place extends Vue {
         geometry: {
           type: "Point",
           coordinates: [
-            this.translateCoordinates(coord_l_array),
-            this.translateCoordinates(coord_b_array),
+            item.koordinate_l.replace(',','.'),
+            item.koordinate_b.replace(',','.'),
           ],
         },
       };
@@ -287,10 +285,6 @@ export default class Place extends Vue {
       }
     });
     return returnedCategories;
-  }
-
-  translateCoordinates(coord: string[]) {
-    return (Number(coord[2]) / 60 + Number(coord[1])) / 60 + Number(coord[0]);
   }
 }
 </script>
