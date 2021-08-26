@@ -62,7 +62,7 @@
     </d3-network>
     <v-card v-if="influencerDetailed !== null" class="detailedView">
       <v-card-title>
-        <div class="hoverLink" @click="openLinktoInsta">
+        <div class="hoverLink" @click="openLinktoInsta(influencerDetailed)">
           {{ influencerDetailed.name }}
           <v-icon style="margin-left: 5px">link</v-icon>
         </div>
@@ -150,8 +150,8 @@ export default class Influencer extends Vue {
     });
   }
 
-  openLinktoInsta() {
-    window.open("https://www.instagram.com", "_blank");
+  openLinktoInsta(influencer) {
+    window.open(influencer.link, "_blank");
   }
 
   async onNodeClick(event, node) {
