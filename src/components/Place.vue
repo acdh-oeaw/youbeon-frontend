@@ -5,7 +5,7 @@
         class="searchbar"
         chips
         v-model="selectedPlaces"
-        :items="placesJSON"
+        :items="allReligions"
         item-text="properties.bezeichnung"
         item-value="id"
         clearable
@@ -49,7 +49,7 @@
         "
       />
 
-      <l-geo-json :geojson="geoPlaces" :options="options" />
+      <l-geo-json :geojson="allPlaces" :options="options" />
 
       <div v-for="item in religionJSON" :key="item.id">
         <l-geo-json
@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import {
   LMap,
   LTileLayer,
@@ -81,7 +81,7 @@ import * as L from "leaflet";
 import * as _ from "lodash";
 
 const defaultCenter = [48.20849, 16.37208];
-const defaultZoom = 11;
+const defaultZoom = 13;
 
 @Component({
   components: {
@@ -127,19 +127,20 @@ export default class Place extends Vue {
   religionJSON: any[] = [];
   allPlaces: any[] = [];
 
-  options = {
-    onEachFeature: this.bindPopUpPlace(),
-    pointToLayer: (feature: any, latlng: any) => {
-      return L.circleMarker(latlng, {
-        radius: 4,
-        weight: 2,
-        opacity: 1,
-        fillOpacity: 0.8,
-        fillColor: "#b0dcd9",
-        color: "black",
-      });
-    },
-  };
+  randomColor(brightness) {
+    function randomChannel(brightness) {
+      var r = 255 - brightness;
+      var n = 0 | (Math.random() * r + brightness);
+      var s = n.toString(16);
+      return s.length == 1 ? "0" + s : s;
+    }
+    return (
+      "#" +
+      randomChannel(brightness) +
+      randomChannel(brightness) +
+      randomChannel(brightness)
+    );
+  }
 
   individualColor(religion: any) {
     return {
@@ -151,10 +152,24 @@ export default class Place extends Vue {
     onEachFeature: this.bindPopUpPlace(),
     pointToLayer: (feature: any, latlng: any) => {
       return L.circleMarker(latlng, {
-        radius: 4,
-        weight: 2,
+        radius: 5,
+        weight: 1,
         opacity: 1,
-        fillOpacity: 0.8,
+        fillOpacity: 1,
+        color: "black",
+      });
+    },
+  };
+
+  options = {
+    onEachFeature: this.bindPopUpPlace(),
+    pointToLayer: (feature: any, latlng: any) => {
+      return L.circleMarker(latlng, {
+        radius: 5,
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 1,
+        fillColor: "#b0dcd9",
         color: "black",
       });
     },
@@ -167,8 +182,16 @@ export default class Place extends Vue {
             ${feature.properties.bezeichnung}
             <hr style="margin-bottom: 5px"></hr>
          </div>
+         <u>Kategorien:</u>
         ${_(feature.properties.kategorie)
           .take(feature.properties.kategorie.length)
+          .map((d) => `<div >${d}</div>`)
+          .value()
+          .join("")}
+        </br>
+        <u>Ideen:</u>
+        ${_(feature.properties.idee)
+          .take(feature.properties.idee.length)
           .map((d) => `<div >${d}</div>`)
           .value()
           .join("")}
@@ -206,8 +229,7 @@ export default class Place extends Vue {
           tempReligion = {
             id: religion.id,
             religion: true,
-            color:
-              "#" + Math.floor(Math.random() * 16777215).toString(16) + "99",
+            color: this.randomColor(110),
             properties: {
               bezeichnung: religion.name,
             },
@@ -215,7 +237,7 @@ export default class Place extends Vue {
           this.allReligions.push(tempReligion);
         });
       });
-    this.handlePlaceData(fetchedData[0], fetchedData[1]);
+    this.handlePlaceData(fetchedData[0], fetchedData[1], fetchedData[2]);
   }
 
   displayLocations(religion: any) {
@@ -228,51 +250,65 @@ export default class Place extends Vue {
 
   async getDataFromServerAtCreated() {
     const headers = { "Content-Type": "application/json" };
-    let placesFetched;
-    await fetch("https://db.youbeon.eu/ort/", { headers })
+    let placesFetched = await fetch("https://db.youbeon.eu/ort/", { headers })
       .then((response) => response.json())
       .then((data) => {
-        placesFetched = data;
+        return data;
       });
 
-    let categoriesFetched;
-    await fetch("https://db.youbeon.eu/kategorie/", { headers })
+    let categoriesFetched = await fetch("https://db.youbeon.eu/kategorie/", {
+      headers,
+    })
       .then((response) => response.json())
       .then((data) => {
-        categoriesFetched = data;
+        return data;
       });
 
-    return [placesFetched, categoriesFetched];
+    let ideasFetched = await fetch("https://db.youbeon.eu/idee", { headers })
+      .then((response) => response.json())
+      .then((data) => {
+        return data;
+      });
+
+    return [placesFetched, categoriesFetched, ideasFetched];
   }
 
   //receives the content of the json, with the places
-  handlePlaceData(allPlaces, allCategories) {
+  async handlePlaceData(allPlaces, allCategories, allIdeas) {
     let tempGeo: any[] = [];
+    let counter = 0;
     allPlaces.forEach((item: any) => {
       let categories = this.getCorrespondingCategories(
         item.kategorie,
         allCategories
       );
+      console.log(categories)
+      let ideas = this.getCorrespondingIdeas(item.idee, allIdeas);
+      console.log(ideas)
       let tempPlace = {
         type: "Feature",
         properties: {
           id: item.id,
           bezeichnung: item.bezeichnung,
           bemerkung: item.bemerkung,
+          idee: ideas,
           kategorie: categories,
           religion: item.religion[0],
         },
         geometry: {
           type: "Point",
           coordinates: [
-            item.koordinate_l.replace(',','.'),
-            item.koordinate_b.replace(',','.'),
+            item.koordinate_l.replace(",", "."),
+            item.koordinate_b.replace(",", "."),
           ],
         },
       };
-      tempGeo.push(tempPlace);
+      if (tempPlace.geometry.coordinates[0] !== "noData") {
+        tempGeo.push(tempPlace);
+      } else {
+        counter++;
+      }
     });
-    //temp: just religion might change later
     this.placesJSON = tempGeo.concat(this.allReligions);
     this.allPlaces = tempGeo;
   }
@@ -285,6 +321,17 @@ export default class Place extends Vue {
       }
     });
     return returnedCategories;
+  }
+
+  getCorrespondingIdeas(ideaIDs: string[], allIdeas: string[]) {
+    console.log(allIdeas, ideaIDs)
+    let returnedIdeas: any[] = [];
+    allIdeas.forEach((idea: any) => {
+      if (ideaIDs.includes(idea.id)) {
+        returnedIdeas.push(idea.name);
+      }
+    });
+    return returnedIdeas;
   }
 }
 </script>
@@ -307,9 +354,10 @@ export default class Place extends Vue {
 
 #legende {
   transition: 0.5s;
-  position: relative;
+  position: fixed;
   max-width: 350px;
-  margin-right: -12px;
+  right: 60px;
+  bottom: 50px;
   float: right;
   z-index: 1;
   width: auto;

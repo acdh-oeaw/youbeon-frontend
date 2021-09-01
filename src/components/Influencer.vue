@@ -77,11 +77,15 @@
       <v-card-text>
         <u>Verbundene Kategorien:</u>
         <br />
-        {{ influencerDetailed.kategorie.toString() }}
+        <div v-for="cat in influencerDetailed.kategorie" v-bind:key="cat.id">
+          {{ cat }}
+        </div>
         <br />
         <u>Verbundene Ideen:</u>
         <br />
-        {{ influencerDetailed.idee.toString() }}
+        <div v-for="idea in influencerDetailed.idee" v-bind:key="idea.id">
+          {{ idea }}
+        </div>
       </v-card-text>
     </v-card>
   </vContainer>
