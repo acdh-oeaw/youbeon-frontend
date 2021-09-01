@@ -95,6 +95,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 // eslint-disable-next-line
 import D3Network from "vue-d3-network";
+import * as _ from "lodash";
 
 @Component({
   components: {
@@ -151,7 +152,18 @@ export default class Influencer extends Vue {
           });
         this.networkInfluencer.push(influencer);
       }
+      if (!this.networkInfluencer.includes(centerNode)) {
+        this.networkInfluencer = _.take(this.shuffle(this.networkInfluencer), 15)
+      }
     });
+  }
+
+  shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
   }
 
   openLinktoInsta(influencer) {
