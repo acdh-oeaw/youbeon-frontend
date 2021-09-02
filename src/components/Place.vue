@@ -169,7 +169,7 @@ export default class Place extends Vue {
         weight: 1,
         opacity: 1,
         fillOpacity: 1,
-        fillColor: "#b0dcd9",
+        fillColor: "white",
         color: "black",
       });
     },
