@@ -32,6 +32,9 @@
     <v-btn fab small class="zoom" @click="zoom = zoom + 1">
       <v-icon>add</v-icon>
     </v-btn>
+    <v-btn class="zoom" fab small @click="resetView">
+      <v-icon>home</v-icon>
+    </v-btn>
     <l-map
       style="z-index: 0; position: absolute; left: 0; top: 0; right: 0"
       ref="map"
@@ -126,6 +129,11 @@ export default class Place extends Vue {
   allReligions: any[] = [];
   religionJSON: any[] = [];
   allPlaces: any[] = [];
+
+  resetView() {
+    this.zoom = defaultZoom;
+    this.center = defaultCenter;
+  }
 
   randomColor(brightness) {
     function randomChannel(brightness) {
@@ -240,6 +248,12 @@ export default class Place extends Vue {
     this.handlePlaceData(fetchedData[0], fetchedData[1], fetchedData[2]);
   }
 
+  mounted() {
+    this.$nextTick(() => {
+      this.map = this.$refs.map;
+    });
+  }
+
   displayLocations(religion: any) {
     return {
       features: this.allPlaces.filter((f: any) => {
@@ -282,9 +296,9 @@ export default class Place extends Vue {
         item.kategorie,
         allCategories
       );
-      console.log(categories)
+      console.log(categories);
       let ideas = this.getCorrespondingIdeas(item.idee, allIdeas);
-      console.log(ideas)
+      console.log(ideas);
       let tempPlace = {
         type: "Feature",
         properties: {
@@ -324,7 +338,7 @@ export default class Place extends Vue {
   }
 
   getCorrespondingIdeas(ideaIDs: string[], allIdeas: string[]) {
-    console.log(allIdeas, ideaIDs)
+    console.log(allIdeas, ideaIDs);
     let returnedIdeas: any[] = [];
     allIdeas.forEach((idea: any) => {
       if (ideaIDs.includes(idea.id)) {
