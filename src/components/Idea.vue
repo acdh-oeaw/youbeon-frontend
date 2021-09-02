@@ -1,13 +1,21 @@
 <template>
   <vContainer>
-    <v-row no-gutters class="mt-10">
-      <v-col class="pa-0 flex-grow-1 mr-7">
-        <v-card>
+    <v-row
+      no-gutters
+      class="mt-2"
+      v-for="religionField in selectedReligion"
+      v-bind:key="religionField.id"
+    >
+      <v-col class="pa-0 flex-grow-1">
+        <v-card
+          :style="{ 'margin-top': religionField.id === 0 ? '2vh' : '0px' }"
+        >
           <v-row no-gutters>
             <v-autocomplete
               flat
               clearable
-              v-model="selectedReligion"
+              @input="getSelectedReligion(religionField.id)"
+              v-model="religionField.religion"
               :items="allReligions"
               elevation="0"
               item-text="name"
@@ -19,34 +27,28 @@
               prepend-inner-icon="search"
             >
             </v-autocomplete>
-            <div style="background-color: #b0dcd9" class="colorDisplay"></div>
-          </v-row>
-        </v-card>
-      </v-col>
-      <v-col class="pa-0 flex-grow-1 ml-7">
-        <v-card>
-          <v-row no-gutters>
-            <v-autocomplete
-              clearable
-              flat
-              :items="allReligions"
-              v-model="selectedComparison"
-              elevation="0"
-              item-text="name"
-              item-value="id"
-              solo
-              text
-              hide-details
-              label="Vergleichen mit..."
-              prepend-inner-icon="search"
+            <v-btn
+              icon
+              style="margin-top: 7px"
+              @click="addReligionField()"
             >
-            </v-autocomplete>
-            <div style="background-color: #ff8d06" class="colorDisplay"></div>
+              <v-icon>add_circle_outline</v-icon>
+            </v-btn>
+            <v-btn
+              v-if="religionField.id !== 0"
+              style="margin-top: 7px"
+              icon
+              @click="removeReligionField(religionField)"
+            >
+              <v-icon>remove_circle_outline</v-icon>
+            </v-btn>
+            <div :style="{ 'background-color': religionField.color }" class="colorDisplay"></div>
           </v-row>
         </v-card>
       </v-col>
     </v-row>
     <d3-network
+      style="margin-top:5vh"
       id="network"
       :net-nodes="nodes"
       :net-links="links"
@@ -77,29 +79,24 @@ export default class Idea extends Vue {
   };
   allReligions: any[] = [];
   selectedReligion: any = [];
-  selectedComparison: any = [];
-  religionIdeas: any[] = [];
-  comparisonIdeas: any[] = [];
 
-  @Watch("selectedReligion")
-  getSelectedReligion() {
-    this.getIdeasForReligions(false);
+  getSelectedReligion(val) {
+  let indexOfChangedReligion = -1;
+  this.selectedReligion.forEach(religion => {
+    if(religion.id === val) {
+      indexOfChangedReligion = this.selectedReligion.indexOf(religion)
+    }
+  });
+    this.getIdeasForReligions(indexOfChangedReligion)
   }
 
-  @Watch("selectedComparison")
-  getComparisonReligion() {
-    this.getIdeasForReligions(true);
-  }
-
-  async getIdeasForReligions(comparison: boolean) {
+  async getIdeasForReligions(changedOne: any) {
     let tempIdeas: any;
     let tempIdeasCount: any;
     const headers = { "Content-Type": "application/json" };
     await fetch(
       "https://db.youbeon.eu/idee/menge/?religion=" +
-        String(
-          comparison === true ? this.selectedComparison : this.selectedReligion
-        ),
+        String(this.selectedReligion[changedOne].religion),
       { headers }
     )
       .then((response) => response.json())
@@ -115,23 +112,55 @@ export default class Idea extends Vue {
       .then((data) => {
         tempIdeas = data;
       });
-    let color = comparison === true ? "#FF8D06" : "#B0DCD9";
     tempIdeas.forEach((idea) => {
-      idea._labelClass = 'stuff';
-      idea._color = color;
+      idea._labelClass = "stuff";
+      idea._color = this.selectedReligion[changedOne].color;
       idea._size = tempIdeasCount[idea.id] * 15;
     });
-    if (comparison === true) {
-      this.comparisonIdeas = tempIdeas;
-    } else {
-      this.religionIdeas = tempIdeas;
-    }
+    this.selectedReligion[changedOne].ideas = tempIdeas;
+    this.combineIntoNodeObject();
   }
 
-  @Watch("religionIdeas")
-  @Watch("comparisonIdeas")
+  randomColor(brightness) {
+    function randomChannel(brightness) {
+      var r = 255 - brightness;
+      var n = 0 | (Math.random() * r + brightness);
+      var s = n.toString(16);
+      return s.length == 1 ? "0" + s : s;
+    }
+    return (
+      "#" +
+      randomChannel(brightness) +
+      randomChannel(brightness) +
+      randomChannel(brightness)
+    );
+  }
+
   combineIntoNodeObject() {
-    this.nodes = this.religionIdeas.concat(this.comparisonIdeas);
+    let objectforNodes:any[] = [];
+    this.selectedReligion.forEach(religion => {
+      objectforNodes = objectforNodes.concat(religion.ideas)
+    });
+    this.nodes = objectforNodes;
+    console.log(this.nodes)
+  }
+
+  
+  addReligionField(): void {
+    this.selectedReligion.push({
+      id: Math.random() * 100 + 1,
+      religion: undefined,
+      color: this.randomColor(125),
+      ideas: {}
+    });
+  }
+
+  removeReligionField(religionField) {
+    const index = this.selectedReligion.indexOf(religionField);
+    if (index > -1) {
+      this.selectedReligion.splice(index, 1);
+    }
+    this.combineIntoNodeObject()
   }
 
   mounted() {
@@ -140,6 +169,14 @@ export default class Idea extends Vue {
       .then((response) => response.json())
       .then((data) => {
         this.allReligions = data;
+        this.selectedReligion = [
+          {
+            id: 0,
+            color: this.randomColor(125),
+            religion: [],
+            ideas: {}
+          },
+        ];
       });
   }
 }
@@ -161,7 +198,7 @@ export default class Idea extends Vue {
 }
 
 .stuff {
-  color:rgb(0, 0, 0);
+  color: rgb(0, 0, 0);
 }
 
 .colorDisplay {
@@ -169,6 +206,6 @@ export default class Idea extends Vue {
   width: 3px;
   height: 30px;
   margin: 10px;
-  margin-right:10px;
+  margin-right: 10px;
 }
 </style>
