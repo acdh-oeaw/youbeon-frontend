@@ -1,6 +1,6 @@
 <template>
   <vContainer>
-    <v-card class="sticky-card mt-10">
+    <v-card class="sticky-card" style="margin-top: 4vh">
       <v-row no-gutters>
         <v-col class="pa-0 flex-grow-1">
           <v-autocomplete
@@ -75,13 +75,13 @@
       >
       <v-card-subtitle> {{ influencerDetailed.bemerkung }} </v-card-subtitle>
       <v-card-text>
-        <u>Verbundene Kategorien:</u>
+        <u>Verknüpfte Kategorien:</u>
         <br />
         <div v-for="cat in influencerDetailed.kategorie" v-bind:key="cat.id">
           {{ cat }}
         </div>
         <br />
-        <u>Verbundene Ideen:</u>
+        <u>Verknüpfte Ideen:</u>
         <br />
         <div v-for="idea in influencerDetailed.idee" v-bind:key="idea.id">
           {{ idea }}
@@ -153,7 +153,10 @@ export default class Influencer extends Vue {
         this.networkInfluencer.push(influencer);
       }
       if (!this.networkInfluencer.includes(centerNode)) {
-        this.networkInfluencer = _.take(this.shuffle(this.networkInfluencer), 15)
+        this.networkInfluencer = _.take(
+          this.shuffle(this.networkInfluencer),
+          15
+        );
       }
     });
   }
