@@ -1,6 +1,6 @@
 <template>
   <vContainer>
-    <div id="list_legy" v-if="religions.length > 0 || places.length > 0">
+    <div id="list_legy" v-if="religions.length > 0 || places.length > 0 || ideas.length > 0">
       <div style="text-align: center; width: fill">
         <b>Legende</b>
       </div>
@@ -17,16 +17,16 @@
         </v-list-item>
         <v-list-item
           class="legend_items"
-          v-for="rel in religions"
-          :key="rel.id"
+          v-for="item in religions.concat(ideas)"
+          :key="item.id"
         >
           <v-list-item-content style="margin-right: 30px">
             <v-list-item-title>
-              {{ rel.properties.bezeichnung }}
+              {{ item.properties.bezeichnung }}
             </v-list-item-title>
           </v-list-item-content>
           <v-list-item-action>
-            <v-avatar :color="rel.color" size="20"></v-avatar>
+            <v-avatar :color="item.color" size="20"></v-avatar>
           </v-list-item-action>
         </v-list-item>
       </v-list>
@@ -48,6 +48,7 @@ import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 export default class MapLegende extends Vue {
   @Prop() public religions: any;
   @Prop() public places: any;
+  @Prop() public ideas: any;
 }
 </script>
 

@@ -1,25 +1,57 @@
 <template>
   <vContainer>
-    <v-col class="pa-0 flex-grow-1 mr-7" style="margin-top: 40px">
-      <v-autocomplete
-        class="searchbar"
-        chips
-        v-model="selectedPlaces"
-        :items="allReligions"
-        item-text="properties.bezeichnung"
-        item-value="id"
-        clearable
-        flat
-        multiple
-        solo
-        text
-        hide-details
-        elevation="0"
-        label="Suche..."
-        prepend-inner-icon="search"
-      >
-      </v-autocomplete>
-    </v-col>
+    <v-card class="sticky-card mt-10 searchbar" outlined color="white)">
+      <v-row no-gutters>
+        <v-col class="pa-0 flex-grow-1">
+          <v-autocomplete
+            chips
+            v-model="selectedPlaces"
+            :items="autocompleteItems"
+            item-text="properties.bezeichnung"
+            item-value="properties"
+            clearable
+            flat
+            multiple
+            solo
+            text
+            hide-details
+            elevation="0"
+            label="Suche..."
+            prepend-inner-icon="search"
+          >
+          </v-autocomplete>
+        </v-col>
+        <div class="vl"></div>
+        <v-col class="pa-0 ma-0" cols="auto">
+          <v-menu max-height="80vh" offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                class="mx-1"
+                style="margin-top: 5px"
+                text
+                v-on="on"
+                v-bind="attrs"
+              >
+                <template>
+                  {{ selectedFilter.name }}
+                </template>
+                <v-icon style="margin-left: 10px">expand_more</v-icon>
+              </v-btn>
+            </template>
+            <v-list dense>
+              <v-list-item
+                dense
+                v-bind:key="item.id"
+                v-for="item in filterChoices"
+                @click="selectedFilter = item"
+              >
+                <v-list-item-title>{{ item.name }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-col>
+      </v-row>
+    </v-card>
     <v-btn
       fab
       small
@@ -54,16 +86,31 @@
 
       <l-geo-json :geojson="allPlaces" :options="options" />
 
+      <l-geo-json :geojson="geoPlaces" :options="optionsAllItems" />
+
+      <div v-for="item in ideaJSON" :key="item.id">
+        <l-geo-json
+          :geojson="displayLocationsIdea(item)"
+          :options="optionsReligionIdea"
+          :optionsStyle="individualColor(item)"
+        />
+      </div>
+
       <div v-for="item in religionJSON" :key="item.id">
         <l-geo-json
-          :geojson="displayLocations(item)"
-          :options="optionsReligion"
+          :geojson="displayLocationsReligion(item)"
+          :options="optionsReligionIdea"
           :optionsStyle="individualColor(item)"
         />
       </div>
     </l-map>
     <v-col class="pa-0 flex-grow-1 mr-7 listHeight">
-      <map-legende id="legende" :religions="religionJSON" :places="geoPlaces">
+      <map-legende
+        id="legende"
+        :religions="religionJSON"
+        :places="geoPlaces"
+        :ideas="ideaJSON"
+      >
       </map-legende>
     </v-col>
   </vContainer>
@@ -127,12 +174,40 @@ export default class Place extends Vue {
   placesJSON: any[] = [];
   selectedPlaces: any[] = [];
   allReligions: any[] = [];
+  allIdeas: any[] = [];
+
   religionJSON: any[] = [];
+  ideaJSON: any[] = [];
   allPlaces: any[] = [];
+
+  filterChoices = [
+    { id: 0, name: "Religionen" },
+    { id: 1, name: "Ideen" },
+    { id: 2, name: "Alle Orte" },
+  ];
+  selectedFilter = { id: 0, name: "Religionen" };
+
+  autocompleteItems: any[] = [];
 
   resetView() {
     this.zoom = defaultZoom;
     this.center = defaultCenter;
+  }
+
+  @Watch("selectedFilter")
+  changeautoFilter() {
+    this.selectedPlaces = [];
+    switch (this.selectedFilter.name) {
+      case "Religionen":
+        this.autocompleteItems = this.allReligions;
+        break;
+      case "Ideen":
+        this.autocompleteItems = this.allIdeas;
+        break;
+      case "Alle Orte":
+        this.autocompleteItems = this.allPlaces;
+        break;
+    }
   }
 
   randomColor(brightness) {
@@ -156,7 +231,7 @@ export default class Place extends Vue {
     };
   }
 
-  optionsReligion = {
+  optionsReligionIdea = {
     onEachFeature: this.bindPopUpPlace(),
     pointToLayer: (feature: any, latlng: any) => {
       return L.circleMarker(latlng, {
@@ -164,6 +239,20 @@ export default class Place extends Vue {
         weight: 1,
         opacity: 1,
         fillOpacity: 1,
+        color: "black",
+      });
+    },
+  };
+
+  optionsAllItems = {
+    onEachFeature: this.bindPopUpPlace(),
+    pointToLayer: (feature: any, latlng: any) => {
+      return L.circleMarker(latlng, {
+        radius: 5,
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 1,
+        fillColor: "#b0dcd9",
         color: "black",
       });
     },
@@ -212,10 +301,31 @@ export default class Place extends Vue {
   displayPlaces() {
     this.religionJSON = [];
     this.geoPlaces = [];
+    this.ideaJSON = [];
     this.placesJSON.forEach((place) => {
-      if (this.selectedPlaces.includes(place.id)) {
+      if (
+        this.selectedPlaces.some((sel) => {
+          return (
+            sel.bezeichnung === place.properties.bezeichnung &&
+            sel.religion === true
+          );
+        })
+      ) {
         this.religionJSON.push(place);
-      } else if (this.selectedPlaces.includes(place.properties.bezeichnung)) {
+      } else if (
+        this.selectedPlaces.some((sel) => {
+          return (
+            sel.bezeichnung === place.properties.bezeichnung &&
+            sel.idea === true
+          );
+        })
+      ) {
+        this.ideaJSON.push(place);
+      } else if (
+        this.selectedPlaces.some((sel) => {
+          return sel.bezeichnung === place.properties.bezeichnung;
+        })
+      ) {
         this.geoPlaces.push(place);
       }
     });
@@ -236,15 +346,16 @@ export default class Place extends Vue {
         data.forEach((religion) => {
           tempReligion = {
             id: religion.id,
-            religion: true,
-            color: this.randomColor(110),
+            color: this.randomColor(20),
             properties: {
               bezeichnung: religion.name,
+              religion: true,
             },
           };
           this.allReligions.push(tempReligion);
         });
       });
+    this.autocompleteItems = this.allReligions;
     this.handlePlaceData(fetchedData[0], fetchedData[1], fetchedData[2]);
   }
 
@@ -254,7 +365,15 @@ export default class Place extends Vue {
     });
   }
 
-  displayLocations(religion: any) {
+  displayLocationsIdea(idea: any) {
+    return {
+      features: this.allPlaces.filter((f: any) => {
+        return f.properties.idee.includes(idea.properties.bezeichnung);
+      }),
+    };
+  }
+
+  displayLocationsReligion(religion: any) {
     return {
       features: this.allPlaces.filter((f: any) => {
         return f.properties.religion === religion.id;
@@ -281,6 +400,18 @@ export default class Place extends Vue {
     let ideasFetched = await fetch("https://db.youbeon.eu/idee", { headers })
       .then((response) => response.json())
       .then((data) => {
+        let tempIdea;
+        data.forEach((idea) => {
+          tempIdea = {
+            id: idea.id,
+            color: this.randomColor(20),
+            properties: {
+              bezeichnung: idea.name,
+              idea: true,
+            },
+          };
+          this.allIdeas.push(tempIdea);
+        });
         return data;
       });
 
@@ -290,15 +421,12 @@ export default class Place extends Vue {
   //receives the content of the json, with the places
   async handlePlaceData(allPlaces, allCategories, allIdeas) {
     let tempGeo: any[] = [];
-    let counter = 0;
     allPlaces.forEach((item: any) => {
       let categories = this.getCorrespondingCategories(
         item.kategorie,
         allCategories
       );
-      console.log(categories);
       let ideas = this.getCorrespondingIdeas(item.idee, allIdeas);
-      console.log(ideas);
       let tempPlace = {
         type: "Feature",
         properties: {
@@ -319,11 +447,10 @@ export default class Place extends Vue {
       };
       if (tempPlace.geometry.coordinates[0] !== "noData") {
         tempGeo.push(tempPlace);
-      } else {
-        counter++;
       }
     });
     this.placesJSON = tempGeo.concat(this.allReligions);
+    this.placesJSON = this.placesJSON.concat(this.allIdeas);
     this.allPlaces = tempGeo;
   }
 
@@ -338,7 +465,6 @@ export default class Place extends Vue {
   }
 
   getCorrespondingIdeas(ideaIDs: string[], allIdeas: string[]) {
-    console.log(allIdeas, ideaIDs);
     let returnedIdeas: any[] = [];
     allIdeas.forEach((idea: any) => {
       if (ideaIDs.includes(idea.id)) {
@@ -379,6 +505,12 @@ export default class Place extends Vue {
 
 .listHeight {
   margin-top: 62vh;
+}
+
+.vl {
+  border-left: 2px solid #e5e5e5;
+  height: 30px;
+  margin-top: 10px;
 }
 
 /*

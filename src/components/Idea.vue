@@ -8,7 +8,7 @@
     >
       <v-col class="pa-0 flex-grow-1">
         <v-card
-          :style="{ 'margin-top': religionField.id === 0 ? '2vh' : '0px' }"
+          :style="{ 'margin-top': religionField.id === 0 ? '3vh' : '0px' }"
         >
           <v-row no-gutters>
             <v-autocomplete
@@ -142,7 +142,6 @@ export default class Idea extends Vue {
       objectforNodes = objectforNodes.concat(religion.ideas)
     });
     this.nodes = objectforNodes;
-    console.log(this.nodes)
   }
 
   
