@@ -27,11 +27,7 @@
               prepend-inner-icon="search"
             >
             </v-autocomplete>
-            <v-btn
-              icon
-              style="margin-top: 7px"
-              @click="addReligionField()"
-            >
+            <v-btn icon style="margin-top: 7px" @click="addReligionField()">
               <v-icon>add_circle_outline</v-icon>
             </v-btn>
             <v-btn
@@ -42,13 +38,16 @@
             >
               <v-icon>remove_circle_outline</v-icon>
             </v-btn>
-            <div :style="{ 'background-color': religionField.color }" class="colorDisplay"></div>
+            <div
+              :style="{ 'background-color': religionField.color }"
+              class="colorDisplay"
+            ></div>
           </v-row>
         </v-card>
       </v-col>
     </v-row>
     <d3-network
-      style="margin-top:5vh"
+      style="margin-top: 5vh"
       id="network"
       :net-nodes="nodes"
       :net-links="links"
@@ -81,13 +80,13 @@ export default class Idea extends Vue {
   selectedReligion: any = [];
 
   getSelectedReligion(val) {
-  let indexOfChangedReligion = -1;
-  this.selectedReligion.forEach(religion => {
-    if(religion.id === val) {
-      indexOfChangedReligion = this.selectedReligion.indexOf(religion)
-    }
-  });
-    this.getIdeasForReligions(indexOfChangedReligion)
+    let indexOfChangedReligion = -1;
+    this.selectedReligion.forEach((religion) => {
+      if (religion.id === val) {
+        indexOfChangedReligion = this.selectedReligion.indexOf(religion);
+      }
+    });
+    this.getIdeasForReligions(indexOfChangedReligion);
   }
 
   async getIdeasForReligions(changedOne: any) {
@@ -137,20 +136,21 @@ export default class Idea extends Vue {
   }
 
   combineIntoNodeObject() {
-    let objectforNodes:any[] = [];
-    this.selectedReligion.forEach(religion => {
-      objectforNodes = objectforNodes.concat(religion.ideas)
+    let objectforNodes: any[] = [];
+    this.selectedReligion.forEach((religion) => {
+      if (religion.religion !== undefined) {
+        objectforNodes = objectforNodes.concat(religion.ideas);
+      }
     });
     this.nodes = objectforNodes;
   }
 
-  
   addReligionField(): void {
     this.selectedReligion.push({
       id: Math.random() * 100 + 1,
       religion: undefined,
       color: this.randomColor(125),
-      ideas: {}
+      ideas: {},
     });
   }
 
@@ -159,7 +159,7 @@ export default class Idea extends Vue {
     if (index > -1) {
       this.selectedReligion.splice(index, 1);
     }
-    this.combineIntoNodeObject()
+    this.combineIntoNodeObject();
   }
 
   mounted() {
@@ -172,8 +172,8 @@ export default class Idea extends Vue {
           {
             id: 0,
             color: this.randomColor(125),
-            religion: [],
-            ideas: {}
+            religion: undefined,
+            ideas: {},
           },
         ];
       });
