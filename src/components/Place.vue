@@ -56,17 +56,22 @@
       fab
       small
       class="zoom"
-      @click="zoom = zoom - 1"
+      @click="zoom = zoom + 1"
       style="margin-top: 30px"
     >
-      <v-icon>remove</v-icon>
-    </v-btn>
-    <v-btn fab small class="zoom" @click="zoom = zoom + 1">
       <v-icon>add</v-icon>
     </v-btn>
-    <v-btn class="zoom" fab small @click="resetView">
+    <v-slider style="z-index: 1; width:100px; margin-top: 30px; margin-left:70px;" max="50" min="-50" color='#e4625c'></v-slider>
+    <v-btn fab small class="zoom" @click="zoom = zoom - 1">
+      <v-icon>remove</v-icon>
+    </v-btn>
+    <v-btn class="zoom" fab small @click="resetView()">
       <v-icon>home</v-icon>
     </v-btn>
+    <v-btn class="zoom" fab small @click="zoomToMap()">
+      <v-icon>map</v-icon>
+    </v-btn>
+  
     <l-map
       style="z-index: 0; position: absolute; left: 0; top: 0; right: 0"
       ref="map"
@@ -84,7 +89,11 @@
         "
       />
 
-      <l-geo-json :geojson="allPlaces" :options="options" />
+      <l-geo-json
+        :geojson="allPlaces"
+        :options="options"
+        :optionsStyle="distanceVariableColor"
+      />
 
       <l-geo-json :geojson="geoPlaces" :options="optionsAllItems" />
 
@@ -153,6 +162,7 @@ export default class Place extends Vue {
   zoom: number = defaultZoom;
   center: number[] = defaultCenter;
   map: any = null;
+  pointerSize = 5;
 
   tileSets = [
     {
@@ -180,6 +190,17 @@ export default class Place extends Vue {
   ideaJSON: any[] = [];
   allPlaces: any[] = [];
 
+  selectableReligions: string[] = [
+    "alle accounts",
+    "alevitentum",
+    "katholisches christentum",
+    "evangelisches christentum",
+    "orthodoxes christentum",
+    "islam",
+    "judentum",
+    "sikhismus",
+  ];
+
   filterChoices = [
     { id: 0, name: "Religionen" },
     { id: 1, name: "Ideen" },
@@ -191,6 +212,11 @@ export default class Place extends Vue {
 
   resetView() {
     this.zoom = defaultZoom;
+    this.center = defaultCenter;
+  }
+
+  zoomToMap() {
+    this.zoom = 3;
     this.center = defaultCenter;
   }
 
@@ -272,6 +298,16 @@ export default class Place extends Vue {
     },
   };
 
+  get distanceVariableColor() {
+    let color = "white";
+    if (this.zoom < 6) {
+      color = "#e4625c";
+    }
+    return {
+      fillColor: color,
+    };
+  }
+
   bindPopUpPlace() {
     return async (feature: any, layer: L.Layer): Promise<void> => {
       layer.bindPopup(
@@ -279,13 +315,6 @@ export default class Place extends Vue {
             ${feature.properties.bezeichnung}
             <hr style="margin-bottom: 5px"></hr>
          </div>
-         <u>Kategorien:</u>
-        ${_(feature.properties.kategorie)
-          .take(feature.properties.kategorie.length)
-          .map((d) => `<div >${d}</div>`)
-          .value()
-          .join("")}
-        </br>
         <u>Ideen:</u>
         ${_(feature.properties.idee)
           .take(feature.properties.idee.length)
@@ -344,15 +373,17 @@ export default class Place extends Vue {
       .then((data) => {
         let tempReligion;
         data.forEach((religion) => {
-          tempReligion = {
-            id: religion.id,
-            color: this.randomColor(20),
-            properties: {
-              bezeichnung: religion.name,
-              religion: true,
-            },
-          };
-          this.allReligions.push(tempReligion);
+          if (this.selectableReligions.includes(religion.name.toLowerCase())) {
+            tempReligion = {
+              id: religion.id,
+              color: this.randomColor(20),
+              properties: {
+                bezeichnung: religion.name,
+                religion: true,
+              },
+            };
+            this.allReligions.push(tempReligion);
+          }
         });
       });
     this.autocompleteItems = this.allReligions;
@@ -402,15 +433,20 @@ export default class Place extends Vue {
       .then((data) => {
         let tempIdea;
         data.forEach((idea) => {
-          tempIdea = {
-            id: idea.id,
-            color: this.randomColor(20),
-            properties: {
-              bezeichnung: idea.name,
-              idea: true,
-            },
-          };
-          this.allIdeas.push(tempIdea);
+          let placesFiltered = placesFetched.filter((p: any) => {
+            return p.idee.includes(idea.id);
+          });
+          if (placesFiltered.length > 0) {
+            tempIdea = {
+              id: idea.id,
+              color: this.randomColor(20),
+              properties: {
+                bezeichnung: idea.name,
+                idea: true,
+              },
+            };
+            this.allIdeas.push(tempIdea);
+          }
         });
         return data;
       });
@@ -482,6 +518,7 @@ export default class Place extends Vue {
 
 .zoom {
   margin: 5px;
+  margin-top: 5px;
   z-index: 1;
   clear: both;
   float: left;

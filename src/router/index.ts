@@ -9,8 +9,8 @@ Vue.use(VueRouter)
 const routes: Array<RouteConfig> = [
   {
     path: '/',
-    name: 'influencer',
-    component: Influencer
+    name: 'place',
+    component: Place
   },
   {
     path: '/Idea',
@@ -18,9 +18,9 @@ const routes: Array<RouteConfig> = [
     component: Idea
   },
   {
-    path: '/Place',
-    name: 'place',
-    component: Place
+    path: '/account',
+    name: 'account',
+    component: Influencer
   },
 
 ]

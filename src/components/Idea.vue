@@ -73,11 +73,29 @@ export default class Idea extends Vue {
   nodes: any = [];
   links: any = [];
   options = {
-    force: 5000,
+    force: 3000,
+    fontSize: 14,
     nodeLabels: true,
+    forces: {
+      X: 0.2,
+      Y: 0.5,
+      ManyBody: true,
+      Center: true,
+    },
   };
   allReligions: any[] = [];
   selectedReligion: any = [];
+
+  selectableReligions: string[] = [
+    "alle accounts",
+    "alevitentum",
+    "katholisches christentum",
+    "evangelisches christentum",
+    "orthodoxes christentum",
+    "islam",
+    "judentum",
+    "sikhismus",
+  ];
 
   getSelectedReligion(val) {
     let indexOfChangedReligion = -1;
@@ -167,7 +185,9 @@ export default class Idea extends Vue {
     fetch("https://db.youbeon.eu/religion/", { headers })
       .then((response) => response.json())
       .then((data) => {
-        this.allReligions = data;
+        this.allReligions = data.filter((r: any) => {
+          return this.selectableReligions.includes(r.name.toLowerCase());
+        });
         this.selectedReligion = [
           {
             id: 0,
@@ -186,7 +206,7 @@ export default class Idea extends Vue {
 #network {
   margin-top: 5vh;
   border: 2px solid #b0dcd9;
-  background-color: #e5e5e5;
+  background-color: #e8c444;
   height: 70vh;
 }
 

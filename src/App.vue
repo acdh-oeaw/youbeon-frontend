@@ -11,7 +11,9 @@
           >
             <v-row style="height: 100px">
               <v-col md="1">
-                <router-link to="/"><img class="logo mt-2" src="./static/logo.png" /></router-link>
+                <router-link to="/"
+                  ><img class="logo mt-2" src="./static/logo.png"
+                /></router-link>
               </v-col>
               <v-col md="5"></v-col>
               <v-col md="6">
@@ -28,10 +30,20 @@
                     ><div
                       :class="[
                         'tabs_top',
-                        $route.name === 'influencer' && 'underline',
+                        $route.name === 'place' && 'underline',
                       ]"
                     >
-                      Influencer
+                      Orte
+                    </div></v-tab
+                  >
+                  <v-tab to="/account"
+                    ><div
+                      :class="[
+                        'tabs_top',
+                        $route.name === 'account' && 'underline',
+                      ]"
+                    >
+                      Accounts
                     </div></v-tab
                   >
                   <v-tab to="/idea"
@@ -42,16 +54,6 @@
                       ]"
                     >
                       Ideen
-                    </div></v-tab
-                  >
-                  <v-tab to="/place"
-                    ><div
-                      :class="[
-                        'tabs_top',
-                        $route.name === 'place' && 'underline',
-                      ]"
-                    >
-                      Orte
                     </div></v-tab
                   >
                 </v-tabs>

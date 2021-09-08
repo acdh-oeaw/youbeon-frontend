@@ -75,12 +75,6 @@
       >
       <v-card-subtitle> {{ influencerDetailed.bemerkung }} </v-card-subtitle>
       <v-card-text>
-        <u>Verknüpfte Kategorien:</u>
-        <br />
-        <div v-for="cat in influencerDetailed.kategorie" v-bind:key="cat.id">
-          {{ cat }}
-        </div>
-        <br />
         <u>Verknüpfte Ideen:</u>
         <br />
         <div v-for="idea in influencerDetailed.idee" v-bind:key="idea.id">
@@ -106,7 +100,7 @@ import * as _ from "lodash";
 export default class Influencer extends Vue {
   //Religion Variables
   religions: any = [];
-  selectedReligion: any = { id: 0, name: "Alle Influencer" };
+  selectedReligion: any = { id: 0, name: "Alle Accounts" };
 
   //Influencer Variables
   allInfluencer: any = [];
@@ -114,21 +108,44 @@ export default class Influencer extends Vue {
   selectedInfluencer: any = [];
   influencerDetailed: any = null;
 
+  selectableReligions: string[] = [
+    "alle accounts",
+    "alevitentum",
+    "katholisches christentum",
+    "evangelisches christentum",
+    "orthodoxes christentum",
+    "islam",
+    "judentum",
+    "sikhismus",
+  ];
+
   //network diagram
   networkInfluencer: any = [];
   links: any = [];
-  options = {
-    force: 4000,
-    nodeSize: 50,
-    linkWidth: 7,
-    nodeLabels: true,
-  };
+  force: any = 4000;
+
+  get options() {
+    return {
+      force: this.force,
+      nodeSize: 50,
+      fontSize: 14,
+      linkWidth: 7,
+      forces: {
+        X: 0.2,
+        Y: 0.5,
+        ManyBody: true,
+        Center: true,
+      },
+      nodeLabels: true,
+    };
+  }
 
   //takes the selected Influences and transfroms them into an Object D3Network understands
   //see https://www.npmjs.com/package/vue-d3-network for clarification
   @Watch("selectedInfluencer")
   buildInfluencerNetworkObject() {
     this.networkInfluencer = [];
+    this.force = 3500;
     this.links = [];
     let centerNode = {
       id: 0,
@@ -138,7 +155,7 @@ export default class Influencer extends Vue {
     };
     if (this.selectedReligion.id != 0) {
       this.networkInfluencer = [centerNode];
-      this.options.force = 100000;
+      this.force = 10000;
     }
     this.listInfluencer.forEach((influencer) => {
       if (
@@ -155,7 +172,7 @@ export default class Influencer extends Vue {
       if (!this.networkInfluencer.includes(centerNode)) {
         this.networkInfluencer = _.take(
           this.shuffle(this.networkInfluencer),
-          15
+          25
         );
       }
     });
@@ -231,9 +248,14 @@ export default class Influencer extends Vue {
   async created() {
     let fetchedData = await this.getDataFromServerAtCreated();
     this.allInfluencer = fetchedData[0];
+    this.allInfluencer.forEach((i) => {
+      i._cssClass = "nodeSpecific";
+    });
     this.listInfluencer = this.allInfluencer;
     this.buildInfluencerNetworkObject();
-    this.religions = fetchedData[1];
+    this.religions = fetchedData[1].filter((r: any) => {
+      return this.selectableReligions.includes(r.name.toLowerCase());
+    });
   }
 
   async getDataFromServerAtCreated() {
@@ -250,7 +272,7 @@ export default class Influencer extends Vue {
       .then((response) => response.json())
       .then((data) => {
         religions = data;
-        data.splice(0, 0, { id: 0, name: "Alle Influencer" });
+        data.splice(0, 0, { id: 0, name: "Alle Accounts" });
       });
 
     return [influencer, religions];
@@ -264,7 +286,7 @@ export default class Influencer extends Vue {
 #network {
   margin-top: 5vh;
   border: 2px solid #b0dcd9;
-  background-color: #e5e5e5;
+  background-color: #e4625c;
   height: 70vh;
 }
 
@@ -280,6 +302,10 @@ export default class Influencer extends Vue {
   width: 400px;
   right: 30px;
   bottom: 30px;
+}
+
+.nodeSpecific {
+  background-color: black !important;
 }
 
 .hoverLink:hover {
