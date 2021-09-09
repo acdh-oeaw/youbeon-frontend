@@ -212,7 +212,7 @@ export default class Idea extends Vue {
         placeholderIdeas.forEach(i => {
           i._size = 20;
         });
-        this.nodes = placeholderIdeas;
+        this.nodes = placeholderIdeas
       });
   }
 

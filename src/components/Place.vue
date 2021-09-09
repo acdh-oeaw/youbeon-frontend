@@ -61,7 +61,12 @@
     >
       <v-icon>add</v-icon>
     </v-btn>
-    <v-slider style="z-index: 1; width:100px; margin-top: 30px; margin-left:70px;" max="50" min="-50" color='#e4625c'></v-slider>
+    <v-slider
+      style="z-index: 1; width: 100px; margin-top: 30px; margin-left: 70px"
+      max="50"
+      min="-50"
+      color="#e4625c"
+    ></v-slider>
     <v-btn fab small class="zoom" @click="zoom = zoom - 1">
       <v-icon>remove</v-icon>
     </v-btn>
@@ -71,7 +76,7 @@
     <v-btn class="zoom" fab small @click="zoomToMap()">
       <v-icon>map</v-icon>
     </v-btn>
-  
+
     <l-map
       style="z-index: 0; position: absolute; left: 0; top: 0; right: 0"
       ref="map"
@@ -138,6 +143,7 @@ import MapLegende from "./MapLegende.vue";
 //@ts-ignore
 import * as L from "leaflet";
 import * as _ from "lodash";
+import * as randomColor from 'randomcolor';
 
 const defaultCenter = [48.20849, 16.37208];
 const defaultZoom = 13;
@@ -189,6 +195,16 @@ export default class Place extends Vue {
   religionJSON: any[] = [];
   ideaJSON: any[] = [];
   allPlaces: any[] = [];
+  colorsMaybe: any[] = [];
+  allColors = [
+    "#FF6347",
+    "#FFA500",
+    "#1E90FF",
+    "#3CB371",
+    "#6A5ACD",
+    "#FFB6C1",
+    "#DC143C",
+  ];
 
   selectableReligions: string[] = [
     "alle accounts",
@@ -234,21 +250,6 @@ export default class Place extends Vue {
         this.autocompleteItems = this.allPlaces;
         break;
     }
-  }
-
-  randomColor(brightness) {
-    function randomChannel(brightness) {
-      var r = 255 - brightness;
-      var n = 0 | (Math.random() * r + brightness);
-      var s = n.toString(16);
-      return s.length == 1 ? "0" + s : s;
-    }
-    return (
-      "#" +
-      randomChannel(brightness) +
-      randomChannel(brightness) +
-      randomChannel(brightness)
-    );
   }
 
   individualColor(religion: any) {
@@ -374,9 +375,12 @@ export default class Place extends Vue {
         let tempReligion;
         data.forEach((religion) => {
           if (this.selectableReligions.includes(religion.name.toLowerCase())) {
+            let selColor = _.sample(this.allColors)
+            this.allColors.splice(this.allColors.indexOf(selColor), 1)
+            console.log(selColor)
             tempReligion = {
               id: religion.id,
-              color: this.randomColor(20),
+              color: selColor,
               properties: {
                 bezeichnung: religion.name,
                 religion: true,
@@ -432,14 +436,15 @@ export default class Place extends Vue {
       .then((response) => response.json())
       .then((data) => {
         let tempIdea;
-        data.forEach((idea) => {
+        let colors = randomColor({count:data.length})
+        data.forEach((idea, index) => {
           let placesFiltered = placesFetched.filter((p: any) => {
             return p.idee.includes(idea.id);
           });
           if (placesFiltered.length > 0) {
             tempIdea = {
               id: idea.id,
-              color: this.randomColor(20),
+              color: colors[index],
               properties: {
                 bezeichnung: idea.name,
                 idea: true,
