@@ -231,7 +231,8 @@ export default class Idea extends Vue {
 #network {
   margin-top: 5vh;
   border: 2px solid #b0dcd9;
-  background-color: #ffdb6b;
+  background-color: rgba(255, 219, 107, 0.5);
+  //background-color: #ffdb6b;
   height: 70vh;
 }
 
