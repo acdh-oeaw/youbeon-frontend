@@ -132,9 +132,9 @@ export default class Idea extends Vue {
       });
     tempIdeas.forEach((idea) => {
       let nodeSize = 20
-      if(tempIdeasCount[idea.id] > 5) {
+      if(tempIdeasCount[idea.id] > 3) {
         nodeSize = 40
-      } else if (tempIdeasCount[idea.id] > 10) {
+      } else if (tempIdeasCount[idea.id] > 6) {
         nodeSize = 60
       }
       idea._labelClass = "stuff";
