@@ -286,7 +286,7 @@ export default class Influencer extends Vue {
 #network {
   margin-top: 5vh;
   border: 2px solid #b0dcd9;
-  background-color: #e4625c;
+  background-color: #FF7D7F;
   height: 70vh;
 }
 

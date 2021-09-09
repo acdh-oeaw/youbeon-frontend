@@ -61,6 +61,7 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 // eslint-disable-next-line
 import D3Network from "vue-d3-network";
+import * as _ from "lodash";
 
 @Component({
   components: {
@@ -130,9 +131,15 @@ export default class Idea extends Vue {
         tempIdeas = data;
       });
     tempIdeas.forEach((idea) => {
+      let nodeSize = 20
+      if(tempIdeasCount[idea.id] > 5) {
+        nodeSize = 40
+      } else if (tempIdeasCount[idea.id] > 10) {
+        nodeSize = 60
+      }
       idea._labelClass = "stuff";
       idea._color = this.selectedReligion[changedOne].color;
-      idea._size = tempIdeasCount[idea.id] * 15;
+      idea._size = nodeSize;
     });
     this.selectedReligion[changedOne].ideas = tempIdeas;
     this.combineIntoNodeObject();
@@ -197,6 +204,24 @@ export default class Idea extends Vue {
           },
         ];
       });
+
+    fetch("https://db.youbeon.eu/idee", { headers })
+      .then((response) => response.json())
+      .then((data) => {
+        let placeholderIdeas = _.take(this.shuffle(data), 25);
+        placeholderIdeas.forEach(i => {
+          i._size = 20;
+        });
+        this.nodes = placeholderIdeas;
+      });
+  }
+
+  shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
   }
 }
 </script>
@@ -206,7 +231,7 @@ export default class Idea extends Vue {
 #network {
   margin-top: 5vh;
   border: 2px solid #b0dcd9;
-  background-color: #e8c444;
+  background-color: #ffdb6b;
   height: 70vh;
 }
 
