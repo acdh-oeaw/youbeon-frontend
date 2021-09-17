@@ -104,7 +104,9 @@ export default class Influencer extends Vue {
 
   //Influencer Variables
   allInfluencer: any = [];
+  // Array of currently visible Influencers
   listInfluencer: any = [];
+  // Array of selected Influencer in autocomplete field
   selectedInfluencer: any = [];
   influencerDetailed: any = null;
 
@@ -119,7 +121,7 @@ export default class Influencer extends Vue {
     "sikhismus",
   ];
 
-  //network diagram
+  //Array that contains all the nodes shown in the diagram
   networkInfluencer: any = [];
   links: any = [];
   force: any = 4000;
@@ -140,9 +142,19 @@ export default class Influencer extends Vue {
     };
   }
 
+  // will change color with better network software hopefully
+  @Watch('selectedInfluencer')
+  changeColorofSelectedInfluencer() {
+    this.networkInfluencer.forEach(inf => {
+      inf._color = '#dcfaf3';
+      if(this.selectedInfluencer.includes(inf)) {
+        inf._color = '#8B008B';
+      }
+    });
+  }
+
   //takes the selected Influences and transfroms them into an Object D3Network understands
   //see https://www.npmjs.com/package/vue-d3-network for clarification
-  @Watch("selectedInfluencer")
   buildInfluencerNetworkObject() {
     this.networkInfluencer = [];
     this.force = 3500;
@@ -158,17 +170,12 @@ export default class Influencer extends Vue {
       this.force = 10000;
     }
     this.listInfluencer.forEach((influencer) => {
-      if (
-        this.selectedInfluencer.includes(influencer.id) ||
-        this.selectedInfluencer[0] === undefined
-      ) {
-        if (this.networkInfluencer.includes(centerNode))
-          this.links.push({
-            sid: 0,
-            tid: influencer.id,
-          });
-        this.networkInfluencer.push(influencer);
-      }
+      if (this.networkInfluencer.includes(centerNode))
+        this.links.push({
+          sid: 0,
+          tid: influencer.id,
+        });
+      this.networkInfluencer.push(influencer);
       if (!this.networkInfluencer.includes(centerNode)) {
         this.networkInfluencer = _.take(
           this.shuffle(this.networkInfluencer),

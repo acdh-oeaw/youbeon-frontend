@@ -377,7 +377,6 @@ export default class Place extends Vue {
           if (this.selectableReligions.includes(religion.name.toLowerCase())) {
             let selColor = _.sample(this.allColors)
             this.allColors.splice(this.allColors.indexOf(selColor), 1)
-            console.log(selColor)
             tempReligion = {
               id: religion.id,
               color: selColor,

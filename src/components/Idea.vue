@@ -27,9 +27,20 @@
               prepend-inner-icon="search"
             >
             </v-autocomplete>
-            <v-btn icon style="margin-top: 7px" @click="addReligionField()">
-              <v-icon>add_circle_outline</v-icon>
-            </v-btn>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  icon
+                  style="margin-top: 7px"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="addReligionField()"
+                >
+                  <v-icon>add_circle_outline</v-icon>
+                </v-btn>
+              </template>
+              <span>Eine weitere Religion hinzufügen und die Schnittmenge bilden</span>
+            </v-tooltip>
             <v-btn
               v-if="religionField.id !== 0"
               style="margin-top: 7px"
@@ -88,7 +99,6 @@ export default class Idea extends Vue {
   selectedReligion: any = [];
 
   selectableReligions: string[] = [
-    "alle accounts",
     "alevitentum",
     "katholisches christentum",
     "evangelisches christentum",
@@ -131,11 +141,11 @@ export default class Idea extends Vue {
         tempIdeas = data;
       });
     tempIdeas.forEach((idea) => {
-      let nodeSize = 20
-      if(tempIdeasCount[idea.id] > 3) {
-        nodeSize = 40
+      let nodeSize = 20;
+      if (tempIdeasCount[idea.id] > 3) {
+        nodeSize = 40;
       } else if (tempIdeasCount[idea.id] > 6) {
-        nodeSize = 60
+        nodeSize = 60;
       }
       idea._labelClass = "stuff";
       idea._color = this.selectedReligion[changedOne].color;
@@ -161,20 +171,30 @@ export default class Idea extends Vue {
   }
 
   combineIntoNodeObject() {
-    let objectforNodes: any[] = [];
+    let intersection: any[] = [];
     this.selectedReligion.forEach((religion) => {
       if (religion.religion !== undefined) {
-        objectforNodes = objectforNodes.concat(religion.ideas);
+        if (intersection.length === 0) {
+          intersection = religion.ideas;
+        } else {
+          let ids: number[] = [];
+          intersection.forEach((el) => {
+            ids.push(el.id);
+          });
+          intersection = religion.ideas.filter((value: any) =>
+            ids.includes(value.id)
+          );
+        }
       }
     });
-    this.nodes = objectforNodes;
+    this.nodes = intersection;
   }
 
   addReligionField(): void {
     this.selectedReligion.push({
       id: Math.random() * 100 + 1,
       religion: undefined,
-      color: this.randomColor(125),
+      color: "#7D387D",
       ideas: {},
     });
   }
@@ -198,7 +218,7 @@ export default class Idea extends Vue {
         this.selectedReligion = [
           {
             id: 0,
-            color: this.randomColor(125),
+            color: "#7D387D",
             religion: undefined,
             ideas: {},
           },
@@ -209,10 +229,11 @@ export default class Idea extends Vue {
       .then((response) => response.json())
       .then((data) => {
         let placeholderIdeas = _.take(this.shuffle(data), 25);
-        placeholderIdeas.forEach(i => {
+        placeholderIdeas.forEach((i) => {
+          i._color = "#7D387D"
           i._size = 20;
         });
-        this.nodes = placeholderIdeas
+        this.nodes = placeholderIdeas;
       });
   }
 
