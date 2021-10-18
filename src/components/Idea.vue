@@ -57,26 +57,18 @@
         </v-card>
       </v-col>
     </v-row>
-    <d3-network
-      style="margin-top: 5vh"
-      id="network"
-      :net-nodes="nodes"
-      :net-links="links"
-      :options="options"
-    >
-    </d3-network>
+  <div id="network" />
   </vContainer>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 // eslint-disable-next-line
-import D3Network from "vue-d3-network";
+import * as d3 from "d3";
 import * as _ from "lodash";
 
 @Component({
   components: {
-    D3Network,
   },
   name: "Idea",
 })
@@ -84,17 +76,7 @@ export default class Idea extends Vue {
   dropDownItems: string[] = [];
   nodes: any = [];
   links: any = [];
-  options = {
-    force: 3000,
-    fontSize: 14,
-    nodeLabels: true,
-    forces: {
-      X: 0.2,
-      Y: 0.5,
-      ManyBody: true,
-      Center: true,
-    },
-  };
+  force = 200;
   allReligions: any[] = [];
   selectedReligion: any = [];
 
@@ -188,6 +170,141 @@ export default class Idea extends Vue {
       }
     });
     this.nodes = intersection;
+    this.generateNetwork(this.nodes,this.links)
+  }
+
+  generateNetwork(nodes, links) {
+    d3.selectAll("g").remove();
+    // set the dimensions and margins of the graph
+    let height = document.querySelector("#network")?.clientHeight;
+    let width = document.querySelector("#network")?.clientWidth;
+
+    // Let's list the force we wanna apply on the network
+    const simulation = d3
+      .forceSimulation(nodes) // Force algorithm is applied to nodes
+      .force(
+        "link",
+        d3
+          .forceLink() // This force provides links between nodes
+          .id(function (d) {
+            return d.id;
+          }) // This provide  the id of a node
+          .links(links) // and this the list of links
+      )
+      .force("charge", d3.forceManyBody().strength(-this.force)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+      //@ts-ignore
+      .force("center", d3.forceCenter(width / 2, height / 2)); // This force attracts nodes to the center of the svg area
+
+    let drag = (simulation) => {
+      function dragstarted(event) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        event.subject.fx = event.subject.x;
+        event.subject.fy = event.subject.y;
+      }
+
+      function dragged(event) {
+        event.subject.fx = event.x;
+        event.subject.fy = event.y;
+      }
+
+      function dragended(event) {
+        if (!event.active) simulation.alphaTarget(0);
+        event.subject.fx = null;
+        event.subject.fy = null;
+      }
+
+      return d3
+        .drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended);
+    };
+
+    // append the svg object to the body of the page
+    let svg;
+    if (d3.select("svg")._groups[0][0] === null) {
+      svg = d3
+        .select("#network")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+    } else {
+      svg = d3.select("svg");
+    }
+
+    let link;
+    // Initialize the links
+    link = svg
+      .selectAll("line")
+      .data(links)
+      .join("line")
+      .style("stroke", "#aaa")
+      .style("stroke-width", "5");
+
+    var groups = svg
+      .selectAll(".group")
+      .data(nodes)
+      .enter()
+      .append("g")
+      .attr("class", "group");
+    groups.exit().remove();
+    groups
+      .attr("transform", function (d) {
+        var x = d.x * 20 + 50;
+        var y = d.y + 20;
+        return "translate(" + x + "," + y + ")";
+      })
+      .call(drag(simulation));
+
+    var node = groups
+      .selectAll("circle")
+      .data(function (d) {
+        return [d];
+      })
+      .enter()
+      .append("circle")
+      .attr("r", 20)
+      .attr("cx", 0)
+      .attr("cy", 0)
+      .style("fill", function (d) {
+        return d._color;
+      });
+
+    var text = groups
+      .selectAll("text")
+      .data(function (d) {
+        return [d];
+      })
+      .enter()
+      .append("text")
+      .text(function (d) {
+        return d.name;
+      })
+      .attr("dx", 25)
+      .style("font-size", "14px");
+
+    // This function is run at each iteration of the force algorithm, updating the nodes position.
+    simulation.on("tick", () => {
+      link
+        .attr("x1", function (d) {
+          return d.source.x;
+        })
+        .attr("y1", function (d) {
+          return d.source.y;
+        })
+        .attr("x2", function (d) {
+          return d.target.x;
+        })
+        .attr("y2", function (d) {
+          return d.target.y;
+        });
+
+      groups.attr("transform", function (d) {
+        var x = d.x + 6;
+        var y = d.y - 6;
+        return "translate(" + x + "," + y + ")";
+      });
+    });
   }
 
   addReligionField(): void {
@@ -207,9 +324,9 @@ export default class Idea extends Vue {
     this.combineIntoNodeObject();
   }
 
-  mounted() {
+  async mounted() {
     const headers = { "Content-Type": "application/json" };
-    fetch("https://db.youbeon.eu/religion/", { headers })
+    await fetch("https://db.youbeon.eu/religion/", { headers })
       .then((response) => response.json())
       .then((data) => {
         this.allReligions = data.filter((r: any) => {
@@ -225,7 +342,7 @@ export default class Idea extends Vue {
         ];
       });
 
-    fetch("https://db.youbeon.eu/idee", { headers })
+    await fetch("https://db.youbeon.eu/idee", { headers })
       .then((response) => response.json())
       .then((data) => {
         let placeholderIdeas = _.take(this.shuffle(data), 25);
@@ -235,6 +352,7 @@ export default class Idea extends Vue {
         });
         this.nodes = placeholderIdeas;
       });
+      this.generateNetwork(this.nodes,this.links)
   }
 
   shuffle(a) {

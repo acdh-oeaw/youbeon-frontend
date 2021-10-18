@@ -52,7 +52,7 @@
         </v-col>
       </v-row>
     </v-card>
-    <div id="arc" />
+    <div id="network" />
     <v-card v-if="influencerDetailed !== null" class="detailedView">
       <v-card-title>
         <div class="hoverLink" @click="openLinktoInsta(influencerDetailed)">
@@ -84,8 +84,7 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import * as _ from "lodash";
 
 @Component({
-  components: {
-  },
+  components: {},
   name: "Influencer",
 })
 export default class Influencer extends Vue {
@@ -102,12 +101,12 @@ export default class Influencer extends Vue {
   influencerDetailed: any = null;
 
   gdp: any = [
-        {country: "USA", value: 20.5 },
-        {country: "China", value: 13.4 },
-        {country: "Germany", value: 4.0 },
-        {country: "Japan", value: 4.9 },
-        {country: "France", value: 2.8 }
-  ]
+    { country: "USA", value: 20.5 },
+    { country: "China", value: 13.4 },
+    { country: "Germany", value: 4.0 },
+    { country: "Japan", value: 4.9 },
+    { country: "France", value: 2.8 },
+  ];
 
   selectableReligions: string[] = [
     "alle accounts",
@@ -120,10 +119,7 @@ export default class Influencer extends Vue {
     "sikhismus",
   ];
 
-  //Array that contains all the nodes shown in the diagram
-  networkInfluencer: any = [];
-  links: any = [];
-  force: any = 4000;
+  force = 400;
 
   get options() {
     return {
@@ -142,22 +138,22 @@ export default class Influencer extends Vue {
   }
 
   // will change color with better network software hopefully
-  @Watch('selectedInfluencer')
+  /**@Watch("selectedInfluencer")
   changeColorofSelectedInfluencer() {
-    this.networkInfluencer.forEach(inf => {
-      inf._color = '#dcfaf3';
-      if(this.selectedInfluencer.includes(inf)) {
-        inf._color = '#8B008B';
+    this.networkInfluencer.forEach((inf) => {
+      inf._color = "#dcfaf3";
+      if (this.selectedInfluencer.includes(inf)) {
+        inf._color = "#8B008B";
       }
     });
-  }
+  }**/
 
   //takes the selected Influences and transfroms them into an Object D3Network understands
   //see https://www.npmjs.com/package/vue-d3-network for clarification
   buildInfluencerNetworkObject() {
-    this.networkInfluencer = [];
-    this.force = 3500;
-    this.links = [];
+    let networkInfluencer: any[] = [];
+    this.force = 100;
+    let links: any[] = [];
     let centerNode = {
       id: 0,
       name: this.selectedReligion.name,
@@ -165,23 +161,21 @@ export default class Influencer extends Vue {
       _color: "#b0dcd9",
     };
     if (this.selectedReligion.id != 0) {
-      this.networkInfluencer = [centerNode];
-      this.force = 10000;
+      networkInfluencer = [centerNode];
+      this.force = 3000;
     }
     this.listInfluencer.forEach((influencer) => {
-      if (this.networkInfluencer.includes(centerNode))
-        this.links.push({
-          sid: 0,
-          tid: influencer.id,
+      if (networkInfluencer.includes(centerNode))
+        links.push({
+          source: 0,
+          target: influencer.id,
         });
-      this.networkInfluencer.push(influencer);
-      if (!this.networkInfluencer.includes(centerNode)) {
-        this.networkInfluencer = _.take(
-          this.shuffle(this.networkInfluencer),
-          25
-        );
+      networkInfluencer.push(influencer);
+      if (!networkInfluencer.includes(centerNode)) {
+        networkInfluencer = _.take(this.shuffle(networkInfluencer), 25);
       }
     });
+    this.generateNetwork(networkInfluencer, links);
   }
 
   shuffle(a) {
@@ -264,72 +258,138 @@ export default class Influencer extends Vue {
     });
   }
 
-  mounted() {
-    this.generateArc();
-  }
+  generateNetwork(nodes, links) {
+    d3.selectAll("g").remove();
+    // set the dimensions and margins of the graph
+    let height = document.querySelector("#network")?.clientHeight;
+    let width = document.querySelector("#network")?.clientWidth;
 
-  generateArc() {
-      const w = 500;
-      const h = 500;
+    // Let's list the force we wanna apply on the network
+    const simulation = d3
+      .forceSimulation(nodes) // Force algorithm is applied to nodes
+      .force(
+        "link",
+        d3
+          .forceLink() // This force provides links between nodes
+          .id(function (d) {
+            return d.id;
+          }) // This provide  the id of a node
+          .links(links) // and this the list of links
+      )
+      .force("charge", d3.forceManyBody().strength(-this.force)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+      //@ts-ignore
+      .force("center", d3.forceCenter(width / 2, height / 2)); // This force attracts nodes to the center of the svg area
 
-      const svg = d3
-        .select("#arc")
+    let drag = (simulation) => {
+      function dragstarted(event) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        event.subject.fx = event.subject.x;
+        event.subject.fy = event.subject.y;
+      }
+
+      function dragged(event) {
+        event.subject.fx = event.x;
+        event.subject.fy = event.y;
+      }
+
+      function dragended(event) {
+        if (!event.active) simulation.alphaTarget(0);
+        event.subject.fx = null;
+        event.subject.fy = null;
+      }
+
+      return d3
+        .drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended);
+    };
+
+    // append the svg object to the body of the page
+    let svg;
+    if (d3.select("svg")._groups[0][0] === null) {
+      svg = d3
+        .select("#network")
         .append("svg")
-        .attr("width", w)
-        .attr("height", h);
+        .attr("width", width)
+        .attr("height", height);
+    } else {
+      svg = d3.select("svg");
+    }
 
-      const sortedGDP = this.gdp.sort((a, b) => (a.value > b.value ? 1 : -1));
-      const color = d3.scaleOrdinal(d3.schemeDark2);
+    let link;
+    // Initialize the links
+    link = svg
+      .selectAll("line")
+      .data(links)
+      .join("line")
+      .style("stroke", "#aaa")
+      .style("stroke-width", "5");
 
-      const max_gdp = d3.max(sortedGDP, o => o.value);
+    var groups = svg
+      .selectAll(".group")
+      .data(nodes)
+      .enter()
+      .append("g")
+      .attr("class", "group");
+    groups.exit().remove();
+    groups
+      .attr("transform", function (d) {
+        var x = d.x * 20 + 50;
+        var y = d.y + 20;
+        return "translate(" + x + "," + y + ")";
+      })
+      .call(drag(simulation));
 
-      const angleScale = d3
-        .scaleLinear()
-        .domain([0, max_gdp])
-        .range([0, 1.5 * Math.PI]);
+    var node = groups
+      .selectAll("circle")
+      .data(function (d) {
+        return [d];
+      })
+      .enter()
+      .append("circle")
+      .attr("r", 20)
+      .attr("cx", 0)
+      .attr("cy", 0)
+      .style("fill", function (d) {
+        return d._color;
+      });
 
-      const arc = d3
-        .arc()
-        .innerRadius((d, i) => (i + 1) * 25)
-        .outerRadius((d, i) => (i + 2) * 25)
-        .startAngle(angleScale(0))
-        .endAngle(d => angleScale(d.value));
+    var text = groups
+      .selectAll("text")
+      .data(function (d) {
+        return [d];
+      })
+      .enter()
+      .append("text")
+      .text(function (d) {
+        return d.name;
+      })
+      .attr("dx", 25)
+      .style("font-size", "14px");
 
-      const g = svg.append("g");
-
-      g.selectAll("path")
-        .data(sortedGDP)
-        .enter()
-        .append("path")
-        .attr("d", arc)
-        .attr("fill", (d, i) => color(i))
-        .attr("stroke", "#FFF")
-        .attr("stroke-width", "1px")
-        .on("mouseenter", function() {
-          //@ts-ignore
-          d3.select(this)
-            .transition()
-            .duration(200)
-            .attr("opacity", 0.5);
+    // This function is run at each iteration of the force algorithm, updating the nodes position.
+    simulation.on("tick", () => {
+      link
+        .attr("x1", function (d) {
+          return d.source.x;
         })
-        .on("mouseout", function() {
-          //@ts-ignore
-          d3.select(this)
-            .transition()
-            .duration(200)
-            .attr("opacity", 1);
+        .attr("y1", function (d) {
+          return d.source.y;
+        })
+        .attr("x2", function (d) {
+          return d.target.x;
+        })
+        .attr("y2", function (d) {
+          return d.target.y;
         });
 
-      g.selectAll("text")
-        .data(this.gdp)
-        .enter()
-        .append("text")
-        .text(d => `${d.country} -  ${d.value} Trillion`)
-        .attr("x", -150)
-        .attr("dy", -8)
-        .attr("y", (d, i) => -(i + 1) * 25);
-
-      g.attr("transform", "translate(200,300)");
+      groups.attr("transform", function (d) {
+        var x = d.x + 6;
+        var y = d.y - 6;
+        return "translate(" + x + "," + y + ")";
+      });
+    });
   }
 
   async getDataFromServerAtCreated() {
@@ -357,7 +417,8 @@ export default class Influencer extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style src="vue-d3-network/dist/vue-d3-network.css"></style>
 <style scoped lang="scss">
-#arc {
+#network {
+  max-width: 100%;
   margin-top: 5vh;
   border: 2px solid #b0dcd9;
   background-color: rgba(255, 125, 127, 0.5);
@@ -376,10 +437,6 @@ export default class Influencer extends Vue {
   width: 400px;
   right: 30px;
   bottom: 30px;
-}
-
-.nodeSpecific {
-  background-color: black !important;
 }
 
 .hoverLink:hover {
