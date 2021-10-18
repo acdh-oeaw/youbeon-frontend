@@ -148,8 +148,7 @@ export default class Influencer extends Vue {
     });
   }**/
 
-  //takes the selected Influences and transfroms them into an Object D3Network understands
-  //see https://www.npmjs.com/package/vue-d3-network for clarification
+  //takes the selected Influences and transfroms them into an Object readable by d3
   buildInfluencerNetworkObject() {
     let networkInfluencer: any[] = [];
     this.force = 100;
@@ -415,7 +414,6 @@ export default class Influencer extends Vue {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style src="vue-d3-network/dist/vue-d3-network.css"></style>
 <style scoped lang="scss">
 #network {
   max-width: 100%;
