@@ -76,7 +76,7 @@ export default class Idea extends Vue {
   dropDownItems: string[] = [];
   nodes: any = [];
   links: any = [];
-  force = 200;
+  force = 50;
   allReligions: any[] = [];
   selectedReligion: any = [];
 
@@ -196,9 +196,14 @@ export default class Idea extends Vue {
       .force("center", d3.forceCenter(width / 2, height / 2)); // This force attracts nodes to the center of the svg area
 
     let drag = (simulation) => {
+      const localforce = this.force
       function dragstarted(event) {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         event.subject.fx = event.subject.x;
+        console.log(event)
+        console.log(simulation)
+        simulation.force("charge").strength(-5)
+        simulation.force("center").strength(0.5)
         event.subject.fy = event.subject.y;
       }
 
@@ -209,6 +214,8 @@ export default class Idea extends Vue {
 
       function dragended(event) {
         if (!event.active) simulation.alphaTarget(0);
+        simulation.force("charge").strength(-localforce)
+        simulation.force("center").strength(1)
         event.subject.fx = null;
         event.subject.fy = null;
       }
@@ -235,8 +242,7 @@ export default class Idea extends Vue {
     const g = svg.append("g");
     const handleZoom = (e) => g.attr("transform", e.transform);
     const zoom = d3.zoom().on("zoom", handleZoom);
-    console.log(handleZoom)
-    console.log(zoom)
+
 
     d3.select("svg").call(zoom);
 

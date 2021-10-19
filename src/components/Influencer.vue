@@ -279,7 +279,9 @@ export default class Influencer extends Vue {
           .links(links) // and this the list of links
       )
       .force("charge", d3.forceManyBody().strength(-this.force)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
-      .force("center", d3.forceCenter(width / 2, height / 2)) // This force attracts nodes to the center of the svg area
+      //.force("center", d3.forceCenter(width / 2, height / 2)) // This force attracts nodes to the center of the svg area
+      .force("x", d3.forceX(width / 2).strength(0.005))
+      .force("y", d3.forceY(height / 2).strength(0.02))
       .force(
         "collision",
         d3.forceCollide().radius(function (d) {
@@ -288,9 +290,13 @@ export default class Influencer extends Vue {
       );
 
     let drag = (simulation) => {
+      const localforce = this.force;
       function dragstarted(event) {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         event.subject.fx = event.subject.x;
+        simulation.force("charge").strength(-5);
+        simulation.force("x").strength(0.0001);
+        simulation.force("y").strength(0.0001);
         event.subject.fy = event.subject.y;
       }
 
@@ -301,6 +307,9 @@ export default class Influencer extends Vue {
 
       function dragended(event) {
         if (!event.active) simulation.alphaTarget(0);
+        simulation.force("charge").strength(-localforce);
+        simulation.force("x").strength(0.005);
+        simulation.force("y").strength(0.02);
         event.subject.fx = null;
         event.subject.fy = null;
       }
