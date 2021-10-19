@@ -164,6 +164,7 @@ export default class Influencer extends Vue {
       this.force = 3000;
     }
     this.listInfluencer.forEach((influencer) => {
+      influencer._color = "#dcfaf3";
       if (networkInfluencer.includes(centerNode))
         links.push({
           source: 0,
@@ -260,8 +261,10 @@ export default class Influencer extends Vue {
   generateNetwork(nodes, links) {
     d3.selectAll("g").remove();
     // set the dimensions and margins of the graph
-    let height = document.querySelector("#network")?.clientHeight;
-    let width = document.querySelector("#network")?.clientWidth;
+    let height;
+    let width;
+    height = document.querySelector("#network")?.clientHeight;
+    width = document.querySelector("#network")?.clientWidth;
 
     // Let's list the force we wanna apply on the network
     const simulation = d3
@@ -276,8 +279,13 @@ export default class Influencer extends Vue {
           .links(links) // and this the list of links
       )
       .force("charge", d3.forceManyBody().strength(-this.force)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
-      //@ts-ignore
-      .force("center", d3.forceCenter(width / 2, height / 2)); // This force attracts nodes to the center of the svg area
+      .force("center", d3.forceCenter(width / 2, height / 2)) // This force attracts nodes to the center of the svg area
+      .force(
+        "collision",
+        d3.forceCollide().radius(function (d) {
+          return d.radius;
+        })
+      );
 
     let drag = (simulation) => {
       function dragstarted(event) {
@@ -316,16 +324,23 @@ export default class Influencer extends Vue {
       svg = d3.select("svg");
     }
 
+    //zoom
+    const g = svg.append("g");
+    const handleZoom = (e) => g.attr("transform", e.transform);
+    const zoom = d3.zoom().on("zoom", handleZoom);
+
+    d3.select("svg").call(zoom);
+
     let link;
     // Initialize the links
-    link = svg
+    link = g
       .selectAll("line")
       .data(links)
       .join("line")
       .style("stroke", "#aaa")
       .style("stroke-width", "5");
 
-    var groups = svg
+    var groups = g
       .selectAll(".group")
       .data(nodes)
       .enter()

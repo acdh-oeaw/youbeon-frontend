@@ -124,9 +124,9 @@ export default class Idea extends Vue {
       });
     tempIdeas.forEach((idea) => {
       let nodeSize = 20;
-      if (tempIdeasCount[idea.id] > 3) {
+      if (tempIdeasCount[idea.id] > 1) {
         nodeSize = 40;
-      } else if (tempIdeasCount[idea.id] > 6) {
+      } else if (tempIdeasCount[idea.id] > 4) {
         nodeSize = 60;
       }
       idea._labelClass = "stuff";
@@ -232,16 +232,24 @@ export default class Idea extends Vue {
       svg = d3.select("svg");
     }
 
+    const g = svg.append("g");
+    const handleZoom = (e) => g.attr("transform", e.transform);
+    const zoom = d3.zoom().on("zoom", handleZoom);
+    console.log(handleZoom)
+    console.log(zoom)
+
+    d3.select("svg").call(zoom);
+
     let link;
     // Initialize the links
-    link = svg
+    link = g
       .selectAll("line")
       .data(links)
       .join("line")
       .style("stroke", "#aaa")
       .style("stroke-width", "5");
 
-    var groups = svg
+    var groups = g
       .selectAll(".group")
       .data(nodes)
       .enter()
@@ -263,7 +271,9 @@ export default class Idea extends Vue {
       })
       .enter()
       .append("circle")
-      .attr("r", 20)
+      .attr("r", function (d) {
+        return d._size;
+      })
       .attr("cx", 0)
       .attr("cy", 0)
       .style("fill", function (d) {
@@ -280,7 +290,9 @@ export default class Idea extends Vue {
       .text(function (d) {
         return d.name;
       })
-      .attr("dx", 25)
+      .attr("dx", function (d) {
+        return d._size + 5;
+      })
       .style("font-size", "14px");
 
     // This function is run at each iteration of the force algorithm, updating the nodes position.
