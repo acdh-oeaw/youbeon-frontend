@@ -294,7 +294,7 @@ export default class Influencer extends Vue {
       function dragstarted(event) {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         event.subject.fx = event.subject.x;
-        simulation.force("charge").strength(-5);
+        simulation.force("charge").strength(-2);
         simulation.force("x").strength(0.0001);
         simulation.force("y").strength(0.0001);
         event.subject.fy = event.subject.y;
@@ -376,6 +376,9 @@ export default class Influencer extends Vue {
       .attr("cy", 0)
       .style("fill", function (d) {
         return d._color;
+      })
+      .on("click", (d, i) => {
+        this.onNodeClick(d, i);
       });
 
     var text = groups
