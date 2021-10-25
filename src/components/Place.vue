@@ -577,30 +577,10 @@ export default class Place extends Vue {
   border: 4px solid #b0dcd9 !important;
   background-color: rgba($color: #fff, $alpha: 0.8);
   position: absolute;
-  max-width: 400px;
-  right: 30px;
-  bottom: 30px;
+  width: 400px;
+  right: 60px;
+  bottom: 50px;
 }
-
-/*
-@media only screen and (max-width: 800px) {
-  .listHeight {
-    margin-top: 63vh;
-  }
-}
-
-@media only screen and (max-width: 1200px) {
-  .listHeight {
-    max-height: 63vh;
-  }
-}
-
-@media only screen and (max-width: 2000px) {
-  .listHeight {
-    max-height: 80vh;
-  }
-}
-*/
 
 .searchbar {
   z-index: 1;
