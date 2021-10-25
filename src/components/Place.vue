@@ -127,6 +127,30 @@
       >
       </map-legende>
     </v-col>
+    <v-card v-if="placeDetailed !== null" id="detailedView">
+      <v-card-title>
+        <v-row no-gutters>
+          <v-col class="pa-0 ma-0 flex-grow-1">
+            <div style="float: left">
+              {{ placeDetailed.name }}
+            </div>
+          </v-col>
+          <v-col cols="2">
+            <div style="float: right">
+              <v-icon @click="placeDetailed = null"> close </v-icon>
+            </div>
+          </v-col>
+        </v-row>
+      </v-card-title>
+      <v-card-subtitle> {{ placeDetailed.bemerkung }} </v-card-subtitle>
+      <v-card-text>
+        <u>Verknüpfte Ideen:</u>
+        <br />
+        <div v-for="idea in placeDetailed.idee" v-bind:key="idea.id">
+          {{ idea }}
+        </div>
+      </v-card-text>
+    </v-card>
   </vContainer>
 </template>
 
@@ -143,7 +167,7 @@ import MapLegende from "./MapLegende.vue";
 //@ts-ignore
 import * as L from "leaflet";
 import * as _ from "lodash";
-import * as randomColor from 'randomcolor';
+import * as randomColor from "randomcolor";
 
 const defaultCenter = [48.20849, 16.37208];
 const defaultZoom = 13;
@@ -191,6 +215,7 @@ export default class Place extends Vue {
   selectedPlaces: any[] = [];
   allReligions: any[] = [];
   allIdeas: any[] = [];
+  placeDetailed: any = null;
 
   religionJSON: any[] = [];
   ideaJSON: any[] = [];
@@ -311,19 +336,13 @@ export default class Place extends Vue {
 
   bindPopUpPlace() {
     return async (feature: any, layer: L.Layer): Promise<void> => {
-      layer.bindPopup(
-        `<div style="text-align:center;"> 
-            ${feature.properties.bezeichnung}
-            <hr style="margin-bottom: 5px"></hr>
-         </div>
-        <u>Ideen:</u>
-        ${_(feature.properties.idee)
-          .take(feature.properties.idee.length)
-          .map((d) => `<div >${d}</div>`)
-          .value()
-          .join("")}
-        `
-      );
+      layer.on("click", (e) => {
+        this.placeDetailed = {
+          idee: feature.properties.idee,
+          name: feature.properties.bezeichnung,
+          bermerkung: feature.properties.bemerkung,
+        };
+      });
     };
   }
 
@@ -375,8 +394,8 @@ export default class Place extends Vue {
         let tempReligion;
         data.forEach((religion) => {
           if (this.selectableReligions.includes(religion.name.toLowerCase())) {
-            let selColor = _.sample(this.allColors)
-            this.allColors.splice(this.allColors.indexOf(selColor), 1)
+            let selColor = _.sample(this.allColors);
+            this.allColors.splice(this.allColors.indexOf(selColor), 1);
             tempReligion = {
               id: religion.id,
               color: selColor,
@@ -435,7 +454,7 @@ export default class Place extends Vue {
       .then((response) => response.json())
       .then((data) => {
         let tempIdea;
-        let colors = randomColor({count:data.length})
+        let colors = randomColor({ count: data.length });
         data.forEach((idea, index) => {
           let placesFiltered = placesFetched.filter((p: any) => {
             return p.idee.includes(idea.id);
@@ -537,7 +556,7 @@ export default class Place extends Vue {
   transition: 0.5s;
   position: fixed;
   max-width: 350px;
-  right: 60px;
+  left: 60px;
   bottom: 50px;
   float: right;
   z-index: 1;
@@ -552,6 +571,14 @@ export default class Place extends Vue {
   border-left: 2px solid #e5e5e5;
   height: 30px;
   margin-top: 10px;
+}
+
+#detailedView {
+  border: 4px solid #b0dcd9 !important;
+  position: absolute;
+  max-width: 400px;
+  right: 30px;
+  bottom: 30px;
 }
 
 /*
