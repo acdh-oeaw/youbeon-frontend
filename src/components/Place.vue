@@ -575,6 +575,7 @@ export default class Place extends Vue {
 
 #detailedView {
   border: 4px solid #b0dcd9 !important;
+  background-color: rgba($color: #fff, $alpha: 0.8);
   position: absolute;
   max-width: 400px;
   right: 30px;
