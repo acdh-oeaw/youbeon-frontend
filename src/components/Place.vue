@@ -61,12 +61,6 @@
     >
       <v-icon>add</v-icon>
     </v-btn>
-    <v-slider
-      style="z-index: 1; width: 100px; margin-top: 30px; margin-left: 70px"
-      max="50"
-      min="-50"
-      color="#e4625c"
-    ></v-slider>
     <v-btn fab small class="zoom" @click="zoom = zoom - 1">
       <v-icon>remove</v-icon>
     </v-btn>
