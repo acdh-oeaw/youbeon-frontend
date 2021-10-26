@@ -58,6 +58,30 @@
       </v-col>
     </v-row>
   <div id="network" />
+  <v-card v-if="ideaDetailed !== null" id="detailedView">
+      <v-card-title>
+        <v-row no-gutters>
+          <v-col class="pa-0 ma-0 flex-grow-1">
+            <div style="float: left">
+              {{ ideaDetailed.name }}
+            </div>
+          </v-col>
+          <v-col cols="2">
+            <div style="float: right">
+              <v-icon @click="ideaDetailed = null"> close </v-icon>
+            </div>
+          </v-col>
+        </v-row>
+      </v-card-title>
+      <v-card-subtitle> {{ ideaDetailed.bemerkung }} </v-card-subtitle>
+      <v-card-text>
+        <u>Verknüpfte Ideen:</u>
+        <br />
+        <div v-for="idea in ideaDetailed.idee" v-bind:key="idea.id">
+          {{ idea }}
+        </div>
+      </v-card-text>
+    </v-card>
   </vContainer>
 </template>
 
@@ -79,6 +103,7 @@ export default class Idea extends Vue {
   force = 50;
   allReligions: any[] = [];
   selectedReligion: any = [];
+  ideaDetailed: any = null;
 
   selectableReligions: string[] = [
     "alevitentum",
@@ -296,6 +321,9 @@ export default class Idea extends Vue {
       .attr("cy", 0)
       .style("fill", function (d) {
         return d._color;
+      })      
+      .on("click", (d, i) => {
+        this.onNodeClick(i)
       });
 
     var text = groups
@@ -335,6 +363,12 @@ export default class Idea extends Vue {
         return "translate(" + x + "," + y + ")";
       });
     });
+  }
+
+  onNodeClick(feature) {
+    this.ideaDetailed = {
+          name: feature.name
+        };
   }
 
   addReligionField(): void {
@@ -413,6 +447,14 @@ export default class Idea extends Vue {
 
 .stuff {
   color: rgb(0, 0, 0);
+}
+
+#detailedView {
+  border: 4px solid #b0dcd9 !important;
+  position: absolute;
+  width: 400px;
+  right: 30px;
+  bottom: 30px;
 }
 
 .colorDisplay {
