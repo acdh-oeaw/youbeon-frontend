@@ -253,7 +253,6 @@ export default class Idea extends Vue {
           return d.radius;
         })
       );
-    console.log(width, height);
 
     let drag = (simulation) => {
       const localforce = this.force;

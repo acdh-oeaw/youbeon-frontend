@@ -14,6 +14,7 @@
             multiple
             deletable-chips
             text
+            disabled
             flat
             hide-details
             label="Suche..."
@@ -33,7 +34,7 @@
                 v-bind="attrs"
               >
                 <template>
-                  {{ selectedReligion.name }}
+                  {{ selectedReligion.displayName ? selectedReligion.displayName : selectedReligion.name }}
                 </template>
                 <v-icon style="margin-left: 10px">expand_more</v-icon>
               </v-btn>
@@ -100,14 +101,6 @@ export default class Influencer extends Vue {
   selectedInfluencer: any = [];
   influencerDetailed: any = null;
 
-  gdp: any = [
-    { country: "USA", value: 20.5 },
-    { country: "China", value: 13.4 },
-    { country: "Germany", value: 4.0 },
-    { country: "Japan", value: 4.9 },
-    { country: "France", value: 2.8 },
-  ];
-
   selectableReligions: string[] = [
     "alle accounts",
     "alevitentum",
@@ -131,22 +124,6 @@ export default class Influencer extends Vue {
   ];
 
   force = 400;
-
-  get options() {
-    return {
-      force: this.force,
-      nodeSize: 50,
-      fontSize: 14,
-      linkWidth: 7,
-      forces: {
-        X: 0.2,
-        Y: 0.5,
-        ManyBody: true,
-        Center: true,
-      },
-      nodeLabels: true,
-    };
-  }
 
   // will change color with better network software hopefully
   @Watch("selectedInfluencer")
@@ -277,7 +254,7 @@ export default class Influencer extends Vue {
   }
 
   generateNetwork(nodes, links) {
-    d3.selectAll("g").remove();
+    d3.selectAll("svg").remove();
     // set the dimensions and margins of the graph
     let height;
     let width;
@@ -321,15 +298,13 @@ export default class Influencer extends Vue {
 
     let drag = (simulation) => {
       const localforce = this.force;
-      const localthis = this;
       function dragstarted(event) {
         if (!event.active) simulation.alphaTarget(0.3).restart();
-        simulation.force("charge").strength(-2);
+        event.subject.fx = event.subject.x;
+        simulation.force("charge").strength(-5);
         simulation.force("x").strength(0.0001);
         simulation.force("y").strength(0.0001);
-        simulation.force("link").strength(0.0001);
-
-        event.subject.fx = event.subject.x;
+        simulation.force("link").strength(0.0001)
         event.subject.fy = event.subject.y;
       }
 
@@ -341,9 +316,9 @@ export default class Influencer extends Vue {
       function dragended(event) {
         if (!event.active) simulation.alphaTarget(0);
         simulation.force("charge").strength(-(localforce / 10));
-        simulation.force("x").strength(0.005);
-        simulation.force("y").strength(0.02);
-        simulation.force("link").strength(0.1);
+        simulation.force("x").strength(0.0001);
+        simulation.force("y").strength(0.001);
+        simulation.force("link").strength(0.1)
         event.subject.fx = null;
         event.subject.fy = null;
       }
