@@ -149,15 +149,15 @@ export default class Influencer extends Vue {
   }
 
   // will change color with better network software hopefully
-  /**@Watch("selectedInfluencer")
+  @Watch("selectedInfluencer")
   changeColorofSelectedInfluencer() {
-    this.networkInfluencer.forEach((inf) => {
+    this.listInfluencer.forEach((inf) => {
       inf._color = "#dcfaf3";
       if (this.selectedInfluencer.includes(inf)) {
         inf._color = "#8B008B";
       }
     });
-  }**/
+  }
 
   //takes the selected Influences and transfroms them into an Object readable by d3
   buildInfluencerNetworkObject() {
@@ -166,7 +166,7 @@ export default class Influencer extends Vue {
     let links: any[] = [];
     let centerNode = {
       id: 0,
-      name: this.selectedReligion.name,
+      name: this.selectedReligion.displayName,
       _size: 70,
       _color: "#b0dcd9",
     };
@@ -321,12 +321,15 @@ export default class Influencer extends Vue {
 
     let drag = (simulation) => {
       const localforce = this.force;
+      const localthis = this;
       function dragstarted(event) {
         if (!event.active) simulation.alphaTarget(0.3).restart();
-        event.subject.fx = event.subject.x;
         simulation.force("charge").strength(-2);
         simulation.force("x").strength(0.0001);
         simulation.force("y").strength(0.0001);
+        simulation.force("link").strength(0.0001);
+
+        event.subject.fx = event.subject.x;
         event.subject.fy = event.subject.y;
       }
 
@@ -338,8 +341,9 @@ export default class Influencer extends Vue {
       function dragended(event) {
         if (!event.active) simulation.alphaTarget(0);
         simulation.force("charge").strength(-(localforce / 10));
-        simulation.force("x").strength(0.0001);
-        simulation.force("y").strength(0.001);
+        simulation.force("x").strength(0.005);
+        simulation.force("y").strength(0.02);
+        simulation.force("link").strength(0.1);
         event.subject.fx = null;
         event.subject.fy = null;
       }
