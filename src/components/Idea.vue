@@ -18,7 +18,7 @@
               v-model="religionField.religion"
               :items="allReligions"
               elevation="0"
-              item-text="name"
+              item-text="displayName"
               item-value="id"
               solo
               text
@@ -39,7 +39,10 @@
                   <v-icon>add_circle_outline</v-icon>
                 </v-btn>
               </template>
-              <span>Eine weitere Religion hinzufügen und die Schnittmenge bilden</span>
+              <span
+                >Eine weitere Religion hinzufügen und die Schnittmenge
+                bilden</span
+              >
             </v-tooltip>
             <v-btn
               v-if="religionField.id !== 0"
@@ -57,8 +60,8 @@
         </v-card>
       </v-col>
     </v-row>
-  <div id="network" />
-  <v-card v-if="ideaDetailed !== null" id="detailedView">
+    <div id="network" />
+    <v-card v-if="ideaDetailed !== null" id="detailedView">
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
@@ -92,8 +95,7 @@ import * as d3 from "d3";
 import * as _ from "lodash";
 
 @Component({
-  components: {
-  },
+  components: {},
   name: "Idea",
 })
 export default class Idea extends Vue {
@@ -113,6 +115,16 @@ export default class Idea extends Vue {
     "islam",
     "judentum",
     "sikhismus",
+  ];
+
+  displayNameReligions: any[] = [
+    ["alevitentum", "alevitische Jugendliche"],
+    ["katholisches christentum", "katholiosche Jugendliche"],
+    ["evangelisches christentum", "evangelische Jugendliche"],
+    ["orthodoxes christentum", "orthodoxe Jugendliche"],
+    ["islam", "muslimische Jugendliche"],
+    ["judentum", "jüdische Jugendliche"],
+    ["sikhismus", "sikh Jugendliche"],
   ];
 
   getSelectedReligion(val) {
@@ -195,7 +207,7 @@ export default class Idea extends Vue {
       }
     });
     this.nodes = intersection;
-    this.generateNetwork(this.nodes,this.links)
+    this.generateNetwork(this.nodes, this.links);
   }
 
   generateNetwork(nodes, links) {
@@ -203,7 +215,7 @@ export default class Idea extends Vue {
     // set the dimensions and margins of the graph
     let height;
     let width;
-    
+
     height = document.querySelector("#network")?.clientHeight;
     width = document.querySelector("#network")?.clientWidth;
 
@@ -221,19 +233,30 @@ export default class Idea extends Vue {
       )
       .force("charge", d3.forceManyBody().strength(-this.force)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
       //.force("center", d3.forceCenter(width / 2, height / 2)) // This force attracts nodes to the center of the svg area
-      .force("x", d3.forceX().x(width/(2/3.5)).strength(0.005))
-      .force("y", d3.forceY().y(height/(3/2)).strength(0.02))
+      .force(
+        "x",
+        d3
+          .forceX()
+          .x(width / (2 / 3.5))
+          .strength(0.005)
+      )
+      .force(
+        "y",
+        d3
+          .forceY()
+          .y(height / (3 / 2))
+          .strength(0.02)
+      )
       .force(
         "collision",
         d3.forceCollide().radius(function (d) {
           return d.radius;
         })
       );
-      console.log(width, height)
-
+    console.log(width, height);
 
     let drag = (simulation) => {
-      const localforce = this.force
+      const localforce = this.force;
       function dragstarted(event) {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         event.subject.fx = event.subject.x;
@@ -250,7 +273,7 @@ export default class Idea extends Vue {
 
       function dragended(event) {
         if (!event.active) simulation.alphaTarget(0);
-        simulation.force("charge").strength(-(localforce/10));
+        simulation.force("charge").strength(-(localforce / 10));
         simulation.force("x").strength(0.0001);
         simulation.force("y").strength(0.001);
         event.subject.fx = null;
@@ -279,7 +302,6 @@ export default class Idea extends Vue {
     const g = svg.append("g");
     const handleZoom = (e) => g.attr("transform", e.transform);
     const zoom = d3.zoom().on("zoom", handleZoom);
-
 
     d3.select("svg").call(zoom);
 
@@ -321,9 +343,9 @@ export default class Idea extends Vue {
       .attr("cy", 0)
       .style("fill", function (d) {
         return d._color;
-      })      
+      })
       .on("click", (d, i) => {
-        this.onNodeClick(i)
+        this.onNodeClick(i);
       });
 
     var text = groups
@@ -367,8 +389,8 @@ export default class Idea extends Vue {
 
   onNodeClick(feature) {
     this.ideaDetailed = {
-          name: feature.name
-        };
+      name: feature.name,
+    };
   }
 
   addReligionField(): void {
@@ -396,6 +418,13 @@ export default class Idea extends Vue {
         this.allReligions = data.filter((r: any) => {
           return this.selectableReligions.includes(r.name.toLowerCase());
         });
+        this.displayNameReligions.forEach((displayReligion) => {
+          this.allReligions.forEach((allReligion) => {
+            if (displayReligion.includes(allReligion.name.toLowerCase())) {
+              allReligion.displayName = displayReligion[1];
+            }
+          });
+        });
         this.selectedReligion = [
           {
             id: 0,
@@ -411,12 +440,12 @@ export default class Idea extends Vue {
       .then((data) => {
         let placeholderIdeas = _.take(this.shuffle(data), 25);
         placeholderIdeas.forEach((i) => {
-          i._color = "#7D387D"
+          i._color = "#7D387D";
           i._size = 20;
         });
         this.nodes = placeholderIdeas;
       });
-      this.generateNetwork(this.nodes,this.links)
+    this.generateNetwork(this.nodes, this.links);
   }
 
   shuffle(a) {

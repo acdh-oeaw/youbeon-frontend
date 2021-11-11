@@ -236,6 +236,16 @@ export default class Place extends Vue {
     "sikhismus",
   ];
 
+  displayNameReligions: any[] = [
+    ["alevitentum", "alevitische Jugendliche"],
+    ["katholisches christentum", "katholiosche Jugendliche"],
+    ["evangelisches christentum", "evangelische Jugendliche"],
+    ["orthodoxes christentum", "orthodoxe Jugendliche"],
+    ["islam", "muslimische Jugendliche"],
+    ["judentum", "jüdische Jugendliche"],
+    ["sikhismus", "sikh Jugendliche"]
+  ]
+
   filterChoices = [
     { id: 0, name: "Religionen" },
     { id: 1, name: "Ideen" },
@@ -387,14 +397,20 @@ export default class Place extends Vue {
       .then((data) => {
         let tempReligion;
         data.forEach((religion) => {
+          let tempBezeichnung;
           if (this.selectableReligions.includes(religion.name.toLowerCase())) {
+            this.displayNameReligions.forEach(displayReligion => {
+              if(displayReligion.includes(religion.name.toLowerCase())) {
+                tempBezeichnung = displayReligion[1]
+              }
+            });
             let selColor = _.sample(this.allColors);
             this.allColors.splice(this.allColors.indexOf(selColor), 1);
             tempReligion = {
               id: religion.id,
               color: selColor,
               properties: {
-                bezeichnung: religion.name,
+                bezeichnung: tempBezeichnung,
                 religion: true,
               },
             };

@@ -45,7 +45,7 @@
                 v-for="item in religions"
                 @click="selectedReligion = item"
               >
-                <v-list-item-title>{{ item.name }}</v-list-item-title>
+                <v-list-item-title>{{ item.displayName }}</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -117,6 +117,17 @@ export default class Influencer extends Vue {
     "islam",
     "judentum",
     "sikhismus",
+  ];
+
+  displayNameReligions: any[] = [
+    ["alle accounts", "Alle Accounts"],
+    ["alevitentum", "alevitische Jugendliche"],
+    ["katholisches christentum", "katholiosche Jugendliche"],
+    ["evangelisches christentum", "evangelische Jugendliche"],
+    ["orthodoxes christentum", "orthodoxe Jugendliche"],
+    ["islam", "muslimische Jugendliche"],
+    ["judentum", "jüdische Jugendliche"],
+    ["sikhismus", "sikh Jugendliche"],
   ];
 
   force = 400;
@@ -256,6 +267,13 @@ export default class Influencer extends Vue {
     this.religions = fetchedData[1].filter((r: any) => {
       return this.selectableReligions.includes(r.name.toLowerCase());
     });
+    this.displayNameReligions.forEach((displayReligion) => {
+      this.religions.forEach((allReligion) => {
+        if (displayReligion.includes(allReligion.name.toLowerCase())) {
+          allReligion.displayName = displayReligion[1];
+        }
+      });
+    });
   }
 
   generateNetwork(nodes, links) {
@@ -280,8 +298,20 @@ export default class Influencer extends Vue {
       )
       .force("charge", d3.forceManyBody().strength(-this.force)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
       //.force("center", d3.forceCenter(width / 2, height / 2)) // This force attracts nodes to the center of the svg area
-      .force("x", d3.forceX().x(width/(2/3.5)).strength(0.005))
-      .force("y", d3.forceY().y(height/(3/2)).strength(0.02))
+      .force(
+        "x",
+        d3
+          .forceX()
+          .x(width / (2 / 3.5))
+          .strength(0.005)
+      )
+      .force(
+        "y",
+        d3
+          .forceY()
+          .y(height / (3 / 2))
+          .strength(0.02)
+      )
       .force(
         "collision",
         d3.forceCollide().radius(function (d) {
@@ -307,7 +337,7 @@ export default class Influencer extends Vue {
 
       function dragended(event) {
         if (!event.active) simulation.alphaTarget(0);
-        simulation.force("charge").strength(-(localforce/10));
+        simulation.force("charge").strength(-(localforce / 10));
         simulation.force("x").strength(0.0001);
         simulation.force("y").strength(0.001);
         event.subject.fx = null;
