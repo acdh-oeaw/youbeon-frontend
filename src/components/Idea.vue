@@ -70,7 +70,7 @@
             </div>
           </v-col>
           <v-col cols="2">
-            <div style="float: right">
+            <div style="right: 60px; position:fixed">
               <v-icon @click="ideaDetailed = null"> close </v-icon>
             </div>
           </v-col>
@@ -78,10 +78,9 @@
       </v-card-title>
       <v-card-subtitle> {{ ideaDetailed.bemerkung }} </v-card-subtitle>
       <v-card-text>
-        <u>Verknüpfte Ideen:</u>
-        <br />
+        <u>Verknüpfte Ideen:</u> 
         <div v-for="idea in ideaDetailed.idee" v-bind:key="idea.id">
-          {{ idea }}
+          {{ idea }} 
         </div>
       </v-card-text>
     </v-card>
@@ -389,6 +388,7 @@ export default class Idea extends Vue {
   onNodeClick(feature) {
     this.ideaDetailed = {
       name: feature.name,
+      idee: feature.cooccurence
     };
   }
 
@@ -480,7 +480,10 @@ export default class Idea extends Vue {
 #detailedView {
   border: 4px solid #b0dcd9 !important;
   position: absolute;
-  width: 400px;
+  max-height: 50%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 450px;
   right: 30px;
   bottom: 30px;
 }

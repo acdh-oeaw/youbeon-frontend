@@ -130,7 +130,7 @@
             </div>
           </v-col>
           <v-col cols="2">
-            <div style="float: right">
+            <div style="right: 60px; position:fixed">
               <v-icon @click="placeDetailed = null"> close </v-icon>
             </div>
           </v-col>
@@ -243,8 +243,8 @@ export default class Place extends Vue {
     ["orthodoxes christentum", "orthodoxe Jugendliche"],
     ["islam", "muslimische Jugendliche"],
     ["judentum", "jüdische Jugendliche"],
-    ["sikhismus", "sikh Jugendliche"]
-  ]
+    ["sikhismus", "sikh Jugendliche"],
+  ];
 
   filterChoices = [
     { id: 0, name: "Religionen" },
@@ -399,9 +399,9 @@ export default class Place extends Vue {
         data.forEach((religion) => {
           let tempBezeichnung;
           if (this.selectableReligions.includes(religion.name.toLowerCase())) {
-            this.displayNameReligions.forEach(displayReligion => {
-              if(displayReligion.includes(religion.name.toLowerCase())) {
-                tempBezeichnung = displayReligion[1]
+            this.displayNameReligions.forEach((displayReligion) => {
+              if (displayReligion.includes(religion.name.toLowerCase())) {
+                tempBezeichnung = displayReligion[1];
               }
             });
             let selColor = _.sample(this.allColors);
@@ -586,8 +586,11 @@ export default class Place extends Vue {
 #detailedView {
   border: 4px solid #b0dcd9 !important;
   background-color: rgba($color: #fff, $alpha: 0.8);
+  max-height: 50%;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: absolute;
-  width: 400px;
+  width: 450px;
   right: 60px;
   bottom: 50px;
 }

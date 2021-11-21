@@ -34,7 +34,11 @@
                 v-bind="attrs"
               >
                 <template>
-                  {{ selectedReligion.displayName ? selectedReligion.displayName : selectedReligion.name }}
+                  {{
+                    selectedReligion.displayName
+                      ? selectedReligion.displayName
+                      : selectedReligion.name
+                  }}
                 </template>
                 <v-icon style="margin-left: 10px">expand_more</v-icon>
               </v-btn>
@@ -56,17 +60,20 @@
     <div id="network" />
     <v-card v-if="influencerDetailed !== null" class="detailedView">
       <v-card-title>
-        <div class="hoverLink" @click="openLinktoInsta(influencerDetailed)">
-          {{ influencerDetailed.name }}
-          <v-icon style="margin-left: 5px">link</v-icon>
-        </div>
-        <v-icon
-          style="position: absolute; right: 20px; top: 20px"
-          @click="influencerDetailed = null"
-        >
-          close
-        </v-icon></v-card-title
-      >
+        <v-row no-gutters>
+          <v-col class="pa-0 ma-0 flex-grow-1">
+            <div class="hoverLink" @click="openLinktoInsta(influencerDetailed)">
+              {{ influencerDetailed.name }}
+              <v-icon style="margin-left: 5px">link</v-icon>
+            </div>
+          </v-col>
+          <v-col cols="2">
+            <div style="right: 60px; position: fixed">
+              <v-icon @click="influencerDetailed = null"> close </v-icon>
+            </div>
+          </v-col>
+        </v-row>
+      </v-card-title>
       <v-card-subtitle> {{ influencerDetailed.bemerkung }} </v-card-subtitle>
       <v-card-text>
         <u>Verknüpfte Ideen:</u>
@@ -304,7 +311,7 @@ export default class Influencer extends Vue {
         simulation.force("charge").strength(-5);
         simulation.force("x").strength(0.0001);
         simulation.force("y").strength(0.0001);
-        simulation.force("link").strength(0.0001)
+        simulation.force("link").strength(0.0001);
         event.subject.fy = event.subject.y;
       }
 
@@ -318,7 +325,7 @@ export default class Influencer extends Vue {
         simulation.force("charge").strength(-(localforce / 10));
         simulation.force("x").strength(0.0001);
         simulation.force("y").strength(0.001);
-        simulation.force("link").strength(0.1)
+        simulation.force("link").strength(0.1);
         event.subject.fx = null;
         event.subject.fy = null;
       }
@@ -468,7 +475,10 @@ export default class Influencer extends Vue {
 .detailedView {
   border: 4px solid #b0dcd9 !important;
   position: absolute;
-  width: 400px;
+  max-height: 50%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 450px;
   right: 30px;
   bottom: 30px;
 }
