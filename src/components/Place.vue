@@ -567,7 +567,7 @@ export default class Place extends Vue {
   position: fixed;
   max-width: 350px;
   left: 60px;
-  bottom: 50px;
+  bottom: 30px;
   float: right;
   z-index: 1;
   width: auto;
@@ -591,8 +591,8 @@ export default class Place extends Vue {
   overflow-x: hidden;
   position: absolute;
   width: 450px;
-  right: 60px;
-  bottom: 50px;
+  right: 30px;
+  bottom: 30px;
 }
 
 .searchbar {
