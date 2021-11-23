@@ -12,6 +12,7 @@
         >
           <v-row no-gutters>
             <v-autocomplete
+              v-if="displayReligionsOrIdeas"
               flat
               clearable
               @input="getSelectedReligion(religionField.id)"
@@ -27,9 +28,26 @@
               prepend-inner-icon="search"
             >
             </v-autocomplete>
+            <v-autocomplete
+              v-else
+              flat
+              clearable
+              v-model="selectedIdeaCooccurence"
+              :items="allIdeas"
+              elevation="0"
+              item-text="name"
+              item-value="cooccurence"
+              solo
+              text
+              hide-details
+              label="Ideen filtern nach..."
+              prepend-inner-icon="search"
+            >
+            </v-autocomplete>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
+                  :disabled="!displayReligionsOrIdeas"
                   icon
                   style="margin-top: 7px"
                   v-bind="attrs"
@@ -52,6 +70,33 @@
             >
               <v-icon>remove_circle_outline</v-icon>
             </v-btn>
+            <div class="vl"></div>
+            <v-col class="pa-0 ma-0" cols="auto">
+              <v-menu max-height="80vh" offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    class="mx-1"
+                    style="margin-top: 5px"
+                    text
+                    v-on="on"
+                    v-bind="attrs"
+                  >
+                    <template>
+                      {{ displayReligionsOrIdeas ? "Religionen" : "Ideen" }}
+                    </template>
+                    <v-icon style="margin-left: 10px">expand_more</v-icon>
+                  </v-btn>
+                </template>
+                <v-list dense>
+                  <v-list-item @click="displayReligionsOrIdeas = true">
+                    <v-list-item-title> Religionen </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="displayReligionsOrIdeas = false">
+                    <v-list-item-title> Ideen </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-col>
             <div
               :style="{ 'background-color': religionField.color }"
               class="colorDisplay"
@@ -70,7 +115,7 @@
             </div>
           </v-col>
           <v-col cols="2">
-            <div style="right: 60px; position:fixed">
+            <div style="right: 60px; position: fixed">
               <v-icon @click="ideaDetailed = null"> close </v-icon>
             </div>
           </v-col>
@@ -78,9 +123,9 @@
       </v-card-title>
       <v-card-subtitle> {{ ideaDetailed.bemerkung }} </v-card-subtitle>
       <v-card-text>
-        <u>Verknüpfte Ideen:</u> 
+        <u>Verknüpfte Ideen:</u>
         <div v-for="idea in ideaDetailed.idee" v-bind:key="idea.id">
-          {{ idea }} 
+          {{ idea }}
         </div>
       </v-card-text>
     </v-card>
@@ -105,6 +150,13 @@ export default class Idea extends Vue {
   allReligions: any[] = [];
   selectedReligion: any = [];
   ideaDetailed: any = null;
+
+  allIdeas: any = [];
+  //saves the COOCCURENCE of the selected IDea in an Array
+  selectedIdeaCooccurence: any = null;
+
+  //Boolean die festlegt ob im autocomplete Ideen oder Religionen angezeigt werden(Religionen = true)
+  displayReligionsOrIdeas = true;
 
   selectableReligions: string[] = [
     "alevitentum",
@@ -170,7 +222,14 @@ export default class Idea extends Vue {
       idea._size = nodeSize;
     });
     this.selectedReligion[changedOne].ideas = tempIdeas;
-    this.combineIntoNodeObject();
+    this.combineIntoNodeObjectReligion();
+  }
+
+  @Watch("selectedIdeaCooccurence")
+  displayCooccurenceOfIdea() {
+    if (this.selectedIdeaCooccurence != undefined) {
+      this.combineIntoNodeObjectIdeas();
+    }
   }
 
   randomColor(brightness) {
@@ -188,7 +247,7 @@ export default class Idea extends Vue {
     );
   }
 
-  combineIntoNodeObject() {
+  combineIntoNodeObjectReligion() {
     let intersection: any[] = [];
     this.selectedReligion.forEach((religion) => {
       if (religion.religion !== undefined) {
@@ -206,7 +265,20 @@ export default class Idea extends Vue {
       }
     });
     this.nodes = intersection;
-    this.generateNetwork(this.nodes, this.links);
+    this.generateNetwork(this.nodes, []);
+  }
+
+  combineIntoNodeObjectIdeas() {
+    let tempIdeas: any = [];
+    this.allIdeas.forEach((idea) => {
+      if (this.selectedIdeaCooccurence.includes(idea.name)) {
+        idea._color = "#7D387D";
+        idea._size = 20;
+        tempIdeas.push(idea);
+      }
+    });
+    this.nodes = tempIdeas;
+    this.generateNetwork(this.nodes, []);
   }
 
   generateNetwork(nodes, links) {
@@ -388,7 +460,7 @@ export default class Idea extends Vue {
   onNodeClick(feature) {
     this.ideaDetailed = {
       name: feature.name,
-      idee: feature.cooccurence
+      idee: feature.cooccurence,
     };
   }
 
@@ -406,7 +478,23 @@ export default class Idea extends Vue {
     if (index > -1) {
       this.selectedReligion.splice(index, 1);
     }
-    this.combineIntoNodeObject();
+    this.combineIntoNodeObjectReligion();
+  }
+
+  @Watch('$route')
+  startLoaded() {
+    this.$nextTick(this.routeLoaded)
+  }
+
+  routeLoaded() {
+    if (this.$route.params.id != undefined) {
+      this.displayReligionsOrIdeas = false;
+      let idea = this.allIdeas.filter((obj) => {
+        if (obj.name === this.$route.params.id) return obj;
+      });
+      this.selectedIdeaCooccurence = idea[0].cooccurence;
+      console.log(this.selectedIdeaCooccurence)
+    }
   }
 
   async mounted() {
@@ -437,6 +525,7 @@ export default class Idea extends Vue {
     await fetch("https://db.youbeon.eu/idee", { headers })
       .then((response) => response.json())
       .then((data) => {
+        this.allIdeas = data;
         let placeholderIdeas = _.take(this.shuffle(data), 25);
         placeholderIdeas.forEach((i) => {
           i._color = "#7D387D";
@@ -444,7 +533,9 @@ export default class Idea extends Vue {
         });
         this.nodes = placeholderIdeas;
       });
-    this.generateNetwork(this.nodes, this.links);
+
+    this.$router.onReady(() => this.routeLoaded());
+    this.generateNetwork(this.nodes, []);
   }
 
   shuffle(a) {

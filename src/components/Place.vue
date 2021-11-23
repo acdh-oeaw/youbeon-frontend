@@ -141,7 +141,7 @@
         <u>Verknüpfte Ideen:</u>
         <br />
         <div v-for="idea in placeDetailed.idee" v-bind:key="idea.id">
-          {{ idea }}
+          <router-link class="link" tag="span" :to="{ name: 'idea', params: { id: idea } }">{{ idea }}</router-link>
         </div>
       </v-card-text>
     </v-card>
@@ -557,9 +557,14 @@ export default class Place extends Vue {
   float: left;
 }
 
+.link:hover{
+  cursor: pointer;
+}
+
 .categoryPopUps {
   margin: 3px;
   text-align: center;
+  text-decoration: none !important;
 }
 
 #legende {
