@@ -146,13 +146,13 @@ export default class Idea extends Vue {
   dropDownItems: string[] = [];
   nodes: any = [];
   links: any = [];
-  force = 50;
+  force = 300;
   allReligions: any[] = [];
   selectedReligion: any = [];
   ideaDetailed: any = null;
 
   allIdeas: any = [];
-  //saves the COOCCURENCE of the selected IDea in an Array
+  //saves the COOCCURENCE of the selected Idea in an Array
   selectedIdeaCooccurence: any = null;
 
   //Boolean die festlegt ob im autocomplete Ideen oder Religionen angezeigt werden(Religionen = true)
@@ -331,15 +331,15 @@ export default class Idea extends Vue {
         "x",
         d3
           .forceX()
-          .x(width / (2 / 3.5))
-          .strength(0.005)
+          .x(width / 2)
+          .strength(0.05)
       )
       .force(
         "y",
         d3
           .forceY()
-          .y(height / (3 / 2))
-          .strength(0.02)
+          .y(height / 2)
+          .strength(0.05)
       )
       .force(
         "collision",
@@ -353,9 +353,6 @@ export default class Idea extends Vue {
       function dragstarted(event) {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         event.subject.fx = event.subject.x;
-        simulation.force("charge").strength(-5);
-        simulation.force("x").strength(0.0001);
-        simulation.force("y").strength(0.0001);
         event.subject.fy = event.subject.y;
       }
 
@@ -366,9 +363,6 @@ export default class Idea extends Vue {
 
       function dragended(event) {
         if (!event.active) simulation.alphaTarget(0);
-        simulation.force("charge").strength(-(localforce / 10));
-        simulation.force("x").strength(0.0001);
-        simulation.force("y").strength(0.001);
         event.subject.fx = null;
         event.subject.fy = null;
       }
