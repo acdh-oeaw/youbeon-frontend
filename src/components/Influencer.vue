@@ -14,7 +14,6 @@
             multiple
             deletable-chips
             text
-            disabled
             flat
             hide-details
             label="Suche..."
@@ -132,18 +131,8 @@ export default class Influencer extends Vue {
 
   force = 400;
 
-  // will change color with better network software hopefully
-  @Watch("selectedInfluencer")
-  changeColorofSelectedInfluencer() {
-    this.listInfluencer.forEach((inf) => {
-      inf._color = "#dcfaf3";
-      if (this.selectedInfluencer.includes(inf)) {
-        inf._color = "#8B008B";
-      }
-    });
-  }
-
   //takes the selected Influences and transfroms them into an Object readable by d3
+  @Watch("selectedInfluencer")
   buildInfluencerNetworkObject() {
     let networkInfluencer: any[] = [];
     this.force = 100;
@@ -160,15 +149,16 @@ export default class Influencer extends Vue {
     }
     this.listInfluencer.forEach((influencer) => {
       influencer._color = "#dcfaf3";
+      if (this.selectedInfluencer.includes(influencer.id)) {
+        influencer._color = " #448A1C";
+        console.log('AAA')
+      }
       if (networkInfluencer.includes(centerNode))
         links.push({
           source: 0,
           target: influencer.id,
         });
       networkInfluencer.push(influencer);
-      if (!networkInfluencer.includes(centerNode)) {
-        networkInfluencer = _.take(this.shuffle(networkInfluencer), 25);
-      }
     });
     this.generateNetwork(networkInfluencer, links);
   }

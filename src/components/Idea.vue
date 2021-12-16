@@ -249,6 +249,7 @@ export default class Idea extends Vue {
 
   combineIntoNodeObjectReligion() {
     let intersection: any[] = [];
+    let links: any[] = [];
     this.selectedReligion.forEach((religion) => {
       if (religion.religion !== undefined) {
         if (intersection.length === 0) {
@@ -264,8 +265,21 @@ export default class Idea extends Vue {
         }
       }
     });
+    /**intersection.forEach((idea) => {
+      let relevantCooc = intersection.filter((value: any) =>
+        idea.cooccurence.includes(value.name)
+      );
+      relevantCooc.forEach((coocIdea) => {
+        links.push({
+          source: idea.id,
+          target: coocIdea.id,
+        });
+      });
+    });
+    console.log(links);
+    this.links = links;**/
     this.nodes = intersection;
-    this.generateNetwork(this.nodes, []);
+    this.generateNetwork(this.nodes, this.links);
   }
 
   combineIntoNodeObjectIdeas() {
@@ -293,6 +307,15 @@ export default class Idea extends Vue {
     // Let's list the force we wanna apply on the network
     const simulation = d3
       .forceSimulation(nodes) // Force algorithm is applied to nodes
+      .force(
+        "link",
+        d3
+          .forceLink() // This force provides links between nodes
+          .id(function (d) {
+            return d.id;
+          }) // This provide  the id of a node
+          .links(links) // and this the list of links
+      )
       .force(
         "link",
         d3
@@ -481,9 +504,9 @@ export default class Idea extends Vue {
     this.combineIntoNodeObjectReligion();
   }
 
-  @Watch('$route')
+  @Watch("$route")
   startLoaded() {
-    this.$nextTick(this.routeLoaded)
+    this.$nextTick(this.routeLoaded);
   }
 
   routeLoaded() {
@@ -493,7 +516,7 @@ export default class Idea extends Vue {
         if (obj.name === this.$route.params.id) return obj;
       });
       this.selectedIdeaCooccurence = idea[0].cooccurence;
-      console.log(this.selectedIdeaCooccurence)
+      console.log(this.selectedIdeaCooccurence);
     }
   }
 
@@ -535,7 +558,7 @@ export default class Idea extends Vue {
       });
 
     this.$router.onReady(() => this.routeLoaded());
-    this.generateNetwork(this.nodes, []);
+    this.generateNetwork(this.nodes, this.links);
   }
 
   shuffle(a) {

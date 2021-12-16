@@ -99,7 +99,7 @@
       <div v-for="item in ideaJSON" :key="item.id">
         <l-geo-json
           :geojson="displayLocationsIdea(item)"
-          :options="optionsReligionIdea"
+          :options="optionsIdea"
           :optionsStyle="individualColor(item)"
         />
       </div>
@@ -107,8 +107,7 @@
       <div v-for="item in religionJSON" :key="item.id">
         <l-geo-json
           :geojson="displayLocationsReligion(item)"
-          :options="optionsReligionIdea"
-          :optionsStyle="individualColor(item)"
+          :options="optionsReligion(item)"
         />
       </div>
     </l-map>
@@ -130,7 +129,7 @@
             </div>
           </v-col>
           <v-col cols="2">
-            <div style="right: 60px; position:fixed">
+            <div style="right: 60px; position: fixed">
               <v-icon @click="placeDetailed = null"> close </v-icon>
             </div>
           </v-col>
@@ -141,7 +140,12 @@
         <u>Verknüpfte Ideen:</u>
         <br />
         <div v-for="idea in placeDetailed.idee" v-bind:key="idea.id">
-          <router-link class="link" tag="span" :to="{ name: 'idea', params: { id: idea } }">{{ idea }}</router-link>
+          <router-link
+            class="link"
+            tag="span"
+            :to="{ name: 'idea', params: { id: idea } }"
+            >{{ idea }}</router-link
+          >
         </div>
       </v-card-text>
     </v-card>
@@ -216,13 +220,13 @@ export default class Place extends Vue {
   allPlaces: any[] = [];
   colorsMaybe: any[] = [];
   allColors = [
-    "#FF6347",
-    "#FFA500",
-    "#1E90FF",
-    "#3CB371",
-    "#6A5ACD",
-    "#FFB6C1",
-    "#DC143C",
+    ["#FF6347", "#ffc0b5"],
+    ["#FFA500", "#ffd68a"],
+    ["#1E90FF", "#93caff"],
+    ["#3CB371", "#a3e7c1"],
+    ["#6A5ACD", "#a89fe1"],
+    ["#FFB6C1", "#ffdbe0"],
+    ["#DC143C", "#fb889f"],
   ];
 
   selectableReligions: string[] = [
@@ -238,7 +242,7 @@ export default class Place extends Vue {
 
   displayNameReligions: any[] = [
     ["alevitentum", "alevitische Jugendliche"],
-    ["katholisches christentum", "katholiosche Jugendliche"],
+    ["katholisches christentum", "katholische Jugendliche"],
     ["evangelisches christentum", "evangelische Jugendliche"],
     ["orthodoxes christentum", "orthodoxe Jugendliche"],
     ["islam", "muslimische Jugendliche"],
@@ -287,7 +291,29 @@ export default class Place extends Vue {
     };
   }
 
-  optionsReligionIdea = {
+  optionsReligion(religion: any) {
+    return {
+      onEachFeature: this.bindPopUpPlace(),
+      pointToLayer: (feature: any, latlng: any) => {
+        let color;
+        if(feature.properties.religiousPlace === true) {
+          color = religion.color
+        } else {
+          color = religion.nonreligionColor
+        }
+        return L.circleMarker(latlng, {
+          radius: 5,
+          weight: 1,
+          opacity: 1,
+          fillOpacity: 1,
+          fillColor: color,
+          color: "black",
+        });
+      },
+    };
+  }
+
+  optionsIdea = {
     onEachFeature: this.bindPopUpPlace(),
     pointToLayer: (feature: any, latlng: any) => {
       return L.circleMarker(latlng, {
@@ -408,8 +434,10 @@ export default class Place extends Vue {
             this.allColors.splice(this.allColors.indexOf(selColor), 1);
             tempReligion = {
               id: religion.id,
-              color: selColor,
+              color: selColor[0],
+              nonreligionColor: selColor[1],
               properties: {
+                name: religion.name,
                 bezeichnung: tempBezeichnung,
                 religion: true,
               },
@@ -439,7 +467,10 @@ export default class Place extends Vue {
   displayLocationsReligion(religion: any) {
     return {
       features: this.allPlaces.filter((f: any) => {
-        return f.properties.religion === religion.id;
+        return (
+          f.properties.religion.toLowerCase() ===
+          religion.properties.name.toLowerCase()
+        );
       }),
     };
   }
@@ -504,7 +535,10 @@ export default class Place extends Vue {
           bemerkung: item.bemerkung,
           idee: ideas,
           kategorie: categories,
-          religion: item.religion[0],
+          religion: this.turnInterviewIDintoReligion(
+            item.interview.split("-")[1]
+          ),
+          religiousPlace: item.religion[0] != undefined ? true : false,
         },
         geometry: {
           type: "Point",
@@ -521,6 +555,25 @@ export default class Place extends Vue {
     this.placesJSON = tempGeo.concat(this.allReligions);
     this.placesJSON = this.placesJSON.concat(this.allIdeas);
     this.allPlaces = tempGeo;
+  }
+
+  turnInterviewIDintoReligion(shortForm: string) {
+    switch (shortForm) {
+      case "musl":
+        return "Islam";
+      case "orth":
+        return "Orthodoxes christentum";
+      case "kath":
+        return "Katholisches christentum";
+      case "alev":
+        return "Alevitentum";
+      case "jued":
+        return "Judentum";
+      case "sikh":
+        return "sikhismus";
+      case "evan":
+        return "evangelisches Christentum";
+    }
   }
 
   getCorrespondingCategories(categoryIDs: string[], allCategories: string[]) {
@@ -557,7 +610,7 @@ export default class Place extends Vue {
   float: left;
 }
 
-.link:hover{
+.link:hover {
   cursor: pointer;
 }
 
