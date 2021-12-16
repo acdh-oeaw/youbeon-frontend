@@ -170,7 +170,7 @@ export default class Idea extends Vue {
 
   displayNameReligions: any[] = [
     ["alevitentum", "alevitische Jugendliche"],
-    ["katholisches christentum", "katholiosche Jugendliche"],
+    ["katholisches christentum", "katholische Jugendliche"],
     ["evangelisches christentum", "evangelische Jugendliche"],
     ["orthodoxes christentum", "orthodoxe Jugendliche"],
     ["islam", "muslimische Jugendliche"],
