@@ -4,7 +4,6 @@
       <v-row no-gutters>
         <v-col class="pa-0 flex-grow-1">
           <v-autocomplete
-            chips
             v-model="selectedPlaces"
             :items="autocompleteItems"
             item-text="properties.bezeichnung"
@@ -13,6 +12,8 @@
             flat
             multiple
             solo
+            chips
+            deletable-chips
             text
             hide-details
             elevation="0"
@@ -220,13 +221,13 @@ export default class Place extends Vue {
   allPlaces: any[] = [];
   colorsMaybe: any[] = [];
   allColors = [
-    ["#FF6347", "#ffc0b5"],
-    ["#FFA500", "#ffd68a"],
-    ["#1E90FF", "#93caff"],
-    ["#3CB371", "#a3e7c1"],
-    ["#6A5ACD", "#a89fe1"],
-    ["#FFB6C1", "#ffdbe0"],
-    ["#DC143C", "#fb889f"],
+    ["#e6194B", "#f5a3b7"], //red
+    ["#3cb44b", "#aee4b5"], // Green
+    ["#ffe119F", "#fff6ba"], // Yellow
+    ["#4363d8", "#b4c1ef"], //Blue
+    ["#f58231", "#fbcdad"], //Orange
+    ["#f032e6", "#f9adf5"], //Magenta
+    ["#42d4f4", "#b3eefb"], //Cyan
   ];
 
   selectableReligions: string[] = [
@@ -265,6 +266,8 @@ export default class Place extends Vue {
   }
 
   zoomToMap() {
+    console.log(this.selectedPlaces)
+    this.selectedPlaces = []
     this.zoom = 3;
     this.center = defaultCenter;
   }
@@ -296,10 +299,10 @@ export default class Place extends Vue {
       onEachFeature: this.bindPopUpPlace(),
       pointToLayer: (feature: any, latlng: any) => {
         let color;
-        if(feature.properties.religiousPlace === true) {
-          color = religion.color
+        if (feature.properties.religiousPlace === true) {
+          color = religion.color;
         } else {
-          color = religion.nonreligionColor
+          color = religion.nonreligionColor;
         }
         return L.circleMarker(latlng, {
           radius: 5,

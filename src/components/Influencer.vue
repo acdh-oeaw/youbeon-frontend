@@ -151,7 +151,6 @@ export default class Influencer extends Vue {
       influencer._color = "#dcfaf3";
       if (this.selectedInfluencer.includes(influencer.id)) {
         influencer._color = " #448A1C";
-        console.log('AAA')
       }
       if (networkInfluencer.includes(centerNode))
         links.push({

@@ -14,15 +14,13 @@
             <v-autocomplete
               v-if="displayReligionsOrIdeas"
               flat
-              clearable
               @input="getSelectedReligion(religionField.id)"
               v-model="religionField.religion"
               :items="allReligions"
-              elevation="0"
               item-text="displayName"
               item-value="id"
               solo
-              text
+              clearable
               hide-details
               label="Religionen filtern nach..."
               prepend-inner-icon="search"
@@ -31,14 +29,12 @@
             <v-autocomplete
               v-else
               flat
-              clearable
               v-model="selectedIdeaCooccurence"
               :items="allIdeas"
-              elevation="0"
               item-text="name"
               item-value="cooccurence"
               solo
-              text
+              clearable
               hide-details
               label="Ideen filtern nach..."
               prepend-inner-icon="search"
@@ -510,7 +506,6 @@ export default class Idea extends Vue {
         if (obj.name === this.$route.params.id) return obj;
       });
       this.selectedIdeaCooccurence = idea[0].cooccurence;
-      console.log(this.selectedIdeaCooccurence);
     }
   }
 
