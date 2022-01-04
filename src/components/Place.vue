@@ -22,6 +22,13 @@
           >
           </v-autocomplete>
         </v-col>
+        <v-col class="pa-0 ma-0" cols="auto">
+          <v-switch
+            dense
+            class="switch"
+            v-model="filterNonReligionPlaces"
+          ></v-switch>
+        </v-col>
         <div class="vl"></div>
         <v-col class="pa-0 ma-0" cols="auto">
           <v-menu max-height="80vh" offset-y>
@@ -90,7 +97,7 @@
       />
 
       <l-geo-json
-        :geojson="allPlaces"
+        :geojson="filterReligiousPlaces(allPlaces)"
         :options="options"
         :optionsStyle="distanceVariableColor"
       />
@@ -215,15 +222,16 @@ export default class Place extends Vue {
   allReligions: any[] = [];
   allIdeas: any[] = [];
   placeDetailed: any = null;
+  filterNonReligionPlaces = false;
 
   religionJSON: any[] = [];
   ideaJSON: any[] = [];
   allPlaces: any[] = [];
   colorsMaybe: any[] = [];
   allColors = [
-    ["#e6194B", "#f5a3b7"], //red
+    ["#e6194B", "#f5a3b7"], //Red
     ["#3cb44b", "#aee4b5"], // Green
-    ["#ffe119F", "#fff6ba"], // Yellow
+    ["#ffe119", "#fff6ba"], // Yellow
     ["#4363d8", "#b4c1ef"], //Blue
     ["#f58231", "#fbcdad"], //Orange
     ["#f032e6", "#f9adf5"], //Magenta
@@ -266,8 +274,8 @@ export default class Place extends Vue {
   }
 
   zoomToMap() {
-    console.log(this.selectedPlaces)
-    this.selectedPlaces = []
+    console.log(this.selectedPlaces);
+    this.selectedPlaces = [];
     this.zoom = 3;
     this.center = defaultCenter;
   }
@@ -467,13 +475,34 @@ export default class Place extends Vue {
     };
   }
 
+  filterReligiousPlaces(places: any[]) {
+    /*if (this.filterNonReligionPlaces === true) {
+      return places.filter((f: any) => {
+        if (f.properties.religiousPlace === true) {
+          return f;
+        }
+      });
+    }*/
+    return places;
+  }
+
   displayLocationsReligion(religion: any) {
     return {
       features: this.allPlaces.filter((f: any) => {
-        return (
-          f.properties.religion.toLowerCase() ===
-          religion.properties.name.toLowerCase()
-        );
+        if (this.filterNonReligionPlaces === true) {
+          if (
+            f.properties.religion.toLowerCase() ===
+              religion.properties.name.toLowerCase() &&
+            f.properties.religiousPlace === true
+          ) {
+            return f;
+          }
+        } else {
+          return (
+            f.properties.religion.toLowerCase() ===
+            religion.properties.name.toLowerCase()
+          );
+        }
       }),
     };
   }
@@ -608,7 +637,7 @@ export default class Place extends Vue {
 .zoom {
   margin: 5px;
   margin-top: 5px;
-  z-index: 1;
+  z-index: 5;
   clear: both;
   float: left;
 }
@@ -621,6 +650,11 @@ export default class Place extends Vue {
   margin: 3px;
   text-align: center;
   text-decoration: none !important;
+}
+
+.switch {
+  margin: 10px 5px 0px 5px;
+  padding: 0px;
 }
 
 #legende {
