@@ -22,14 +22,10 @@ const routes: Array<RouteConfig> = [
     name: 'account',
     component: Influencer
   },
-  {
-    path: '/*',
-    redirect: { name: 'place' }
-  }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: 'hash',
   base: process.env.BASE_URL,
   routes
 })
