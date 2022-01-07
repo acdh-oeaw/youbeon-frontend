@@ -22,7 +22,10 @@ const routes: Array<RouteConfig> = [
     name: 'account',
     component: Influencer
   },
-
+  {
+    path: '/*',
+    redirect: { name: 'route-name' }
+  }
 ]
 
 const router = new VueRouter({
