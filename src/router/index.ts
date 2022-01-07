@@ -24,7 +24,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/*',
-    redirect: { name: 'route-name' }
+    redirect: { name: 'place' }
   }
 ]
 
