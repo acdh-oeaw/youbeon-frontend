@@ -232,9 +232,6 @@ export default class Influencer extends Vue {
   async created() {
     let fetchedData = await this.getDataFromServerAtCreated();
     this.allInfluencer = fetchedData[0];
-    this.allInfluencer.forEach((i) => {
-      i._cssClass = "nodeSpecific";
-    });
     this.listInfluencer = this.allInfluencer;
     this.buildInfluencerNetworkObject();
     this.religions = fetchedData[1].filter((r: any) => {
