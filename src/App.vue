@@ -70,7 +70,14 @@
           ></div>
           <v-flex xs12 fill-height class="pa-0 ma-0">
             <keep-alive>
-              <router-view />
+              <router-view v-if="loading === false" />
+              <v-skeleton-loader
+                v-else
+                style="margin:5% auto"
+                max-width="90%"
+                max-height="800"
+                type="sentences, image, image"
+              ></v-skeleton-loader>
             </keep-alive>
           </v-flex>
         </v-layout>
@@ -78,6 +85,22 @@
     </v-main>
   </v-app>
 </template>
+
+<script lang="ts">
+import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import { initialize as initData } from "./store/data";
+@Component({
+  components: {},
+})
+export default class App extends Vue {
+  loading = true;
+  mounted() {
+    initData().then(() => {
+      this.loading = false;
+    });
+  }
+}
+</script>
 
 <style lang="scss">
 #app {

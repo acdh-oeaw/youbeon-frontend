@@ -130,6 +130,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { dataStore } from "../store/data";
 // eslint-disable-next-line
 import * as d3 from "d3";
 import * as _ from "lodash";
@@ -510,41 +511,33 @@ export default class Idea extends Vue {
   }
 
   async mounted() {
-    const headers = { "Content-Type": "application/json" };
-    await fetch("https://db.youbeon.eu/religion/", { headers })
-      .then((response) => response.json())
-      .then((data) => {
-        this.allReligions = data.filter((r: any) => {
-          return this.selectableReligions.includes(r.name.toLowerCase());
-        });
-        this.displayNameReligions.forEach((displayReligion) => {
-          this.allReligions.forEach((allReligion) => {
-            if (displayReligion.includes(allReligion.name.toLowerCase())) {
-              allReligion.displayName = displayReligion[1];
-            }
-          });
-        });
-        this.selectedReligion = [
-          {
-            id: 0,
-            color: "#7D387D",
-            religion: undefined,
-            ideas: {},
-          },
-        ];
+    let religionData = dataStore.religionen;
+    this.allReligions = religionData.filter((r: any) => {
+      return this.selectableReligions.includes(r.name.toLowerCase());
+    });
+    this.displayNameReligions.forEach((displayReligion) => {
+      this.allReligions.forEach((allReligion) => {
+        if (displayReligion.includes(allReligion.name.toLowerCase())) {
+          allReligion.displayName = displayReligion[1];
+        }
       });
+    });
+    this.selectedReligion = [
+      {
+        id: 0,
+        color: "#7D387D",
+        religion: undefined,
+        ideas: {},
+      },
+    ];
 
-    await fetch("https://db.youbeon.eu/idee", { headers })
-      .then((response) => response.json())
-      .then((data) => {
-        this.allIdeas = data;
-        let placeholderIdeas = _.take(this.shuffle(data), 25);
-        placeholderIdeas.forEach((i) => {
-          i._color = "#7D387D";
-          i._size = 20;
-        });
-        this.nodes = placeholderIdeas;
-      });
+    this.allIdeas = dataStore.ideen;
+    let placeholderIdeas = _.take(this.shuffle(this.allIdeas), 25);
+    placeholderIdeas.forEach((i) => {
+      i._color = "#7D387D";
+      i._size = 20;
+    });
+    this.nodes = placeholderIdeas;
 
     this.$router.onReady(() => this.routeLoaded());
     this.generateNetwork(this.nodes, this.links);

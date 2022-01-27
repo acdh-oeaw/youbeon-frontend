@@ -170,6 +170,7 @@ import {
   LWMSTileLayer as LWmsTileLayer,
 } from "vue2-leaflet";
 import MapLegende from "./MapLegende.vue";
+import { dataStore } from "../store/data";
 //@ts-ignore
 import * as L from "leaflet";
 import * as _ from "lodash";
@@ -428,35 +429,33 @@ export default class Place extends Vue {
   async created() {
     let fetchedData = await this.getDataFromServerAtCreated();
 
-    const headers = { "Content-Type": "application/json" };
-    await fetch("https://db.youbeon.eu/religion/", { headers })
-      .then((response) => response.json())
-      .then((data) => {
-        let tempReligion;
-        data.forEach((religion) => {
-          let tempBezeichnung;
-          if (this.selectableReligions.includes(religion.name.toLowerCase())) {
-            this.displayNameReligions.forEach((displayReligion) => {
-              if (displayReligion.includes(religion.name.toLowerCase())) {
-                tempBezeichnung = displayReligion[1];
-              }
-            });
-            let selColor = _.sample(this.allColors);
-            this.allColors.splice(this.allColors.indexOf(selColor), 1);
-            tempReligion = {
-              id: religion.id,
-              color: selColor[0],
-              nonreligionColor: selColor[1],
-              properties: {
-                name: religion.name,
-                bezeichnung: tempBezeichnung,
-                religion: true,
-              },
-            };
-            this.allReligions.push(tempReligion);
+    let religionData = dataStore.religionen;
+
+    let tempReligion;
+    religionData.forEach((religion) => {
+      let tempBezeichnung;
+      if (this.selectableReligions.includes(religion.name.toLowerCase())) {
+        this.displayNameReligions.forEach((displayReligion) => {
+          if (displayReligion.includes(religion.name.toLowerCase())) {
+            tempBezeichnung = displayReligion[1];
           }
         });
-      });
+        let selColor = _.sample(this.allColors);
+        this.allColors.splice(this.allColors.indexOf(selColor), 1);
+        tempReligion = {
+          id: religion.id,
+          color: selColor[0],
+          nonreligionColor: selColor[1],
+          properties: {
+            name: religion.name,
+            bezeichnung: tempBezeichnung,
+            religion: true,
+          },
+        };
+        this.allReligions.push(tempReligion);
+      }
+    });
+
     this.autocompleteItems = this.allReligions;
     this.handlePlaceData(fetchedData[0], fetchedData[1], fetchedData[2]);
   }
@@ -507,45 +506,31 @@ export default class Place extends Vue {
     };
   }
 
-  async getDataFromServerAtCreated() {
-    const headers = { "Content-Type": "application/json" };
-    let placesFetched = await fetch("https://db.youbeon.eu/ort/", { headers })
-      .then((response) => response.json())
-      .then((data) => {
-        return data;
-      });
+  getDataFromServerAtCreated() {
+    let placesFetched = dataStore.orte;
 
-    let categoriesFetched = await fetch("https://db.youbeon.eu/kategorie/", {
-      headers,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        return data;
-      });
+    let categoriesFetched = dataStore.kategorien;
 
-    let ideasFetched = await fetch("https://db.youbeon.eu/idee", { headers })
-      .then((response) => response.json())
-      .then((data) => {
-        let tempIdea;
-        let colors = randomColor({ count: data.length });
-        data.forEach((idea, index) => {
-          let placesFiltered = placesFetched.filter((p: any) => {
-            return p.idee.includes(idea.id);
-          });
-          if (placesFiltered.length > 0) {
-            tempIdea = {
-              id: idea.id,
-              color: colors[index],
-              properties: {
-                bezeichnung: idea.name,
-                idea: true,
-              },
-            };
-            this.allIdeas.push(tempIdea);
-          }
-        });
-        return data;
+    let ideasFetched = dataStore.ideen;
+
+    let tempIdea;
+    let colors = randomColor({ count: ideasFetched.length });
+    ideasFetched.forEach((idea, index) => {
+      let placesFiltered = placesFetched.filter((p: any) => {
+        return p.idee.includes(idea.id);
       });
+      if (placesFiltered.length > 0) {
+        tempIdea = {
+          id: idea.id,
+          color: colors[index],
+          properties: {
+            bezeichnung: idea.name,
+            idea: true,
+          },
+        };
+        this.allIdeas.push(tempIdea);
+      }
+    });
 
     return [placesFetched, categoriesFetched, ideasFetched];
   }

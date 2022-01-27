@@ -89,6 +89,7 @@
 import * as d3 from "d3";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import * as _ from "lodash";
+import { dataStore } from "../store/data";
 
 @Component({
   components: {},
@@ -121,7 +122,7 @@ export default class Influencer extends Vue {
   displayNameReligions: any[] = [
     ["alle accounts", "Alle Accounts"],
     ["alevitentum", "alevitische Jugendliche"],
-    ["katholisches christentum", "katholiosche Jugendliche"],
+    ["katholisches christentum", "katholische Jugendliche"],
     ["evangelisches christentum", "evangelische Jugendliche"],
     ["orthodoxes christentum", "orthodoxe Jugendliche"],
     ["islam", "muslimische Jugendliche"],
@@ -230,11 +231,10 @@ export default class Influencer extends Vue {
   }
 
   async created() {
-    let fetchedData = await this.getDataFromServerAtCreated();
-    this.allInfluencer = fetchedData[0];
+    this.allInfluencer = dataStore.influencer;
     this.listInfluencer = this.allInfluencer;
     this.buildInfluencerNetworkObject();
-    this.religions = fetchedData[1].filter((r: any) => {
+    this.religions = dataStore.religionen.filter((r: any) => {
       return this.selectableReligions.includes(r.name.toLowerCase());
     });
     this.displayNameReligions.forEach((displayReligion) => {
@@ -408,26 +408,6 @@ export default class Influencer extends Vue {
         return "translate(" + x + "," + y + ")";
       });
     });
-  }
-
-  async getDataFromServerAtCreated() {
-    const headers = { "Content-Type": "application/json" };
-    let influencer;
-    await fetch("https://db.youbeon.eu/influencer/", { headers })
-      .then((response) => response.json())
-      .then((data) => {
-        influencer = data;
-      });
-
-    let religions;
-    await fetch("https://db.youbeon.eu/religion/", { headers })
-      .then((response) => response.json())
-      .then((data) => {
-        religions = data;
-        data.splice(0, 0, { id: 0, name: "Alle Accounts" });
-      });
-
-    return [influencer, religions];
   }
 }
 </script>
