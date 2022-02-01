@@ -76,7 +76,7 @@
                 style="margin:5% auto"
                 max-width="90%"
                 max-height="800"
-                type="sentences, image, image"
+                type="sentences, image, imagefb"
               ></v-skeleton-loader>
             </keep-alive>
           </v-flex>
