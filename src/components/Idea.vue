@@ -1,33 +1,10 @@
 <template>
   <vContainer>
-    <v-row
-      no-gutters
-      class="mt-2"
-      v-for="religionField in selectedReligion"
-      v-bind:key="religionField.id"
-    >
+    <v-row no-gutters class="mt-2">
       <v-col class="pa-0 flex-grow-1">
-        <v-card
-          :style="{ 'margin-top': religionField.id === 0 ? '3vh' : '0px' }"
-        >
+        <v-card style="margin-top: 3vh">
           <v-row no-gutters>
             <v-autocomplete
-              v-if="displayReligionsOrIdeas"
-              flat
-              @input="getSelectedReligion(religionField.id)"
-              v-model="religionField.religion"
-              :items="allReligions"
-              item-text="displayName"
-              item-value="id"
-              solo
-              clearable
-              hide-details
-              label="Religionen filtern nach..."
-              prepend-inner-icon="search"
-            >
-            </v-autocomplete>
-            <v-autocomplete
-              v-else
               flat
               v-model="selectedIdeaCooccurence"
               :items="allIdeas"
@@ -40,63 +17,6 @@
               prepend-inner-icon="search"
             >
             </v-autocomplete>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  :disabled="!displayReligionsOrIdeas"
-                  icon
-                  style="margin-top: 7px"
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="addReligionField()"
-                >
-                  <v-icon>add_circle_outline</v-icon>
-                </v-btn>
-              </template>
-              <span
-                >Eine weitere Religion hinzufügen und die Schnittmenge
-                bilden</span
-              >
-            </v-tooltip>
-            <v-btn
-              v-if="religionField.id !== 0"
-              style="margin-top: 7px"
-              icon
-              @click="removeReligionField(religionField)"
-            >
-              <v-icon>remove_circle_outline</v-icon>
-            </v-btn>
-            <div class="vl"></div>
-            <v-col class="pa-0 ma-0" cols="auto">
-              <v-menu max-height="80vh" offset-y>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    class="mx-1"
-                    style="margin-top: 5px"
-                    text
-                    v-on="on"
-                    v-bind="attrs"
-                  >
-                    <template>
-                      {{ displayReligionsOrIdeas ? "Religionen" : "Ideen" }}
-                    </template>
-                    <v-icon style="margin-left: 10px">expand_more</v-icon>
-                  </v-btn>
-                </template>
-                <v-list dense>
-                  <v-list-item @click="displayReligionsOrIdeas = true">
-                    <v-list-item-title> Religionen </v-list-item-title>
-                  </v-list-item>
-                  <v-list-item @click="displayReligionsOrIdeas = false">
-                    <v-list-item-title> Ideen </v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </v-col>
-            <div
-              :style="{ 'background-color': religionField.color }"
-              class="colorDisplay"
-            ></div>
           </v-row>
         </v-card>
       </v-col>
@@ -129,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { dataStore } from "../store/data";
 // eslint-disable-next-line
 import * as d3 from "d3";
@@ -144,8 +64,8 @@ export default class Idea extends Vue {
   nodes: any = [];
   links: any = [];
   force = 300;
+  ideaNetworkPot: any[] = [];
   allReligions: any[] = [];
-  selectedReligion: any = [];
   ideaDetailed: any = null;
 
   allIdeas: any = [];
@@ -175,51 +95,75 @@ export default class Idea extends Vue {
     ["sikhismus", "sikh Jugendliche"],
   ];
 
-  getSelectedReligion(val) {
-    let indexOfChangedReligion = -1;
-    this.selectedReligion.forEach((religion) => {
-      if (religion.id === val) {
-        indexOfChangedReligion = this.selectedReligion.indexOf(religion);
-      }
-    });
-    this.getIdeasForReligions(indexOfChangedReligion);
-  }
+  formatIdeasIntoReligions(ideas: any) {
+    let returnIdeas = [
+      {
+        name: "multiple",
+        children: [] as any,
+      },
+      {
+        name: "alevitische Jugendliche",
+        children: [] as any,
+      },
+      {
+        name: "katholische Jugendliche",
+        children: [] as any,
+      },
+      {
+        name: "evangelische Jugendliche",
+        children: [] as any,
+      },
+      {
+        name: "orthodoxe Jugendliche",
+        children: [] as any,
+      },
+      {
+        name: "muslimische Jugendliche",
+        children: [] as any,
+      },
+      {
+        name: "jüdische Jugendliche",
+        children: [] as any,
+      },
+      {
+        name: "sikh Jugendliche",
+        children: [] as any,
+      },
+    ];
 
-  async getIdeasForReligions(changedOne: any) {
-    let tempIdeas: any;
-    let tempIdeasCount: any;
-    const headers = { "Content-Type": "application/json" };
-    await fetch(
-      "https://db.youbeon.eu/idee/menge/?religion=" +
-        String(this.selectedReligion[changedOne].religion),
-      { headers }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        tempIdeasCount = data;
-      });
-    await fetch(
-      "https://db.youbeon.eu/idee/filter/?ids=" +
-        Object.getOwnPropertyNames(tempIdeasCount).toString(),
-      { headers }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        tempIdeas = data;
-      });
-    tempIdeas.forEach((idea) => {
-      let nodeSize = 20;
-      if (tempIdeasCount[idea.id] > 1) {
-        nodeSize = 40;
-      } else if (tempIdeasCount[idea.id] > 4) {
-        nodeSize = 60;
+    ideas.forEach((idea) => {
+      if (idea.interviews.length > 1) {
+        returnIdeas[0].children.push(idea);
       }
-      idea._labelClass = "stuff";
-      idea._color = this.selectedReligion[changedOne].color;
-      idea._size = nodeSize;
+      switch (idea.interviews[0]) {
+        case "alev":
+          returnIdeas[1].children.push(idea);
+          break;
+        case "kath":
+          returnIdeas[2].children.push(idea);
+          break;
+        case "evan":
+          returnIdeas[3].children.push(idea);
+          break;
+        case "orth":
+          returnIdeas[4].children.push(idea);
+          break;
+        case "musl":
+          returnIdeas[5].children.push(idea);
+          break;
+        case "jued":
+          returnIdeas[6].children.push(idea);
+          break;
+        case "sikh":
+          returnIdeas[7].children.push(idea);
+          break;
+        default:
+          console.log("There are ideas with unknown religions over here dawg");
+          break;
+      }
     });
-    this.selectedReligion[changedOne].ideas = tempIdeas;
-    this.combineIntoNodeObjectReligion();
+
+    return returnIdeas;
   }
 
   @Watch("selectedIdeaCooccurence")
@@ -242,41 +186,6 @@ export default class Idea extends Vue {
       randomChannel(brightness) +
       randomChannel(brightness)
     );
-  }
-
-  combineIntoNodeObjectReligion() {
-    let intersection: any[] = [];
-    let links: any[] = [];
-    this.selectedReligion.forEach((religion) => {
-      if (religion.religion !== undefined) {
-        if (intersection.length === 0) {
-          intersection = religion.ideas;
-        } else {
-          let ids: number[] = [];
-          intersection.forEach((el) => {
-            ids.push(el.id);
-          });
-          intersection = religion.ideas.filter((value: any) =>
-            ids.includes(value.id)
-          );
-        }
-      }
-    });
-    /**intersection.forEach((idea) => {
-      let relevantCooc = intersection.filter((value: any) =>
-        idea.cooccurence.includes(value.name)
-      );
-      relevantCooc.forEach((coocIdea) => {
-        links.push({
-          source: idea.id,
-          target: coocIdea.id,
-        });
-      });
-    });
-    console.log(links);
-    this.links = links;**/
-    this.nodes = intersection;
-    this.generateNetwork(this.nodes, this.links);
   }
 
   combineIntoNodeObjectIdeas() {
@@ -307,22 +216,12 @@ export default class Idea extends Vue {
       .force(
         "link",
         d3
-          .forceLink() // This force provides links between nodes
-          .id(function (d) {
-            return d.id;
-          }) // This provide  the id of a node
-          .links(links) // and this the list of links
+          .forceLink(links)
+          .id((d) => d.index)
+          .distance(0)
+          .strength(0.005)
       )
-      .force(
-        "link",
-        d3
-          .forceLink() // This force provides links between nodes
-          .id(function (d) {
-            return d.id;
-          }) // This provide  the id of a node
-          .links(links) // and this the list of links
-      )
-      .force("charge", d3.forceManyBody().strength(-this.force)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+      .force("charge", d3.forceManyBody().strength(-200)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
       //.force("center", d3.forceCenter(width / 2, height / 2)) // This force attracts nodes to the center of the svg area
       .force(
         "x",
@@ -420,14 +319,11 @@ export default class Idea extends Vue {
       })
       .enter()
       .append("circle")
-      .attr("r", function (d) {
-        return d._size;
-      })
       .attr("cx", 0)
       .attr("cy", 0)
-      .style("fill", function (d) {
-        return d._color;
-      })
+      .attr("fill", (d) => (d.children ? "#fff" : "#7D387D"))
+      .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
+      .attr("r", 20)
       .on("click", (d, i) => {
         this.onNodeClick(i);
       });
@@ -440,10 +336,11 @@ export default class Idea extends Vue {
       .enter()
       .append("text")
       .text(function (d) {
-        return d.name;
+        console.log(d)
+        return (d.data ? d.data.name : d.name);
       })
       .attr("dx", function (d) {
-        return d._size + 5;
+        return 25;
       })
       .style("font-size", "14px");
 
@@ -472,27 +369,12 @@ export default class Idea extends Vue {
   }
 
   onNodeClick(feature) {
-    this.ideaDetailed = {
-      name: feature.name,
-      idee: feature.cooccurence,
-    };
-  }
-
-  addReligionField(): void {
-    this.selectedReligion.push({
-      id: Math.random() * 100 + 1,
-      religion: undefined,
-      color: "#7D387D",
-      ideas: {},
-    });
-  }
-
-  removeReligionField(religionField) {
-    const index = this.selectedReligion.indexOf(religionField);
-    if (index > -1) {
-      this.selectedReligion.splice(index, 1);
+    if (feature.data) {
+      this.ideaDetailed = {
+        name: feature.data.name,
+        idee: feature.data.cooccurence,
+      };
     }
-    this.combineIntoNodeObjectReligion();
   }
 
   @Watch("$route")
@@ -510,7 +392,7 @@ export default class Idea extends Vue {
     }
   }
 
-  async mounted() {
+  mounted() {
     let religionData = dataStore.religionen;
     this.allReligions = religionData.filter((r: any) => {
       return this.selectableReligions.includes(r.name.toLowerCase());
@@ -522,22 +404,57 @@ export default class Idea extends Vue {
         }
       });
     });
-    this.selectedReligion = [
-      {
-        id: 0,
-        color: "#7D387D",
-        religion: undefined,
-        ideas: {},
-      },
-    ];
 
-    this.allIdeas = dataStore.ideen;
-    let placeholderIdeas = _.take(this.shuffle(this.allIdeas), 25);
-    placeholderIdeas.forEach((i) => {
-      i._color = "#7D387D";
-      i._size = 20;
+    this.ideaNetworkPot = this.formatIdeasIntoReligions(dataStore.ideen);
+
+    this.ideaNetworkPot.forEach((religion) => {
+      let tempHierarchy = d3.hierarchy(religion);
+      if (religion.name != "multiple") {
+        this.nodes.push(religion);
+      } else {
+        this.nodes.push(...tempHierarchy.descendants().slice(1));
+      }
     });
-    this.nodes = placeholderIdeas;
+
+    let numberOfNodes = this.nodes.length;
+    this.nodes.forEach((node) => {
+      if (node.data != undefined) {
+        //@ts-ignore
+        let linkArray: [number] = [];
+        node.data.interviews.forEach((links) => {
+          switch (links) {
+            case "alev":
+              linkArray.push(numberOfNodes - 7);
+              break;
+            case "kath":
+              linkArray.push(numberOfNodes - 6);
+              break;
+            case "evan":
+              linkArray.push(numberOfNodes - 5);
+              break;
+            case "orth":
+              linkArray.push(numberOfNodes - 4);
+              break;
+            case "musl":
+              linkArray.push(numberOfNodes - 3);
+              break;
+            case "jued":
+              linkArray.push(numberOfNodes - 2);
+              break;
+            case "sikh":
+              linkArray.push(numberOfNodes - 1);
+              break;
+          }
+        });
+        linkArray.forEach((target) => {
+          this.links.push({
+            source: this.nodes.indexOf(node),
+            target: target,
+          });
+        });
+      }
+    });
+    console.log(this.links);
 
     this.$router.onReady(() => this.routeLoaded());
     this.generateNetwork(this.nodes, this.links);
