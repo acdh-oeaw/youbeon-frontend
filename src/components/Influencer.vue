@@ -385,7 +385,7 @@ export default class Influencer extends Vue {
       .append("circle")
       .attr("cx", 0)
       .attr("cy", 0)
-      .attr("fill", (d) => (d.children ? "#fff" : "#7D387D"))
+      .attr("fill", (d) => (d.children ? "#fff" : "#dcfaf3"))
       .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
       .attr("r", 20)
       .on("click", (d, i) => {
