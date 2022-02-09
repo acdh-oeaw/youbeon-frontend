@@ -21,39 +21,6 @@
           >
           </v-autocomplete>
         </v-col>
-        <div class="vl"></div>
-        <v-col class="pa-0 ma-0" cols="auto">
-          <v-menu max-height="80vh" offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="mx-1"
-                style="margin-top: 5px"
-                text
-                v-on="on"
-                v-bind="attrs"
-              >
-                <template>
-                  {{
-                    selectedReligion.displayName
-                      ? selectedReligion.displayName
-                      : selectedReligion.name
-                  }}
-                </template>
-                <v-icon style="margin-left: 10px">expand_more</v-icon>
-              </v-btn>
-            </template>
-            <v-list dense>
-              <v-list-item
-                dense
-                v-bind:key="item.id"
-                v-for="item in religions"
-                @click="selectedReligion = item"
-              >
-                <v-list-item-title>{{ item.displayName }}</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-col>
       </v-row>
     </v-card>
     <div id="network" />
@@ -97,8 +64,12 @@ import { dataStore } from "../store/data";
 })
 export default class Influencer extends Vue {
   //Religion Variables
-  religions: any = [];
   selectedReligion: any = { id: 0, name: "Alle Accounts" };
+
+  //network variables
+  nodes: any = [];
+  links: any = [];
+  force = 400;
 
   //Influencer Variables
   allInfluencer: any = [];
@@ -107,61 +78,6 @@ export default class Influencer extends Vue {
   // Array of selected Influencer in autocomplete field
   selectedInfluencer: any = [];
   influencerDetailed: any = null;
-
-  selectableReligions: string[] = [
-    "alle accounts",
-    "alevitentum",
-    "katholisches christentum",
-    "evangelisches christentum",
-    "orthodoxes christentum",
-    "islam",
-    "judentum",
-    "sikhismus",
-  ];
-
-  displayNameReligions: any[] = [
-    ["alle accounts", "Alle Accounts"],
-    ["alevitentum", "alevitische Jugendliche"],
-    ["katholisches christentum", "katholische Jugendliche"],
-    ["evangelisches christentum", "evangelische Jugendliche"],
-    ["orthodoxes christentum", "orthodoxe Jugendliche"],
-    ["islam", "muslimische Jugendliche"],
-    ["judentum", "jüdische Jugendliche"],
-    ["sikhismus", "sikh Jugendliche"],
-  ];
-
-  force = 400;
-
-  //takes the selected Influences and transfroms them into an Object readable by d3
-  @Watch("selectedInfluencer")
-  buildInfluencerNetworkObject() {
-    let networkInfluencer: any[] = [];
-    this.force = 400;
-    let links: any[] = [];
-    let centerNode = {
-      id: 0,
-      name: this.selectedReligion.displayName,
-      _size: 70,
-      _color: "#b0dcd9",
-    };
-    if (this.selectedReligion.id != 0) {
-      networkInfluencer = [centerNode];
-      this.force = 3000;
-    }
-    this.listInfluencer.forEach((influencer) => {
-      influencer._color = "#dcfaf3";
-      if (this.selectedInfluencer.includes(influencer.id)) {
-        influencer._color = " #448A1C";
-      }
-      if (networkInfluencer.includes(centerNode))
-        links.push({
-          source: 0,
-          target: influencer.id,
-        });
-      networkInfluencer.push(influencer);
-    });
-    this.generateNetwork(networkInfluencer, links);
-  }
 
   shuffle(a) {
     for (let i = a.length - 1; i > 0; i--) {
@@ -214,43 +130,147 @@ export default class Influencer extends Vue {
     this.influencerDetailed = tempInfluencerDetailed;
   }
 
-  @Watch("selectedReligion")
-  modifyInfluencerList() {
-    this.selectedInfluencer = [];
-    if (this.selectedReligion.id === 0) {
-      this.listInfluencer = this.allInfluencer;
-    } else {
-      this.listInfluencer = [];
-      this.allInfluencer.forEach((influencer) => {
-        if (influencer.religion.includes(this.selectedReligion.id)) {
-          this.listInfluencer.push(influencer);
+  formatInfluencerIntoReligions(influencer: any) {
+    let returnInfluencer = [
+      {
+        name: "multiple",
+        children: [] as any,
+      },
+      {
+        name: "alevitische Jugendliche",
+        children: [] as any,
+      },
+      {
+        name: "katholische Jugendliche",
+        children: [] as any,
+      },
+      {
+        name: "evangelische Jugendliche",
+        children: [] as any,
+      },
+      {
+        name: "orthodoxe Jugendliche",
+        children: [] as any,
+      },
+      {
+        name: "muslimische Jugendliche",
+        children: [] as any,
+      },
+      {
+        name: "jüdische Jugendliche",
+        children: [] as any,
+      },
+      {
+        name: "sikh Jugendliche",
+        children: [] as any,
+      },
+    ];
+    influencer.forEach((tempInfluencer) => {
+      if (tempInfluencer.interviews.length > 1) {
+        returnInfluencer[0].children.push(tempInfluencer);
+      }
+
+      tempInfluencer.interviews.forEach((interview) => {
+        switch (interview) {
+          case "alev":
+            returnInfluencer[1].children.push(tempInfluencer);
+            break;
+          case "kath":
+            returnInfluencer[2].children.push(tempInfluencer);
+            break;
+          case "evan":
+            returnInfluencer[3].children.push(tempInfluencer);
+            break;
+          case "orth":
+            returnInfluencer[4].children.push(tempInfluencer);
+            break;
+          case "musl":
+            returnInfluencer[5].children.push(tempInfluencer);
+            break;
+          case "jued":
+            returnInfluencer[6].children.push(tempInfluencer);
+            break;
+          case "sikh":
+            returnInfluencer[7].children.push(tempInfluencer);
+            break;
+          default:
+            console.log(
+              "There are influencers with unknown religions over here dawg"
+            );
+            break;
         }
       });
-    }
-    this.buildInfluencerNetworkObject();
+    });
+    return returnInfluencer;
   }
 
-  async created() {
-    this.allInfluencer = dataStore.influencer;
-    this.listInfluencer = this.allInfluencer;
-    this.buildInfluencerNetworkObject();
-    this.religions = dataStore.religionen.filter((r: any) => {
-      return this.selectableReligions.includes(r.name.toLowerCase());
+  async mounted() {
+    this.allInfluencer = this.formatInfluencerIntoReligions(
+      dataStore.influencer
+    );
+
+    let religions: any[] = [];
+    this.allInfluencer.forEach((religion) => {
+      let tempHierarchy = d3.hierarchy(religion);
+      if (religion.name != "multiple") {
+        this.nodes.push(...tempHierarchy.descendants().slice(1));
+        religions.push(religion);
+      } else {
+        this.nodes.push(...tempHierarchy.descendants().slice(1));
+      }
     });
-    this.displayNameReligions.forEach((displayReligion) => {
-      this.religions.forEach((allReligion) => {
-        if (displayReligion.includes(allReligion.name.toLowerCase())) {
-          allReligion.displayName = displayReligion[1];
-        }
-      });
+    this.nodes.push(...religions);
+
+    let numberOfNodes = this.nodes.length;
+    this.nodes.forEach((node) => {
+      if (node.data != undefined) {
+        //@ts-ignore
+        let linkArray: [number] = [];
+        node.data.interviews.forEach((links) => {
+          switch (links) {
+            case "alev":
+              linkArray.push(numberOfNodes - 7);
+              break;
+            case "kath":
+              linkArray.push(numberOfNodes - 6);
+              break;
+            case "evan":
+              linkArray.push(numberOfNodes - 5);
+              break;
+            case "orth":
+              linkArray.push(numberOfNodes - 4);
+              break;
+            case "musl":
+              linkArray.push(numberOfNodes - 3);
+              break;
+            case "jued":
+              linkArray.push(numberOfNodes - 2);
+              break;
+            case "sikh":
+              linkArray.push(numberOfNodes - 1);
+              break;
+          }
+        });
+        linkArray.forEach((target) => {
+          this.links.push({
+            source: this.nodes.indexOf(node),
+            target: target,
+          });
+        });
+      }
     });
+
+    console.log(this.links);
+    console.log(this.nodes);
+    this.generateNetwork(this.nodes, this.links);
   }
 
   generateNetwork(nodes, links) {
-    d3.selectAll("svg").remove();
+    d3.selectAll("g").remove();
     // set the dimensions and margins of the graph
     let height;
     let width;
+
     height = document.querySelector("#network")?.clientHeight;
     width = document.querySelector("#network")?.clientWidth;
 
@@ -260,13 +280,13 @@ export default class Influencer extends Vue {
       .force(
         "link",
         d3
-          .forceLink() // This force provides links between nodes
-          .id(function (d) {
-            return d.id;
-          }) // This provide  the id of a node
-          .links(links) // and this the list of links
+          .forceLink(links)
+          .id((d) => d.index)
+          .distance(0)
+          .strength(0.005)
       )
-      .force("charge", d3.forceManyBody().strength(-this.force)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+      .force("charge", d3.forceManyBody().strength(-200)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+      //.force("center", d3.forceCenter(width / 2, height / 2)) // This force attracts nodes to the center of the svg area
       .force(
         "x",
         d3
@@ -289,6 +309,7 @@ export default class Influencer extends Vue {
       );
 
     let drag = (simulation) => {
+      const localforce = this.force;
       function dragstarted(event) {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         event.subject.fx = event.subject.x;
@@ -325,7 +346,6 @@ export default class Influencer extends Vue {
       svg = d3.select("svg");
     }
 
-    //zoom
     const g = svg.append("g");
     const handleZoom = (e) => g.attr("transform", e.transform);
     const zoom = d3.zoom().on("zoom", handleZoom);
@@ -339,7 +359,7 @@ export default class Influencer extends Vue {
       .data(links)
       .join("line")
       .style("stroke", "#aaa")
-      .style("stroke-width", "5");
+      .style("stroke-width", "2");
 
     var groups = g
       .selectAll(".group")
@@ -363,12 +383,11 @@ export default class Influencer extends Vue {
       })
       .enter()
       .append("circle")
-      .attr("r", 20)
       .attr("cx", 0)
       .attr("cy", 0)
-      .style("fill", function (d) {
-        return d._color;
-      })
+      .attr("fill", (d) => (d.children ? "#fff" : "#7D387D"))
+      .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
+      .attr("r", 20)
       .on("click", (d, i) => {
         this.onNodeClick(d, i);
       });
@@ -381,9 +400,11 @@ export default class Influencer extends Vue {
       .enter()
       .append("text")
       .text(function (d) {
-        return d.name;
+        return d.data ? d.data.name : d.name;
       })
-      .attr("dx", 25)
+      .attr("dx", function (d) {
+        return 25;
+      })
       .style("font-size", "14px");
 
     // This function is run at each iteration of the force algorithm, updating the nodes position.

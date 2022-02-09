@@ -65,35 +65,14 @@ export default class Idea extends Vue {
   links: any = [];
   force = 300;
   ideaNetworkPot: any[] = [];
-  allReligions: any[] = [];
   ideaDetailed: any = null;
+
+  displayReligionsOrIdeas = false;
 
   allIdeas: any = [];
   //saves the COOCCURENCE of the selected Idea in an Array
   selectedIdeaCooccurence: any = null;
 
-  //Boolean die festlegt ob im autocomplete Ideen oder Religionen angezeigt werden(Religionen = true)
-  displayReligionsOrIdeas = true;
-
-  selectableReligions: string[] = [
-    "alevitentum",
-    "katholisches christentum",
-    "evangelisches christentum",
-    "orthodoxes christentum",
-    "islam",
-    "judentum",
-    "sikhismus",
-  ];
-
-  displayNameReligions: any[] = [
-    ["alevitentum", "alevitische Jugendliche"],
-    ["katholisches christentum", "katholische Jugendliche"],
-    ["evangelisches christentum", "evangelische Jugendliche"],
-    ["orthodoxes christentum", "orthodoxe Jugendliche"],
-    ["islam", "muslimische Jugendliche"],
-    ["judentum", "jüdische Jugendliche"],
-    ["sikhismus", "sikh Jugendliche"],
-  ];
 
   formatIdeasIntoReligions(ideas: any) {
     let returnIdeas = [
@@ -295,7 +274,7 @@ export default class Idea extends Vue {
       .data(links)
       .join("line")
       .style("stroke", "#aaa")
-      .style("stroke-width", "5");
+      .style("stroke-width", "2");
 
     var groups = g
       .selectAll(".group")
@@ -393,18 +372,6 @@ export default class Idea extends Vue {
   }
 
   mounted() {
-    let religionData = dataStore.religionen;
-    this.allReligions = religionData.filter((r: any) => {
-      return this.selectableReligions.includes(r.name.toLowerCase());
-    });
-    this.displayNameReligions.forEach((displayReligion) => {
-      this.allReligions.forEach((allReligion) => {
-        if (displayReligion.includes(allReligion.name.toLowerCase())) {
-          allReligion.displayName = displayReligion[1];
-        }
-      });
-    });
-
     this.ideaNetworkPot = this.formatIdeasIntoReligions(dataStore.ideen);
 
     this.ideaNetworkPot.forEach((religion) => {
@@ -454,7 +421,6 @@ export default class Idea extends Vue {
         });
       }
     });
-    console.log(this.links);
 
     this.$router.onReady(() => this.routeLoaded());
     this.generateNetwork(this.nodes, this.links);
