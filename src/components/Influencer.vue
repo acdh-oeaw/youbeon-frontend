@@ -79,6 +79,41 @@ export default class Influencer extends Vue {
   selectedInfluencer: any = [];
   influencerDetailed: any = null;
 
+  coordinatesForcePoints: any = [
+    {
+      x: 50,
+      y: -500,
+    },
+    {
+      x: 750,
+      y: -900,
+    },
+    {
+      x: 1450,
+      y: -450,
+    },
+    {
+      x: 1450,
+      y: 700,
+    },
+    {
+      x: 1000,
+      y: 1000,
+    },
+    {
+      x: -450,
+      y: 100,
+    },
+    {
+      x: 450,
+      y: 800,
+    },
+    {
+      x: -150,
+      y: 100,
+    },
+  ];
+
   shuffle(a) {
     for (let i = a.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -259,10 +294,121 @@ export default class Influencer extends Vue {
         });
       }
     });
-
-    console.log(this.links);
-    console.log(this.nodes);
     this.generateNetwork(this.nodes, this.links);
+  }
+
+  determinePosition(node, width, height) {
+    let returnValue = 0;
+    if (width > height) {
+      if (node.data != undefined) {
+        if (node.data.interviews.length > 1) {
+          returnValue = 700;
+        } else {
+          switch (node.data.interviews[0]) {
+            case "alev":
+              returnValue = this.coordinatesForcePoints[0].x;
+              break;
+            case "kath":
+              returnValue = this.coordinatesForcePoints[1].x;
+              break;
+            case "evan":
+              returnValue = this.coordinatesForcePoints[2].x;
+              break;
+            case "orth":
+              returnValue = this.coordinatesForcePoints[3].x;
+              break;
+            case "musl":
+              returnValue = this.coordinatesForcePoints[4].x;
+              break;
+            case "jued":
+              returnValue = this.coordinatesForcePoints[6].x;
+              break;
+            case "sikh":
+              returnValue = this.coordinatesForcePoints[5].x;
+              break;
+          }
+        }
+      } else {
+        switch (node.name) {
+          case "alevitische Jugendliche":
+            returnValue = this.coordinatesForcePoints[0].x;
+            break;
+          case "katholische Jugendliche":
+            returnValue = this.coordinatesForcePoints[1].x;
+            break;
+          case "evangelische Jugendliche":
+            returnValue = this.coordinatesForcePoints[2].x;
+            break;
+          case "orthodoxe Jugendliche":
+            returnValue = this.coordinatesForcePoints[3].x;
+            break;
+          case "muslimische Jugendliche":
+            returnValue = this.coordinatesForcePoints[4].x;
+            break;
+          case "jüdische Jugendliche":
+            returnValue = this.coordinatesForcePoints[6].x;
+            break;
+          case "sikh Jugendliche":
+            returnValue = this.coordinatesForcePoints[5].x;
+            break;
+        }
+      }
+    } else {
+      if (node.data != undefined) {
+        if (node.data.interviews.length > 1) {
+          returnValue = 0;
+        } else {
+          switch (node.data.interviews[0]) {
+            case "alev":
+              returnValue = this.coordinatesForcePoints[0].y;
+              break;
+            case "kath":
+              returnValue = this.coordinatesForcePoints[1].y;
+              break;
+            case "evan":
+              returnValue = this.coordinatesForcePoints[2].y;
+              break;
+            case "orth":
+              returnValue = this.coordinatesForcePoints[3].y;
+              break;
+            case "musl":
+              returnValue = this.coordinatesForcePoints[4].y;
+              break;
+            case "jued":
+              returnValue = this.coordinatesForcePoints[6].y;
+              break;
+            case "sikh":
+              returnValue = this.coordinatesForcePoints[5].y;
+              break;
+          }
+        }
+      } else {
+        switch (node.name) {
+          case "alevitische Jugendliche":
+            returnValue = this.coordinatesForcePoints[0].y;
+            break;
+          case "katholische Jugendliche":
+            returnValue = this.coordinatesForcePoints[1].y;
+            break;
+          case "evangelische Jugendliche":
+            returnValue = this.coordinatesForcePoints[2].y;
+            break;
+          case "orthodoxe Jugendliche":
+            returnValue = this.coordinatesForcePoints[3].y;
+            break;
+          case "muslimische Jugendliche":
+            returnValue = this.coordinatesForcePoints[4].y;
+            break;
+          case "jüdische Jugendliche":
+            returnValue = this.coordinatesForcePoints[6].y;
+            break;
+          case "sikh Jugendliche":
+            returnValue = this.coordinatesForcePoints[5].y;
+            break;
+        }
+      }
+    }
+    return returnValue;
   }
 
   generateNetwork(nodes, links) {
@@ -283,7 +429,7 @@ export default class Influencer extends Vue {
           .forceLink(links)
           .id((d) => d.index)
           .distance(0)
-          .strength(0.005)
+          .strength(0.0005)
       )
       .force("charge", d3.forceManyBody().strength(-200)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
       //.force("center", d3.forceCenter(width / 2, height / 2)) // This force attracts nodes to the center of the svg area
@@ -291,15 +437,19 @@ export default class Influencer extends Vue {
         "x",
         d3
           .forceX()
-          .x(width / 2)
-          .strength(0.05)
+          .x((d) => {
+            return this.determinePosition(d, width, 0);
+          })
+          .strength(0.1)
       )
       .force(
         "y",
         d3
           .forceY()
-          .y(height / 2)
-          .strength(0.05)
+          .y((d) => {
+            return this.determinePosition(d, 0, height);
+          })
+          .strength(0.1)
       )
       .force(
         "collision",

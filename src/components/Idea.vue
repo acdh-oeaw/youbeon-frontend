@@ -67,12 +67,46 @@ export default class Idea extends Vue {
   ideaNetworkPot: any[] = [];
   ideaDetailed: any = null;
 
+  coordinatesForcePoints: any = [
+    {
+      x: 50,
+      y: -500,
+    },
+    {
+      x: 750,
+      y: -900,
+    },
+    {
+      x: 1450,
+      y: -450,
+    },
+    {
+      x: 1450,
+      y: 700,
+    },
+    {
+      x: 1000,
+      y: 1000,
+    },
+    {
+      x: -450,
+      y: 100,
+    },
+    {
+      x: 450,
+      y: 800,
+    },
+    {
+      x: -150,
+      y: 100,
+    },
+  ];
+
   displayReligionsOrIdeas = false;
 
   allIdeas: any = [];
   //saves the COOCCURENCE of the selected Idea in an Array
   selectedIdeaCooccurence: any = null;
-
 
   formatIdeasIntoReligions(ideas: any) {
     let returnIdeas = [
@@ -180,6 +214,68 @@ export default class Idea extends Vue {
     this.generateNetwork(this.nodes, []);
   }
 
+  determinePosition(node, width, height) {
+    let returnValue = 0;
+    if (width > height) {
+      if (node.data != undefined) {
+        returnValue = 700;
+      } else {
+        switch (node.name) {
+          case "alevitische Jugendliche":
+            returnValue = this.coordinatesForcePoints[0].x;
+            break;
+          case "katholische Jugendliche":
+            returnValue = this.coordinatesForcePoints[1].x;
+            break;
+          case "evangelische Jugendliche":
+            returnValue = this.coordinatesForcePoints[2].x;
+            break;
+          case "orthodoxe Jugendliche":
+            returnValue = this.coordinatesForcePoints[3].x;
+            break;
+          case "muslimische Jugendliche":
+            returnValue = this.coordinatesForcePoints[4].x;
+            break;
+          case "jüdische Jugendliche":
+            returnValue = this.coordinatesForcePoints[6].x;
+            break;
+          case "sikh Jugendliche":
+            returnValue = this.coordinatesForcePoints[5].x;
+            break;
+        }
+      }
+    } else {
+      if (node.data != undefined) {
+        returnValue = 0;
+      } else {
+        switch (node.name) {
+          case "alevitische Jugendliche":
+            returnValue = this.coordinatesForcePoints[0].y;
+            break;
+          case "katholische Jugendliche":
+            returnValue = this.coordinatesForcePoints[1].y;
+            break;
+          case "evangelische Jugendliche":
+            returnValue = this.coordinatesForcePoints[2].y;
+            break;
+          case "orthodoxe Jugendliche":
+            returnValue = this.coordinatesForcePoints[3].y;
+            break;
+          case "muslimische Jugendliche":
+            returnValue = this.coordinatesForcePoints[4].y;
+            break;
+          case "jüdische Jugendliche":
+            returnValue = this.coordinatesForcePoints[6].y;
+            break;
+          case "sikh Jugendliche":
+            returnValue = this.coordinatesForcePoints[5].y;
+            break;
+        }
+      }
+    }
+    return returnValue;
+  }
+
   generateNetwork(nodes, links) {
     d3.selectAll("g").remove();
     // set the dimensions and margins of the graph
@@ -206,15 +302,19 @@ export default class Idea extends Vue {
         "x",
         d3
           .forceX()
-          .x(width / 2)
-          .strength(0.05)
+          .x((d) => {
+            return this.determinePosition(d, width, 0);
+          })
+          .strength(0.1)
       )
       .force(
         "y",
         d3
           .forceY()
-          .y(height / 2)
-          .strength(0.05)
+          .y((d) => {
+            return this.determinePosition(d, 0, height);
+          })
+          .strength(0.1)
       )
       .force(
         "collision",
@@ -315,8 +415,8 @@ export default class Idea extends Vue {
       .enter()
       .append("text")
       .text(function (d) {
-        console.log(d)
-        return (d.data ? d.data.name : d.name);
+        console.log(d);
+        return d.data ? d.data.name : d.name;
       })
       .attr("dx", function (d) {
         return 25;
