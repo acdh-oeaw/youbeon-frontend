@@ -128,11 +128,11 @@ export default class Influencer extends Vue {
 
   async onNodeClick(event, node) {
     const headers = { "Content-Type": "application/json" };
-    let tempInfluencerDetailed = node;
+    let tempInfluencerDetailed = node.data;
     if (!isNaN(Number(tempInfluencerDetailed.kategorie[0]))) {
       await fetch(
         "https://db.youbeon.eu/kategorie/filter/?ids=" +
-          node.kategorie.toString(),
+          tempInfluencerDetailed.kategorie.toString(),
         { headers }
       )
         .then((response) => response.json())
@@ -148,7 +148,7 @@ export default class Influencer extends Vue {
     }
     if (!isNaN(Number(tempInfluencerDetailed.idee[0]))) {
       await fetch(
-        "https://db.youbeon.eu/idee/filter/?ids=" + node.idee.toString(),
+        "https://db.youbeon.eu/idee/filter/?ids=" + tempInfluencerDetailed.idee.toString(),
         { headers }
       )
         .then((response) => response.json())
