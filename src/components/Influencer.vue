@@ -203,38 +203,38 @@ export default class Influencer extends Vue {
     influencer.forEach((tempInfluencer) => {
       if (tempInfluencer.interviews.length > 1) {
         returnInfluencer[0].children.push(tempInfluencer);
+      } else {
+        tempInfluencer.interviews.forEach((interview) => {
+          switch (interview) {
+            case "alev":
+              returnInfluencer[1].children.push(tempInfluencer);
+              break;
+            case "kath":
+              returnInfluencer[2].children.push(tempInfluencer);
+              break;
+            case "evan":
+              returnInfluencer[3].children.push(tempInfluencer);
+              break;
+            case "orth":
+              returnInfluencer[4].children.push(tempInfluencer);
+              break;
+            case "musl":
+              returnInfluencer[5].children.push(tempInfluencer);
+              break;
+            case "jued":
+              returnInfluencer[6].children.push(tempInfluencer);
+              break;
+            case "sikh":
+              returnInfluencer[7].children.push(tempInfluencer);
+              break;
+            default:
+              console.log(
+                "There are influencers with unknown religions over here dawg"
+              );
+              break;
+          }
+        });
       }
-
-      tempInfluencer.interviews.forEach((interview) => {
-        switch (interview) {
-          case "alev":
-            returnInfluencer[1].children.push(tempInfluencer);
-            break;
-          case "kath":
-            returnInfluencer[2].children.push(tempInfluencer);
-            break;
-          case "evan":
-            returnInfluencer[3].children.push(tempInfluencer);
-            break;
-          case "orth":
-            returnInfluencer[4].children.push(tempInfluencer);
-            break;
-          case "musl":
-            returnInfluencer[5].children.push(tempInfluencer);
-            break;
-          case "jued":
-            returnInfluencer[6].children.push(tempInfluencer);
-            break;
-          case "sikh":
-            returnInfluencer[7].children.push(tempInfluencer);
-            break;
-          default:
-            console.log(
-              "There are influencers with unknown religions over here dawg"
-            );
-            break;
-        }
-      });
     });
     return returnInfluencer;
   }
@@ -429,7 +429,7 @@ export default class Influencer extends Vue {
           .forceLink(links)
           .id((d) => d.index)
           .distance(0)
-          .strength(0.0005)
+          .strength(0.01)
       )
       .force("charge", d3.forceManyBody().strength(-200)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
       //.force("center", d3.forceCenter(width / 2, height / 2)) // This force attracts nodes to the center of the svg area
@@ -453,9 +453,7 @@ export default class Influencer extends Vue {
       )
       .force(
         "collision",
-        d3.forceCollide().radius(function (d) {
-          return d.radius;
-        })
+        d3.forceCollide().radius((d) => (d.children ? 50 : 30))
       );
 
     let drag = (simulation) => {
@@ -537,7 +535,7 @@ export default class Influencer extends Vue {
       .attr("cy", 0)
       .attr("fill", (d) => (d.children ? "#448A1C" : "#dcfaf3"))
       .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
-      .attr("r", 20)
+      .attr("r", (d) => (d.children ? 40 : 20))
       .on("click", (d, i) => {
         this.onNodeClick(d, i);
       });
@@ -553,7 +551,7 @@ export default class Influencer extends Vue {
         return d.data ? d.data.name : d.name;
       })
       .attr("dx", function (d) {
-        return 25;
+        return d.data ? 25 : 50;
       })
       .style("font-size", "14px");
 

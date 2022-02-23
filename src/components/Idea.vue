@@ -318,9 +318,7 @@ export default class Idea extends Vue {
       )
       .force(
         "collision",
-        d3.forceCollide().radius(function (d) {
-          return d.radius;
-        })
+        d3.forceCollide().radius((d) => (d.children ? 50 : 20))
       );
 
     let drag = (simulation) => {
@@ -402,7 +400,7 @@ export default class Idea extends Vue {
       .attr("cy", 0)
       .attr("fill", (d) => (d.children ? "#fff" : "#7D387D"))
       .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
-      .attr("r", 20)
+      .attr("r", (d) => (d.children ? 40 : 20))
       .on("click", (d, i) => {
         this.onNodeClick(i);
       });
@@ -415,11 +413,10 @@ export default class Idea extends Vue {
       .enter()
       .append("text")
       .text(function (d) {
-        console.log(d);
         return d.data ? d.data.name : d.name;
       })
       .attr("dx", function (d) {
-        return 25;
+        return d.data ? 25 : 50;
       })
       .style("font-size", "14px");
 
