@@ -22,6 +22,7 @@
       </v-col>
     </v-row>
     <div id="network" />
+    <v-btn elevation="1" @click="resetNetwork" small id="innitViewButton">Reset</v-btn>
     <v-card v-if="ideaDetailed !== null" id="detailedView">
       <v-card-title>
         <v-row no-gutters>
@@ -107,6 +108,7 @@ export default class Idea extends Vue {
   allIdeas: any = [];
   //saves the COOCCURENCE of the selected Idea in an Array
   selectedIdeaCooccurence: any = null;
+  bigNetwork = true;
 
   formatIdeasIntoReligions(ideas: any) {
     let returnIdeas = [
@@ -156,6 +158,9 @@ export default class Idea extends Vue {
           returnIdeas[2].children.push(idea);
           break;
         case "evan":
+          returnIdeas[3].children.push(idea);
+          break;
+        case "evang":
           returnIdeas[3].children.push(idea);
           break;
         case "orth":
@@ -444,12 +449,36 @@ export default class Idea extends Vue {
     });
   }
 
+  resetNetwork() {
+    this.bigNetwork=false
+    this.initialNetwork()
+  }
+
   onNodeClick(feature) {
     if (feature.data) {
       this.ideaDetailed = {
         name: feature.data.name,
         idee: feature.data.cooccurence,
       };
+    } else {
+      this.bigNetwork = false;
+      this.ideaNetworkPot.forEach((religion) => {
+        if (religion.name === feature.name) {
+          let tempHierarchy = d3.hierarchy(religion);
+          this.nodes = tempHierarchy.descendants();
+          this.links = tempHierarchy.links();
+        }
+      });
+      this.ideaNetworkPot[0].children.forEach((multipleIdea) => {
+        if (
+          multipleIdea.interviews.includes(
+            feature.name.split(" ")[0].slice(0, 4)
+          )
+        ) {
+          this.nodes.push(multipleIdea);
+        }
+      });
+      this.generateNetwork(this.nodes, this.links);
     }
   }
 
@@ -468,9 +497,9 @@ export default class Idea extends Vue {
     }
   }
 
-  mounted() {
-    this.ideaNetworkPot = this.formatIdeasIntoReligions(dataStore.ideen);
-
+  initialNetwork() {
+    this.nodes = []
+    this.links = []
     this.ideaNetworkPot.forEach((religion) => {
       let tempHierarchy = d3.hierarchy(religion);
       if (religion.name != "multiple") {
@@ -494,6 +523,9 @@ export default class Idea extends Vue {
               linkArray.push(numberOfNodes - 6);
               break;
             case "evan":
+              linkArray.push(numberOfNodes - 5);
+              break;
+            case "evang":
               linkArray.push(numberOfNodes - 5);
               break;
             case "orth":
@@ -523,12 +555,9 @@ export default class Idea extends Vue {
     this.generateNetwork(this.nodes, this.links);
   }
 
-  shuffle(a) {
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
+  mounted() {
+    this.ideaNetworkPot = this.formatIdeasIntoReligions(dataStore.ideen);
+    this.initialNetwork();
   }
 }
 </script>
@@ -551,6 +580,12 @@ export default class Idea extends Vue {
 
 .stuff {
   color: rgb(0, 0, 0);
+}
+
+#innitViewButton{
+  position: absolute;
+  right: 100px;
+  top: 250px;
 }
 
 #detailedView {

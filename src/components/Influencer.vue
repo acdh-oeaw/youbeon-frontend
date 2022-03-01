@@ -127,6 +127,7 @@ export default class Influencer extends Vue {
   }
 
   async onNodeClick(event, node) {
+    console.log(node)
     const headers = { "Content-Type": "application/json" };
     let tempInfluencerDetailed = node.data;
     if (!isNaN(Number(tempInfluencerDetailed.kategorie[0]))) {
@@ -228,6 +229,7 @@ export default class Influencer extends Vue {
               returnInfluencer[7].children.push(tempInfluencer);
               break;
             default:
+              console.log(tempInfluencer)
               console.log(
                 "There are influencers with unknown religions over here dawg"
               );
@@ -239,11 +241,8 @@ export default class Influencer extends Vue {
     return returnInfluencer;
   }
 
-  async mounted() {
-    this.allInfluencer = this.formatInfluencerIntoReligions(
-      dataStore.influencer
-    );
 
+  initalNetwork() {
     let religions: any[] = [];
     this.allInfluencer.forEach((religion) => {
       let tempHierarchy = d3.hierarchy(religion);
@@ -295,6 +294,13 @@ export default class Influencer extends Vue {
       }
     });
     this.generateNetwork(this.nodes, this.links);
+  }
+
+  async mounted() {
+    this.allInfluencer = this.formatInfluencerIntoReligions(
+      dataStore.influencer
+    );
+    this.initalNetwork();
   }
 
   determinePosition(node, width, height) {
