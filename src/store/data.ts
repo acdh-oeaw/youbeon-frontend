@@ -26,6 +26,9 @@ async function init() {
     dataStore.ideen = await fetch("https://db.youbeon.eu/idee", { headers })
         .then((response) => response.json())
         .then((data) => {
+            data.forEach(idea => {
+                idea._color = "#7D387D"
+            });
             return data
         });
 

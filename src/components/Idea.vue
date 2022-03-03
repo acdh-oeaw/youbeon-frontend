@@ -6,11 +6,12 @@
           <v-row no-gutters>
             <v-autocomplete
               flat
-              v-model="selectedIdeaCooccurence"
-              :items="allIdeas"
-              item-text="name"
+              v-model="selectedIdea"
+              :items="nodes"
+              item-text="data.name"
               item-value="cooccurence"
               solo
+              multiple
               clearable
               hide-details
               label="Ideen filtern nach..."
@@ -22,7 +23,9 @@
       </v-col>
     </v-row>
     <div id="network" />
-    <v-btn elevation="1" @click="resetNetwork" small id="innitViewButton">Reset</v-btn>
+    <v-btn elevation="1" @click="resetNetwork" small id="innitViewButton"
+      >Reset</v-btn
+    >
     <v-card v-if="ideaDetailed !== null" id="detailedView">
       <v-card-title>
         <v-row no-gutters>
@@ -68,7 +71,10 @@ export default class Idea extends Vue {
   ideaNetworkPot: any[] = [];
   ideaDetailed: any = null;
 
-  coordinatesForcePoints: any = [
+  height = document.querySelector("#network")?.clientHeight || 1080;
+  width = document.querySelector("#network")?.clientWidth  || 1920;
+
+coordinatesForcePoints: any = [
     {
       x: 50,
       y: -500,
@@ -103,11 +109,46 @@ export default class Idea extends Vue {
     },
   ];
 
+  /**coordinatesForcePoints: any = [
+    {
+      x: this.width/2,
+      y: this.height/2,
+    },
+    {
+      x: this.width/2,
+      y: this.height/2 + 500,
+    },
+    {
+      x: this.width/2 + 250,
+      y: this.height/2 + 250,
+    },
+    {
+      x: this.width/2 + 500,
+      y: this.height/2,
+    },
+    {
+      x:  this.width/2 + 250,
+      y: this.height/2 - 250,
+    },
+    {
+      x: this.width/2,
+      y: this.height/2 - 500,
+    },
+    {
+      x: this.width/2 - 250,
+      y: this.height/2 - 250,
+    },
+    {
+      x: this.width/2 - 500,
+      y: this.height/2,
+    },
+  ];**/
+
   displayReligionsOrIdeas = false;
 
   allIdeas: any = [];
   //saves the COOCCURENCE of the selected Idea in an Array
-  selectedIdeaCooccurence: any = null;
+  selectedIdea: any = null;
   bigNetwork = true;
 
   formatIdeasIntoReligions(ideas: any) {
@@ -184,39 +225,40 @@ export default class Idea extends Vue {
     return returnIdeas;
   }
 
-  @Watch("selectedIdeaCooccurence")
-  displayCooccurenceOfIdea() {
-    if (this.selectedIdeaCooccurence != undefined) {
-      this.combineIntoNodeObjectIdeas();
-    }
-  }
-
-  randomColor(brightness) {
-    function randomChannel(brightness) {
-      var r = 255 - brightness;
-      var n = 0 | (Math.random() * r + brightness);
-      var s = n.toString(16);
-      return s.length == 1 ? "0" + s : s;
-    }
-    return (
-      "#" +
-      randomChannel(brightness) +
-      randomChannel(brightness) +
-      randomChannel(brightness)
-    );
-  }
-
-  combineIntoNodeObjectIdeas() {
-    let tempIdeas: any = [];
-    this.allIdeas.forEach((idea) => {
-      if (this.selectedIdeaCooccurence.includes(idea.name)) {
-        idea._color = "#7D387D";
-        idea._size = 20;
-        tempIdeas.push(idea);
+  @Watch("selectedIdea")
+  buildInfluencerNetworkObject() {
+    this.nodes.forEach((node) => {
+      if (node.data) {
+        if (this.selectedIdea.length > 0) {
+          this.selectedIdea.forEach((selected) => {
+            if (node.data.name === selected) {
+              node.data._color = "#82c782";
+            } else {
+              node.data._color = "#7D387D";
+            }
+          });
+        } else {
+          node.data._color = "#7D387D";
+        }
       }
     });
-    this.nodes = tempIdeas;
-    this.generateNetwork(this.nodes, []);
+    this.links.forEach((link) => {
+      if (this.selectedIdea.length > 0) {
+        this.selectedIdea.forEach((selected) => {
+          if (link.source.data.name === selected) {
+            link._color = "#000";
+            link.thiccness = "3";
+          } else {
+            link._color = "#AAA";
+            link.thiccness = "2";
+          }
+        });
+      } else {
+        link._color = "#AAA";
+        link.thiccness = "2";
+      }
+    });
+    this.generateNetwork(this.nodes, this.links);
   }
 
   determinePosition(node, width, height) {
@@ -284,11 +326,6 @@ export default class Idea extends Vue {
   generateNetwork(nodes, links) {
     d3.selectAll("g").remove();
     // set the dimensions and margins of the graph
-    let height;
-    let width;
-
-    height = document.querySelector("#network")?.clientHeight;
-    width = document.querySelector("#network")?.clientWidth;
 
     // Let's list the force we wanna apply on the network
     const simulation = d3
@@ -308,7 +345,7 @@ export default class Idea extends Vue {
         d3
           .forceX()
           .x((d) => {
-            return this.determinePosition(d, width, 0);
+            return this.determinePosition(d, this.width, 0);
           })
           .strength(0.1)
       )
@@ -317,7 +354,7 @@ export default class Idea extends Vue {
         d3
           .forceY()
           .y((d) => {
-            return this.determinePosition(d, 0, height);
+            return this.determinePosition(d, 0, this.height);
           })
           .strength(0.1)
       )
@@ -327,7 +364,6 @@ export default class Idea extends Vue {
       );
 
     let drag = (simulation) => {
-      const localforce = this.force;
       function dragstarted(event) {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         event.subject.fx = event.subject.x;
@@ -358,8 +394,8 @@ export default class Idea extends Vue {
       svg = d3
         .select("#network")
         .append("svg")
-        .attr("width", width)
-        .attr("height", height);
+        .attr("width", this.width)
+        .attr("height", this.height);
     } else {
       svg = d3.select("svg");
     }
@@ -367,8 +403,9 @@ export default class Idea extends Vue {
     const g = svg.append("g");
     const handleZoom = (e) => g.attr("transform", e.transform);
     const zoom = d3.zoom().on("zoom", handleZoom);
-
-    d3.select("svg").call(zoom);
+    svg
+      .call(zoom)
+      //.call(zoom.transform, d3.zoomIdentity.scale(0.3,0.3));
 
     let link;
     // Initialize the links
@@ -376,8 +413,8 @@ export default class Idea extends Vue {
       .selectAll("line")
       .data(links)
       .join("line")
-      .style("stroke", "#aaa")
-      .style("stroke-width", "2");
+      .style("stroke", (d) => d._color)
+      .style("stroke-width", (d) => d.thiccness);
 
     var groups = g
       .selectAll(".group")
@@ -403,7 +440,7 @@ export default class Idea extends Vue {
       .append("circle")
       .attr("cx", 0)
       .attr("cy", 0)
-      .attr("fill", (d) => (d.children ? "#fff" : "#7D387D"))
+      .attr("fill", (d) => (d.children ? "#fff" : d.data ? d.data._color : "#fff"))
       .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
       .attr("r", (d) => (d.children ? 40 : 20))
       .on("click", (d, i) => {
@@ -450,8 +487,8 @@ export default class Idea extends Vue {
   }
 
   resetNetwork() {
-    this.bigNetwork=false
-    this.initialNetwork()
+    this.bigNetwork = false;
+    this.initialNetwork();
   }
 
   onNodeClick(feature) {
@@ -478,6 +515,10 @@ export default class Idea extends Vue {
           this.nodes.push(multipleIdea);
         }
       });
+      this.links.forEach((link) => {
+        link._color = "#aaa";
+        link.thiccness = "2";
+      });
       this.generateNetwork(this.nodes, this.links);
     }
   }
@@ -493,13 +534,13 @@ export default class Idea extends Vue {
       let idea = this.allIdeas.filter((obj) => {
         if (obj.name === this.$route.params.id) return obj;
       });
-      this.selectedIdeaCooccurence = idea[0].cooccurence;
+      //go into idea view
     }
   }
 
   initialNetwork() {
-    this.nodes = []
-    this.links = []
+    this.nodes = [];
+    this.links = [];
     this.ideaNetworkPot.forEach((religion) => {
       let tempHierarchy = d3.hierarchy(religion);
       if (religion.name != "multiple") {
@@ -546,6 +587,8 @@ export default class Idea extends Vue {
           this.links.push({
             source: this.nodes.indexOf(node),
             target: target,
+            _color: "#AAA",
+            thiccness: "2",
           });
         });
       }
@@ -582,7 +625,7 @@ export default class Idea extends Vue {
   color: rgb(0, 0, 0);
 }
 
-#innitViewButton{
+#innitViewButton {
   position: absolute;
   right: 100px;
   top: 250px;
