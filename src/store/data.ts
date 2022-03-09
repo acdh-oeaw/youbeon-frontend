@@ -41,6 +41,9 @@ async function init() {
     dataStore.influencer = await fetch("https://db.youbeon.eu/influencer/", { headers })
         .then((response) => response.json())
         .then((data) => {
+            data.forEach(idea => {
+                idea._color = "#dcfaf3"
+            });
             return data;
         });
 }

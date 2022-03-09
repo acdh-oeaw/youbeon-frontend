@@ -5,9 +5,9 @@
         <v-col class="pa-0 flex-grow-1">
           <v-autocomplete
             v-model="selectedInfluencer"
-            :items="listInfluencer"
-            item-text="name"
-            item-value="id"
+            :items="nodes"
+            item-text="data.name"
+            item-value="data.id"
             clearable
             chips
             solo
@@ -24,6 +24,9 @@
       </v-row>
     </v-card>
     <div id="network" />
+    <v-btn elevation="1" @click="resetNetwork" small id="innitViewButton"
+      >Reset</v-btn
+    >
     <v-card v-if="influencerDetailed !== null" class="detailedView">
       <v-card-title>
         <v-row no-gutters>
@@ -70,6 +73,8 @@ export default class Influencer extends Vue {
   nodes: any = [];
   links: any = [];
   force = 400;
+
+  bigNetwork = true;
 
   //Influencer Variables
   allInfluencer: any = [];
@@ -127,43 +132,66 @@ export default class Influencer extends Vue {
   }
 
   async onNodeClick(event, node) {
-    console.log(node)
-    const headers = { "Content-Type": "application/json" };
-    let tempInfluencerDetailed = node.data;
-    if (!isNaN(Number(tempInfluencerDetailed.kategorie[0]))) {
-      await fetch(
-        "https://db.youbeon.eu/kategorie/filter/?ids=" +
-          tempInfluencerDetailed.kategorie.toString(),
-        { headers }
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          let tempKategorie: any[] = [];
-          data.forEach((kategorie: any) => {
-            if (kategorie.name) {
-              tempKategorie.push(kategorie.name);
-            }
+    if (!node.children) {
+      const headers = { "Content-Type": "application/json" };
+      let tempInfluencerDetailed = node.data;
+      if (!isNaN(Number(tempInfluencerDetailed.kategorie[0]))) {
+        await fetch(
+          "https://db.youbeon.eu/kategorie/filter/?ids=" +
+            tempInfluencerDetailed.kategorie.toString(),
+          { headers }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            let tempKategorie: any[] = [];
+            data.forEach((kategorie: any) => {
+              if (kategorie.name) {
+                tempKategorie.push(kategorie.name);
+              }
+            });
+            tempInfluencerDetailed.kategorie = tempKategorie;
           });
-          tempInfluencerDetailed.kategorie = tempKategorie;
-        });
-    }
-    if (!isNaN(Number(tempInfluencerDetailed.idee[0]))) {
-      await fetch(
-        "https://db.youbeon.eu/idee/filter/?ids=" + tempInfluencerDetailed.idee.toString(),
-        { headers }
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          let tempIdee: any[] = [];
-          data.forEach((idee: any) => {
-            if (idee.name) {
-              tempIdee.push(idee.name);
-            }
+      }
+      if (!isNaN(Number(tempInfluencerDetailed.idee[0]))) {
+        await fetch(
+          "https://db.youbeon.eu/idee/filter/?ids=" +
+            tempInfluencerDetailed.idee.toString(),
+          { headers }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            let tempIdee: any[] = [];
+            data.forEach((idee: any) => {
+              if (idee.name) {
+                tempIdee.push(idee.name);
+              }
+            });
+            tempInfluencerDetailed.idee = tempIdee;
           });
-          tempInfluencerDetailed.idee = tempIdee;
-        });
+      }
+      this.influencerDetailed = tempInfluencerDetailed;
+    } else {
+      this.bigNetwork = false;
+      this.allInfluencer.forEach((religion) => {
+        if (religion.name === node.name) {
+          let tempHierarchy = d3.hierarchy(religion);
+          this.nodes = tempHierarchy.descendants();
+          this.links = tempHierarchy.links();
+        }
+      });
+      this.allInfluencer[0].children.forEach((multipleIdea) => {
+        if (
+          multipleIdea.interviews.includes(node.name.split(" ")[0].slice(0, 4))
+        ) {
+          this.nodes.push(multipleIdea);
+        }
+      });
+      this.links.forEach((link) => {
+        link._color = "#aaa";
+        link.thiccness = "2";
+      });
+      this.generateNetwork(this.nodes, []);
     }
-    this.influencerDetailed = tempInfluencerDetailed;
   }
 
   formatInfluencerIntoReligions(influencer: any) {
@@ -229,7 +257,7 @@ export default class Influencer extends Vue {
               returnInfluencer[7].children.push(tempInfluencer);
               break;
             default:
-              console.log(tempInfluencer)
+              console.log(tempInfluencer);
               console.log(
                 "There are influencers with unknown religions over here dawg"
               );
@@ -241,8 +269,14 @@ export default class Influencer extends Vue {
     return returnInfluencer;
   }
 
+  resetNetwork() {
+    this.bigNetwork = true;
+    this.initialNetwork();
+  }
 
-  initalNetwork() {
+  initialNetwork() {
+    this.nodes = []
+    this.links=[]
     let religions: any[] = [];
     this.allInfluencer.forEach((religion) => {
       let tempHierarchy = d3.hierarchy(religion);
@@ -257,7 +291,7 @@ export default class Influencer extends Vue {
 
     let numberOfNodes = this.nodes.length;
     this.nodes.forEach((node) => {
-      if (node.data != undefined) {
+      if (node.data != undefined && node.data.interviews != undefined) {
         //@ts-ignore
         let linkArray: [number] = [];
         node.data.interviews.forEach((links) => {
@@ -288,6 +322,8 @@ export default class Influencer extends Vue {
         linkArray.forEach((target) => {
           this.links.push({
             source: this.nodes.indexOf(node),
+            _color: "#AAA",
+            thiccness: "2",
             target: target,
           });
         });
@@ -300,13 +336,16 @@ export default class Influencer extends Vue {
     this.allInfluencer = this.formatInfluencerIntoReligions(
       dataStore.influencer
     );
-    this.initalNetwork();
+    this.initialNetwork();
   }
 
   determinePosition(node, width, height) {
     let returnValue = 0;
     if (width > height) {
-      if (node.data != undefined) {
+      if (this.bigNetwork === false) {
+        return width / 2;
+      }
+      if (node.data != undefined && node.data.interviews != undefined) {
         if (node.data.interviews.length > 1) {
           returnValue = 700;
         } else {
@@ -360,7 +399,10 @@ export default class Influencer extends Vue {
         }
       }
     } else {
-      if (node.data != undefined) {
+      if (this.bigNetwork === false) {
+        return height / 2;
+      }
+      if (node.data != undefined && node.data.interviews != undefined) {
         if (node.data.interviews.length > 1) {
           returnValue = 0;
         } else {
@@ -415,6 +457,46 @@ export default class Influencer extends Vue {
       }
     }
     return returnValue;
+  }
+
+  @Watch("selectedInfluencer")
+  buildInfluencerNetworkObject() {
+    this.nodes.forEach((node) => {
+      if (node.data) {
+        if (this.selectedInfluencer.length > 0) {
+          this.selectedInfluencer.forEach((selected) => {
+            if (node.data.id === selected) {
+              node.data._color = "#82c782";
+            } else {
+              node.data._color = "#dcfaf3";
+            }
+          });
+        } else {
+          node.data._color = "#dcfaf3";
+        }
+      }
+    });
+    if (this.bigNetwork === true) {
+      this.links.forEach((link) => {
+        if (this.selectedInfluencer.length > 0) {
+          this.selectedInfluencer.forEach((selected) => {
+            if (link.source.data.name === selected) {
+              link._color = "#000";
+              link.thiccness = "3";
+            } else {
+              link._color = "#AAA";
+              link.thiccness = "2";
+            }
+          });
+        } else {
+          link._color = "#AAA";
+          link.thiccness = "2";
+        }
+      });
+    } else {
+      this.links = [];
+    }
+    this.generateNetwork(this.nodes, this.links);
   }
 
   generateNetwork(nodes, links) {
@@ -539,7 +621,9 @@ export default class Influencer extends Vue {
       .append("circle")
       .attr("cx", 0)
       .attr("cy", 0)
-      .attr("fill", (d) => (d.children ? "#448A1C" : "#dcfaf3"))
+      .attr("fill", (d) =>
+        d.children ? "#448A1C" : d._color ? d._color : d.data._color
+      )
       .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
       .attr("r", (d) => (d.children ? 40 : 20))
       .on("click", (d, i) => {
@@ -612,6 +696,12 @@ export default class Influencer extends Vue {
   width: 450px;
   right: 30px;
   bottom: 30px;
+}
+
+#innitViewButton {
+  position: absolute;
+  right: 100px;
+  top: 250px;
 }
 
 .hoverLink:hover {

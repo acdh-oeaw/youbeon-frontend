@@ -71,10 +71,10 @@ export default class Idea extends Vue {
   ideaNetworkPot: any[] = [];
   ideaDetailed: any = null;
 
-  height = document.querySelector("#network")?.clientHeight || 1080;
-  width = document.querySelector("#network")?.clientWidth  || 1920;
+  height = document.querySelector("#network")?.clientHeight;
+  width = document.querySelector("#network")?.clientWidth;
 
-coordinatesForcePoints: any = [
+  coordinatesForcePoints: any = [
     {
       x: 50,
       y: -500,
@@ -242,28 +242,37 @@ coordinatesForcePoints: any = [
         }
       }
     });
-    this.links.forEach((link) => {
-      if (this.selectedIdea.length > 0) {
-        this.selectedIdea.forEach((selected) => {
-          if (link.source.data.name === selected) {
-            link._color = "#000";
-            link.thiccness = "3";
-          } else {
-            link._color = "#AAA";
-            link.thiccness = "2";
-          }
-        });
-      } else {
-        link._color = "#AAA";
-        link.thiccness = "2";
-      }
-    });
+    if (this.bigNetwork === true) {
+      this.links.forEach((link) => {
+        if (this.selectedIdea.length > 0) {
+          this.selectedIdea.forEach((selected) => {
+            if (link.source.data.name === selected) {
+              link._color = "#000";
+              link.thiccness = "3";
+            } else {
+              link._color = "#AAA";
+              link.thiccness = "2";
+            }
+          });
+        } else {
+          link._color = "#AAA";
+          link.thiccness = "2";
+        }
+      });
+    } else {
+      this.links = [];
+    }
     this.generateNetwork(this.nodes, this.links);
   }
 
   determinePosition(node, width, height) {
     let returnValue = 0;
     if (width > height) {
+      if (this.bigNetwork === false) {
+        //@ts-ignore
+        return this.width / 2;
+      }
+
       if (node.data != undefined) {
         returnValue = 700;
       } else {
@@ -292,6 +301,10 @@ coordinatesForcePoints: any = [
         }
       }
     } else {
+      if (this.bigNetwork === false) {
+        //@ts-ignore
+        return this.height / 2;
+      }
       if (node.data != undefined) {
         returnValue = 0;
       } else {
@@ -326,6 +339,8 @@ coordinatesForcePoints: any = [
   generateNetwork(nodes, links) {
     d3.selectAll("g").remove();
     // set the dimensions and margins of the graph
+    this.height = document.querySelector("#network")?.clientHeight;
+    this.width = document.querySelector("#network")?.clientWidth;
 
     // Let's list the force we wanna apply on the network
     const simulation = d3
@@ -403,9 +418,8 @@ coordinatesForcePoints: any = [
     const g = svg.append("g");
     const handleZoom = (e) => g.attr("transform", e.transform);
     const zoom = d3.zoom().on("zoom", handleZoom);
-    svg
-      .call(zoom)
-      //.call(zoom.transform, d3.zoomIdentity.scale(0.3,0.3));
+    svg.call(zoom);
+    //.call(zoom.transform, d3.zoomIdentity.scale(0.3,0.3));
 
     let link;
     // Initialize the links
@@ -440,7 +454,9 @@ coordinatesForcePoints: any = [
       .append("circle")
       .attr("cx", 0)
       .attr("cy", 0)
-      .attr("fill", (d) => (d.children ? "#fff" : d.data ? d.data._color : "#fff"))
+      .attr("fill", (d) =>
+        d.children ? "#fff" : d._color ? d._color : d.data._color
+      )
       .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
       .attr("r", (d) => (d.children ? 40 : 20))
       .on("click", (d, i) => {
@@ -487,7 +503,7 @@ coordinatesForcePoints: any = [
   }
 
   resetNetwork() {
-    this.bigNetwork = false;
+    this.bigNetwork = true;
     this.initialNetwork();
   }
 
@@ -519,7 +535,7 @@ coordinatesForcePoints: any = [
         link._color = "#aaa";
         link.thiccness = "2";
       });
-      this.generateNetwork(this.nodes, this.links);
+      this.generateNetwork(this.nodes, []);
     }
   }
 
