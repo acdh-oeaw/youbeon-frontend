@@ -244,6 +244,9 @@ export default class Influencer extends Vue {
             case "evan":
               returnInfluencer[3].children.push(tempInfluencer);
               break;
+            case "evang":
+              returnInfluencer[3].children.push(tempInfluencer);
+              break;
             case "orth":
               returnInfluencer[4].children.push(tempInfluencer);
               break;
@@ -305,6 +308,9 @@ export default class Influencer extends Vue {
             case "evan":
               linkArray.push(numberOfNodes - 5);
               break;
+            case "evang":
+              linkArray.push(numberOfNodes - 5);
+              break;
             case "orth":
               linkArray.push(numberOfNodes - 4);
               break;
@@ -357,6 +363,9 @@ export default class Influencer extends Vue {
               returnValue = this.coordinatesForcePoints[1].x;
               break;
             case "evan":
+              returnValue = this.coordinatesForcePoints[2].x;
+              break;
+            case "evang":
               returnValue = this.coordinatesForcePoints[2].x;
               break;
             case "orth":
@@ -414,6 +423,9 @@ export default class Influencer extends Vue {
               returnValue = this.coordinatesForcePoints[1].y;
               break;
             case "evan":
+              returnValue = this.coordinatesForcePoints[2].y;
+              break;
+            case "evang":
               returnValue = this.coordinatesForcePoints[2].y;
               break;
             case "orth":
