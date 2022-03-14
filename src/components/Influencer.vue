@@ -278,8 +278,8 @@ export default class Influencer extends Vue {
   }
 
   initialNetwork() {
-    this.nodes = []
-    this.links=[]
+    this.nodes = [];
+    this.links = [];
     let religions: any[] = [];
     this.allInfluencer.forEach((religion) => {
       let tempHierarchy = d3.hierarchy(religion);
