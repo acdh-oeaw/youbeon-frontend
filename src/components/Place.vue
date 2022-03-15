@@ -23,11 +23,11 @@
           </v-autocomplete>
         </v-col>
         <v-col class="pa-0 ma-0" cols="auto">
-          <v-switch
+          <!--<v-switch
             dense
             class="switch"
             v-model="filterNonReligionPlaces"
-          ></v-switch>
+          ></v-switch>-->
         </v-col>
         <div class="vl"></div>
         <v-col class="pa-0 ma-0" cols="auto">
@@ -497,10 +497,13 @@ export default class Place extends Vue {
             return f;
           }
         } else {
-          return (
-            f.properties.religion.toLowerCase() ===
-            religion.properties.name.toLowerCase()
-          );
+          console.log(f)
+          if (f.properties != undefined && f.properties.religion != undefined) {
+            return (
+              f.properties.religion.toLowerCase() ===
+              religion.properties.name.toLowerCase()
+            );
+          }
         }
       }),
     };
