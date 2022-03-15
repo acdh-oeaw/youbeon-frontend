@@ -497,7 +497,6 @@ export default class Place extends Vue {
             return f;
           }
         } else {
-          console.log(f)
           if (f.properties != undefined && f.properties.religion != undefined) {
             return (
               f.properties.religion.toLowerCase() ===
