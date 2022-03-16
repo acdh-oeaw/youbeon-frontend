@@ -275,7 +275,6 @@ export default class Place extends Vue {
   }
 
   zoomToMap() {
-    console.log(this.selectedPlaces);
     this.selectedPlaces = [];
     this.zoom = 3;
     this.center = defaultCenter;
@@ -490,22 +489,35 @@ export default class Place extends Vue {
       features: this.allPlaces.filter((f: any) => {
         if (this.filterNonReligionPlaces === true) {
           if (
-            f.properties.religion.toLowerCase() ===
-              religion.properties.name.toLowerCase() &&
+            f.properties.religion.findIndex(
+              (item) =>
+                religion.properties.name.toLowerCase() === item.toLowerCase()
+            ) &&
             f.properties.religiousPlace === true
           ) {
             return f;
           }
         } else {
           if (f.properties != undefined && f.properties.religion != undefined) {
-            return (
-              f.properties.religion.toLowerCase() ===
-              religion.properties.name.toLowerCase()
+            let value = f.properties.religion.findIndex(
+              (item) =>
+                this.namesAreWeird(religion.properties.name.toLowerCase().substring(0,4)) === item.toLowerCase().split("-")[1].substring(0,4)
             );
+            return value > -1;
           }
         }
       }),
     };
+  }
+
+  namesAreWeird(wrongName: string) {
+    if(wrongName === "isla") {
+      return "musl"
+    } else if(wrongName === "jude") {
+      return "jued"
+    } else {
+      return wrongName
+    }
   }
 
   getDataFromServerAtCreated() {
@@ -554,9 +566,7 @@ export default class Place extends Vue {
           bemerkung: item.bemerkung,
           idee: ideas,
           kategorie: categories,
-          religion: this.turnInterviewIDintoReligion(
-            item.interview.split("-")[1]
-          ),
+          religion: this.turnInterviewIDintoReligion(item.interview),
           religiousPlace: item.religion[0] != undefined ? true : false,
         },
         geometry: {
@@ -576,23 +586,33 @@ export default class Place extends Vue {
     this.allPlaces = tempGeo;
   }
 
-  turnInterviewIDintoReligion(shortForm: string) {
-    switch (shortForm) {
-      case "musl":
-        return "Islam";
-      case "orth":
-        return "Orthodoxes christentum";
-      case "kath":
-        return "Katholisches christentum";
-      case "alev":
-        return "Alevitentum";
-      case "jued":
-        return "Judentum";
-      case "sikh":
-        return "sikhismus";
-      case "evan":
-        return "evangelisches Christentum";
-    }
+  turnInterviewIDintoReligion(shortForm: string[]) {
+    shortForm.forEach((oneReligion) => {
+      switch (oneReligion.split("-")[1]) {
+        case "musl":
+          oneReligion = "Islam";
+          break;
+        case "orth":
+          oneReligion = "Orthodoxes Christentum";
+          break;
+        case "kath":
+          oneReligion = "Katholisches Christentum";
+          break;
+        case "alev":
+          oneReligion = "Alevitentum";
+          break;
+        case "jued":
+          oneReligion = "Judentum";
+          break;
+        case "sikh":
+          oneReligion = "sikhismus";
+          break;
+        case "evan":
+          oneReligion = "evangelisches Christentum";
+          break;
+      }
+    });
+    return shortForm;
   }
 
   getCorrespondingCategories(categoryIDs: string[], allCategories: string[]) {
