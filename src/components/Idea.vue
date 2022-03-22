@@ -71,6 +71,8 @@ export default class Idea extends Vue {
   ideaNetworkPot: any[] = [];
   ideaDetailed: any = null;
 
+  currentZoomLevel = d3.zoomIdentity
+
   height = document.querySelector("#network")?.clientHeight;
   width = document.querySelector("#network")?.clientWidth;
 
@@ -354,7 +356,6 @@ export default class Idea extends Vue {
           .strength(0.005)
       )
       .force("charge", d3.forceManyBody().strength(-200)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
-      //.force("center", d3.forceCenter(width / 2, height / 2)) // This force attracts nodes to the center of the svg area
       .force(
         "x",
         d3
@@ -414,12 +415,18 @@ export default class Idea extends Vue {
     } else {
       svg = d3.select("svg");
     }
-
+console.log(this.currentZoomLevel)
     const g = svg.append("g");
-    const handleZoom = (e) => g.attr("transform", e.transform);
+    const handleZoom = (e) =>
+      g.attr(
+        "transform",
+        e.transform,
+        (this.currentZoomLevel = e.transform)
+      );
+    console.log(d3.zoomIdentity)
+    console.log(this.currentZoomLevel)
     const zoom = d3.zoom().on("zoom", handleZoom);
-    svg.call(zoom);
-    //.call(zoom.transform, d3.zoomIdentity.scale(0.3,0.3));
+    svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
 
     let link;
     // Initialize the links
