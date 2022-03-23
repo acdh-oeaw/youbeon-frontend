@@ -492,13 +492,11 @@ export default class Influencer extends Vue {
     this.nodes.forEach((node) => {
       if (node.data) {
         if (this.selectedInfluencer.length > 0) {
-          this.selectedInfluencer.forEach((selected) => {
-            if (node.data.id === selected) {
+            if (this.selectedInfluencer.includes(node.data.id)) {
               node.data._color = "#82c782";
             } else {
               node.data._color = "#dcfaf3";
             }
-          });
         } else {
           node.data._color = "#dcfaf3";
         }
@@ -507,8 +505,7 @@ export default class Influencer extends Vue {
     if (this.bigNetwork === true) {
       this.links.forEach((link) => {
         if (this.selectedInfluencer.length > 0) {
-          this.selectedInfluencer.forEach((selected) => {
-            if (link.source.data.id === selected) {
+            if (this.selectedInfluencer.includes(link.source.data.id)) {
               console.log("YE")
               link._color = "#000";
               link.thiccness = "3";
@@ -516,7 +513,6 @@ export default class Influencer extends Vue {
               link._color = "#AAA";
               link.thiccness = "2";
             }
-          });
         } else {
           link._color = "#AAA";
           link.thiccness = "2";

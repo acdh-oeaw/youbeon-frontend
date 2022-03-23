@@ -6,6 +6,7 @@
           <v-row no-gutters>
             <v-autocomplete
               flat
+              chips
               v-model="selectedIdea"
               :items="nodes"
               item-text="data.name"
@@ -230,13 +231,11 @@ export default class Idea extends Vue {
     this.nodes.forEach((node) => {
       if (node.data) {
         if (this.selectedIdea.length > 0) {
-          this.selectedIdea.forEach((selected) => {
-            if (node.data.name === selected) {
+            if (this.selectedIdea.includes(node.data.name)) {
               node.data._color = "#82c782";
             } else {
               node.data._color = "#7D387D";
             }
-          });
         } else {
           node.data._color = "#7D387D";
         }
@@ -245,15 +244,13 @@ export default class Idea extends Vue {
     if (this.bigNetwork === true) {
       this.links.forEach((link) => {
         if (this.selectedIdea.length > 0) {
-          this.selectedIdea.forEach((selected) => {
-            if (link.source.data.name === selected) {
+            if (this.selectedIdea.includes(link.source.data.name)) {
               link._color = "#000";
               link.thiccness = "3";
             } else {
               link._color = "#AAA";
               link.thiccness = "2";
             }
-          });
         } else {
           link._color = "#AAA";
           link.thiccness = "2";
