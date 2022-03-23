@@ -415,7 +415,6 @@ export default class Idea extends Vue {
     } else {
       svg = d3.select("svg");
     }
-console.log(this.currentZoomLevel)
     const g = svg.append("g");
     const handleZoom = (e) =>
       g.attr(
@@ -423,8 +422,6 @@ console.log(this.currentZoomLevel)
         e.transform,
         (this.currentZoomLevel = e.transform)
       );
-    console.log(d3.zoomIdentity)
-    console.log(this.currentZoomLevel)
     const zoom = d3.zoom().on("zoom", handleZoom);
     svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
 
@@ -511,6 +508,7 @@ console.log(this.currentZoomLevel)
 
   resetNetwork() {
     this.bigNetwork = true;
+    this.currentZoomLevel = d3.zoomIdentity;
     this.initialNetwork();
   }
 
