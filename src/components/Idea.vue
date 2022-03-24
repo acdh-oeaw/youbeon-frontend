@@ -471,7 +471,7 @@ export default class Idea extends Vue {
         return d.data ? d.data.name : d.name;
       })
       .attr("dx", function (d) {
-        return d.data ? 25 : 50;
+        return d.children ? 50 : 25;
       })
       .style("font-size", "14px");
 
