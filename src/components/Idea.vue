@@ -24,7 +24,7 @@
       </v-col>
     </v-row>
     <div id="network" />
-    <v-btn elevation="1" @click="resetNetwork" small id="innitViewButton"
+    <v-btn v-if="!bigNetwork" elevation="1" @click="resetNetwork" small id="innitViewButton"
       >Reset</v-btn
     >
     <v-card v-if="ideaDetailed !== null" id="detailedView">
@@ -337,6 +337,7 @@ export default class Idea extends Vue {
 
   generateNetwork(nodes, links) {
     d3.selectAll("g").remove();
+    let tempZoom = this.currentZoomLevel;
     // set the dimensions and margins of the graph
     this.height = document.querySelector("#network")?.clientHeight;
     this.width = document.querySelector("#network")?.clientWidth;
@@ -475,9 +476,12 @@ export default class Idea extends Vue {
         return d.data ? d.data.name : d.name;
       })
       .attr("dx", function (d) {
-        return d.data ? 25 : 50;
+        return d.children ? 50 : 25;
       })
-      .style("font-size", "14px");
+      .style("font-size", function (d) {
+        console.log(14 / tempZoom.k + "px")
+        return d.children ? 14 / (tempZoom.k) + "px" : 14;
+      });
 
     // This function is run at each iteration of the force algorithm, updating the nodes position.
     simulation.on("tick", () => {
@@ -504,8 +508,8 @@ export default class Idea extends Vue {
   }
 
   resetNetwork() {
+    this.selectedIdea = []
     this.bigNetwork = true;
-    this.currentZoomLevel = d3.zoomIdentity;
     this.initialNetwork();
   }
 
@@ -517,6 +521,7 @@ export default class Idea extends Vue {
       };
     } else {
       this.bigNetwork = false;
+      this.selectedIdea = []
       this.ideaNetworkPot.forEach((religion) => {
         if (religion.name === feature.name) {
           let tempHierarchy = d3.hierarchy(religion);

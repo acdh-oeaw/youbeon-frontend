@@ -24,7 +24,7 @@
       </v-row>
     </v-card>
     <div id="network" />
-    <v-btn elevation="1" @click="resetNetwork" small id="innitViewButton"
+    <v-btn v-if="!bigNetwork" elevation="1" @click="resetNetwork" small id="innitViewButton"
       >Reset</v-btn
     >
     <v-card v-if="influencerDetailed !== null" class="detailedView">
@@ -68,6 +68,8 @@ import { dataStore } from "../store/data";
 export default class Influencer extends Vue {
   //Religion Variables
   selectedReligion: any = { id: 0, name: "Alle Accounts" };
+
+  currentZoomLevel = d3.zoomIdentity
 
   //network variables
   nodes: any = [];
@@ -171,6 +173,7 @@ export default class Influencer extends Vue {
       }
       this.influencerDetailed = tempInfluencerDetailed;
     } else {
+      this.selectedInfluencer = []
       this.bigNetwork = false;
       this.allInfluencer.forEach((religion) => {
         if (religion.name === node.name) {
@@ -185,10 +188,6 @@ export default class Influencer extends Vue {
         ) {
           this.nodes.push(multipleIdea);
         }
-      });
-      this.links.forEach((link) => {
-        link._color = "#aaa";
-        link.thiccness = "2";
       });
       this.generateNetwork(this.nodes, []);
     }
@@ -273,6 +272,7 @@ export default class Influencer extends Vue {
   }
 
   resetNetwork() {
+    this.selectedInfluencer = []
     this.bigNetwork = true;
     this.initialNetwork();
   }
@@ -506,7 +506,6 @@ export default class Influencer extends Vue {
       this.links.forEach((link) => {
         if (this.selectedInfluencer.length > 0) {
             if (this.selectedInfluencer.includes(link.source.data.id)) {
-              console.log("YE")
               link._color = "#000";
               link.thiccness = "3";
             } else {
@@ -608,10 +607,15 @@ export default class Influencer extends Vue {
     }
 
     const g = svg.append("g");
-    const handleZoom = (e) => g.attr("transform", e.transform);
+    const handleZoom = (e) =>
+      g.attr(
+        "transform",
+        e.transform,
+        (this.currentZoomLevel = e.transform)
+      );
     const zoom = d3.zoom().on("zoom", handleZoom);
+    svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
 
-    d3.select("svg").call(zoom);
 
     let link;
     // Initialize the links
@@ -666,7 +670,7 @@ export default class Influencer extends Vue {
         return d.data ? d.data.name : d.name;
       })
       .attr("dx", function (d) {
-        return d.data ? 25 : 50;
+        return d.children ? 50 : 25;
       })
       .style("font-size", "14px");
 
