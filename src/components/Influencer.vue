@@ -353,7 +353,15 @@ export default class Influencer extends Vue {
       }
       if (node.data != undefined && node.data.interviews != undefined) {
         if (node.data.interviews.length > 1) {
-          returnValue = 700;
+          if (
+            node.data.interviews.length === 2 &&
+            node.data.interviews.includes("evan") &&
+            node.data.interviews.includes("evang")
+          ) {
+            returnValue = this.coordinatesForcePoints[2].x;
+          } else {
+            returnValue = 700;
+          }
         } else {
           switch (node.data.interviews[0]) {
             case "alev":
@@ -413,7 +421,15 @@ export default class Influencer extends Vue {
       }
       if (node.data != undefined && node.data.interviews != undefined) {
         if (node.data.interviews.length > 1) {
-          returnValue = 0;
+          if (
+            node.data.interviews.length === 2 &&
+            node.data.interviews.includes("evan") &&
+            node.data.interviews.includes("evang")
+          ) {
+            returnValue = this.coordinatesForcePoints[2].y;
+          } else {
+            returnValue = 0;
+          }
         } else {
           switch (node.data.interviews[0]) {
             case "alev":
@@ -476,13 +492,11 @@ export default class Influencer extends Vue {
     this.nodes.forEach((node) => {
       if (node.data) {
         if (this.selectedInfluencer.length > 0) {
-          this.selectedInfluencer.forEach((selected) => {
-            if (node.data.id === selected) {
+            if (this.selectedInfluencer.includes(node.data.id)) {
               node.data._color = "#82c782";
             } else {
               node.data._color = "#dcfaf3";
             }
-          });
         } else {
           node.data._color = "#dcfaf3";
         }
@@ -491,15 +505,14 @@ export default class Influencer extends Vue {
     if (this.bigNetwork === true) {
       this.links.forEach((link) => {
         if (this.selectedInfluencer.length > 0) {
-          this.selectedInfluencer.forEach((selected) => {
-            if (link.source.data.name === selected) {
+            if (this.selectedInfluencer.includes(link.source.data.id)) {
+              console.log("YE")
               link._color = "#000";
               link.thiccness = "3";
             } else {
               link._color = "#AAA";
               link.thiccness = "2";
             }
-          });
         } else {
           link._color = "#AAA";
           link.thiccness = "2";
@@ -606,8 +619,8 @@ export default class Influencer extends Vue {
       .selectAll("line")
       .data(links)
       .join("line")
-      .style("stroke", "#aaa")
-      .style("stroke-width", "2");
+      .style("stroke", (d) => d._color)
+      .style("stroke-width", (d) => d.thiccness);
 
     var groups = g
       .selectAll(".group")
