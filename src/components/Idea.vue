@@ -24,7 +24,12 @@
       </v-col>
     </v-row>
     <div id="network" />
-    <v-btn v-if="!bigNetwork" elevation="1" @click="resetNetwork" small id="innitViewButton"
+    <v-btn
+      v-if="!bigNetwork"
+      elevation="1"
+      @click="resetNetwork"
+      small
+      id="innitViewButton"
       >Reset</v-btn
     >
     <v-card v-if="ideaDetailed !== null" id="detailedView">
@@ -72,10 +77,10 @@ export default class Idea extends Vue {
   ideaNetworkPot: any[] = [];
   ideaDetailed: any = null;
 
-  currentZoomLevel = d3.zoomIdentity
-
   height = document.querySelector("#network")?.clientHeight;
   width = document.querySelector("#network")?.clientWidth;
+
+  currentZoomLevel = d3.zoomIdentity;
 
   coordinatesForcePoints: any = [
     {
@@ -111,41 +116,6 @@ export default class Idea extends Vue {
       y: 100,
     },
   ];
-
-  /**coordinatesForcePoints: any = [
-    {
-      x: this.width/2,
-      y: this.height/2,
-    },
-    {
-      x: this.width/2,
-      y: this.height/2 + 500,
-    },
-    {
-      x: this.width/2 + 250,
-      y: this.height/2 + 250,
-    },
-    {
-      x: this.width/2 + 500,
-      y: this.height/2,
-    },
-    {
-      x:  this.width/2 + 250,
-      y: this.height/2 - 250,
-    },
-    {
-      x: this.width/2,
-      y: this.height/2 - 500,
-    },
-    {
-      x: this.width/2 - 250,
-      y: this.height/2 - 250,
-    },
-    {
-      x: this.width/2 - 500,
-      y: this.height/2,
-    },
-  ];**/
 
   displayReligionsOrIdeas = false;
 
@@ -233,11 +203,11 @@ export default class Idea extends Vue {
     this.nodes.forEach((node) => {
       if (node.data) {
         if (this.selectedIdea.length > 0) {
-            if (this.selectedIdea.includes(node.data.name)) {
-              node.data._color = "#82c782";
-            } else {
-              node.data._color = "#7D387D";
-            }
+          if (this.selectedIdea.includes(node.data.name)) {
+            node.data._color = "#82c782";
+          } else {
+            node.data._color = "#7D387D";
+          }
         } else {
           node.data._color = "#7D387D";
         }
@@ -246,13 +216,13 @@ export default class Idea extends Vue {
     if (this.bigNetwork === true) {
       this.links.forEach((link) => {
         if (this.selectedIdea.length > 0) {
-            if (this.selectedIdea.includes(link.source.data.name)) {
-              link._color = "#000";
-              link.thiccness = "3";
-            } else {
-              link._color = "#AAA";
-              link.thiccness = "2";
-            }
+          if (this.selectedIdea.includes(link.source.data.name)) {
+            link._color = "#000";
+            link.thiccness = "3";
+          } else {
+            link._color = "#AAA";
+            link.thiccness = "2";
+          }
         } else {
           link._color = "#AAA";
           link.thiccness = "2";
@@ -415,11 +385,7 @@ export default class Idea extends Vue {
     }
     const g = svg.append("g");
     const handleZoom = (e) =>
-      g.attr(
-        "transform",
-        e.transform,
-        (this.currentZoomLevel = e.transform)
-      );
+      g.attr("transform", e.transform, (this.currentZoomLevel = e.transform));
     const zoom = d3.zoom().on("zoom", handleZoom);
     svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
 
@@ -479,8 +445,7 @@ export default class Idea extends Vue {
         return d.children ? 50 : 25;
       })
       .style("font-size", function (d) {
-        console.log(14 / tempZoom.k + "px")
-        return d.children ? 14 / (tempZoom.k) + "px" : 14;
+        return d.children ? 14 / tempZoom.k + "px" : 14;
       });
 
     // This function is run at each iteration of the force algorithm, updating the nodes position.
@@ -508,7 +473,7 @@ export default class Idea extends Vue {
   }
 
   resetNetwork() {
-    this.selectedIdea = []
+    this.selectedIdea = [];
     this.bigNetwork = true;
     this.initialNetwork();
   }
@@ -519,9 +484,44 @@ export default class Idea extends Vue {
         name: feature.data.name,
         idee: feature.data.cooccurence,
       };
+      this.bigNetwork = false;
+      this.selectedIdea = [];
+      this.nodes = [];
+
+      let tempNodes = []
+      this.ideaNetworkPot.forEach((religion) => {
+        let tempReligion = religion.name;
+        if (tempReligion === "evangelische Jugendliche") {
+          if (
+            feature.data.interviews.includes("evang") ||
+            feature.data.interviews.includes("evan")
+          ) {
+            let tempHierarchy = d3.hierarchy(religion);
+            //@ts-ignore
+            tempNodes.push(...tempHierarchy.descendants());
+          }
+        } else if(tempReligion === "jüdische Jugendliche" ) {
+          tempReligion = "jued"
+        }
+        if (feature.data.interviews.includes(tempReligion.substring(0, 4))) {
+          let tempHierarchy = d3.hierarchy(religion);
+          //@ts-ignore
+          tempNodes.push(...tempHierarchy.descendants());
+        }
+      });
+      tempNodes.forEach((idea) => {
+        //@ts-ignore
+        if(feature.data.cooccurence.includes(idea.data.name)) {
+          this.nodes.push(idea)
+        }
+      });
+      let centerNode = feature
+      centerNode.children = []
+      this.nodes.push(centerNode)
+      this.generateNetwork(this.nodes, []);
     } else {
       this.bigNetwork = false;
-      this.selectedIdea = []
+      this.selectedIdea = [];
       this.ideaNetworkPot.forEach((religion) => {
         if (religion.name === feature.name) {
           let tempHierarchy = d3.hierarchy(religion);
@@ -564,6 +564,14 @@ export default class Idea extends Vue {
   initialNetwork() {
     this.nodes = [];
     this.links = [];
+
+    this.currentZoomLevel
+      .translate(
+        this.width ? this.width / 2 - 200 : 800,
+        this.height ? this.height / 2 : 400
+      )
+      .scale(0.25);
+
     this.ideaNetworkPot.forEach((religion) => {
       let tempHierarchy = d3.hierarchy(religion);
       if (religion.name != "multiple") {

@@ -24,7 +24,12 @@
       </v-row>
     </v-card>
     <div id="network" />
-    <v-btn v-if="!bigNetwork" elevation="1" @click="resetNetwork" small id="innitViewButton"
+    <v-btn
+      v-if="!bigNetwork"
+      elevation="1"
+      @click="resetNetwork"
+      small
+      id="innitViewButton"
       >Reset</v-btn
     >
     <v-card v-if="influencerDetailed !== null" class="detailedView">
@@ -69,7 +74,16 @@ export default class Influencer extends Vue {
   //Religion Variables
   selectedReligion: any = { id: 0, name: "Alle Accounts" };
 
-  currentZoomLevel = d3.zoomIdentity
+  height = document.querySelector("#network")?.clientHeight;
+  width = document.querySelector("#network")?.clientWidth;
+
+  initialZoom = d3.zoomIdentity
+    .translate(
+      this.width ? this.width / 2 - 200 : 2000,
+      this.height ? this.height / 2 : 750
+    )
+    .scale(0.25);
+  currentZoomLevel = this.initialZoom;
 
   //network variables
   nodes: any = [];
@@ -173,7 +187,7 @@ export default class Influencer extends Vue {
       }
       this.influencerDetailed = tempInfluencerDetailed;
     } else {
-      this.selectedInfluencer = []
+      this.selectedInfluencer = [];
       this.bigNetwork = false;
       this.allInfluencer.forEach((religion) => {
         if (religion.name === node.name) {
@@ -272,7 +286,7 @@ export default class Influencer extends Vue {
   }
 
   resetNetwork() {
-    this.selectedInfluencer = []
+    this.selectedInfluencer = [];
     this.bigNetwork = true;
     this.initialNetwork();
   }
@@ -492,11 +506,11 @@ export default class Influencer extends Vue {
     this.nodes.forEach((node) => {
       if (node.data) {
         if (this.selectedInfluencer.length > 0) {
-            if (this.selectedInfluencer.includes(node.data.id)) {
-              node.data._color = "#82c782";
-            } else {
-              node.data._color = "#dcfaf3";
-            }
+          if (this.selectedInfluencer.includes(node.data.id)) {
+            node.data._color = "#82c782";
+          } else {
+            node.data._color = "#dcfaf3";
+          }
         } else {
           node.data._color = "#dcfaf3";
         }
@@ -505,13 +519,13 @@ export default class Influencer extends Vue {
     if (this.bigNetwork === true) {
       this.links.forEach((link) => {
         if (this.selectedInfluencer.length > 0) {
-            if (this.selectedInfluencer.includes(link.source.data.id)) {
-              link._color = "#000";
-              link.thiccness = "3";
-            } else {
-              link._color = "#AAA";
-              link.thiccness = "2";
-            }
+          if (this.selectedInfluencer.includes(link.source.data.id)) {
+            link._color = "#000";
+            link.thiccness = "3";
+          } else {
+            link._color = "#AAA";
+            link.thiccness = "2";
+          }
         } else {
           link._color = "#AAA";
           link.thiccness = "2";
@@ -526,11 +540,6 @@ export default class Influencer extends Vue {
   generateNetwork(nodes, links) {
     d3.selectAll("g").remove();
     // set the dimensions and margins of the graph
-    let height;
-    let width;
-
-    height = document.querySelector("#network")?.clientHeight;
-    width = document.querySelector("#network")?.clientWidth;
 
     // Let's list the force we wanna apply on the network
     const simulation = d3
@@ -550,7 +559,7 @@ export default class Influencer extends Vue {
         d3
           .forceX()
           .x((d) => {
-            return this.determinePosition(d, width, 0);
+            return this.determinePosition(d, this.width, 0);
           })
           .strength(0.1)
       )
@@ -559,7 +568,7 @@ export default class Influencer extends Vue {
         d3
           .forceY()
           .y((d) => {
-            return this.determinePosition(d, 0, height);
+            return this.determinePosition(d, 0, this.height);
           })
           .strength(0.1)
       )
@@ -600,22 +609,17 @@ export default class Influencer extends Vue {
       svg = d3
         .select("#network")
         .append("svg")
-        .attr("width", width)
-        .attr("height", height);
+        .attr("width", this.width)
+        .attr("height", this.height);
     } else {
       svg = d3.select("svg");
     }
 
     const g = svg.append("g");
     const handleZoom = (e) =>
-      g.attr(
-        "transform",
-        e.transform,
-        (this.currentZoomLevel = e.transform)
-      );
+      g.attr("transform", e.transform, (this.currentZoomLevel = e.transform));
     const zoom = d3.zoom().on("zoom", handleZoom);
     svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
-
 
     let link;
     // Initialize the links
