@@ -23,11 +23,11 @@
           </v-autocomplete>
         </v-col>
         <v-col class="pa-0 ma-0" cols="auto">
-          <!--<v-switch
+          <v-switch
             dense
             class="switch"
             v-model="filterNonReligionPlaces"
-          ></v-switch>-->
+          ></v-switch>
         </v-col>
         <div class="vl"></div>
         <v-col class="pa-0 ma-0" cols="auto">
@@ -97,7 +97,7 @@
       />
 
       <l-geo-json
-        :geojson="filterReligiousPlaces(allPlaces)"
+        :geojson="allPlaces"
         :options="options"
         :optionsStyle="distanceVariableColor"
       />
@@ -106,7 +106,7 @@
 
       <div v-for="item in ideaJSON" :key="item.id">
         <l-geo-json
-          :geojson="displayLocationsIdea(item)"
+          :geojson="filterReligiousPlaces(displayLocationsIdea(item))"
           :options="optionsIdea"
           :optionsStyle="individualColor(item)"
         />
@@ -114,7 +114,7 @@
 
       <div v-for="item in religionJSON" :key="item.id">
         <l-geo-json
-          :geojson="displayLocationsReligion(item)"
+          :geojson="filterReligiousPlaces(displayLocationsReligion(item))"
           :options="optionsReligion(item)"
         />
       </div>
@@ -473,21 +473,21 @@ export default class Place extends Vue {
     };
   }
 
-  filterReligiousPlaces(places: any[]) {
-    /*if (this.filterNonReligionPlaces === true) {
-      return places.filter((f: any) => {
+  filterReligiousPlaces(places) {
+    if (this.filterNonReligionPlaces === true) {
+      return places.features.filter((f: any) => {
         if (f.properties.religiousPlace === true) {
           return f;
         }
       });
-    }*/
+    }
     return places;
   }
 
   displayLocationsReligion(religion: any) {
     return {
       features: this.allPlaces.filter((f: any) => {
-        if (this.filterNonReligionPlaces === true) {
+        /**if (this.filterNonReligionPlaces === true) {
           if (
             f.properties.religion.findIndex(
               (item) =>
@@ -497,26 +497,28 @@ export default class Place extends Vue {
           ) {
             return f;
           }
-        } else {
-          if (f.properties != undefined && f.properties.religion != undefined) {
-            let value = f.properties.religion.findIndex(
-              (item) =>
-                this.namesAreWeird(religion.properties.name.toLowerCase().substring(0,4)) === item.toLowerCase().split("-")[1].substring(0,4)
-            );
-            return value > -1;
-          }
+        } else {**/
+        if (f.properties != undefined && f.properties.religion != undefined) {
+          let value = f.properties.religion.findIndex(
+            (item) =>
+              this.namesAreWeird(
+                religion.properties.name.toLowerCase().substring(0, 4)
+              ) === item.toLowerCase().split("-")[1].substring(0, 4)
+          );
+          return value > -1;
         }
+        //}
       }),
     };
   }
 
   namesAreWeird(wrongName: string) {
-    if(wrongName === "isla") {
-      return "musl"
-    } else if(wrongName === "jude") {
-      return "jued"
+    if (wrongName === "isla") {
+      return "musl";
+    } else if (wrongName === "jude") {
+      return "jued";
     } else {
-      return wrongName
+      return wrongName;
     }
   }
 
@@ -660,7 +662,7 @@ export default class Place extends Vue {
 }
 
 .switch {
-  margin: 10px 5px 0px 5px;
+  margin: 13px 5px 0px 5px;
   padding: 0px;
 }
 

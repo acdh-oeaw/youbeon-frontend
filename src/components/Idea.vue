@@ -488,7 +488,7 @@ export default class Idea extends Vue {
       this.selectedIdea = [];
       this.nodes = [];
 
-      let tempNodes = []
+      let tempNodes = [];
       this.ideaNetworkPot.forEach((religion) => {
         let tempReligion = religion.name;
         if (tempReligion === "evangelische Jugendliche") {
@@ -500,8 +500,8 @@ export default class Idea extends Vue {
             //@ts-ignore
             tempNodes.push(...tempHierarchy.descendants());
           }
-        } else if(tempReligion === "jüdische Jugendliche" ) {
-          tempReligion = "jued"
+        } else if (tempReligion === "jüdische Jugendliche") {
+          tempReligion = "jued";
         }
         if (feature.data.interviews.includes(tempReligion.substring(0, 4))) {
           let tempHierarchy = d3.hierarchy(religion);
@@ -511,13 +511,13 @@ export default class Idea extends Vue {
       });
       tempNodes.forEach((idea) => {
         //@ts-ignore
-        if(feature.data.cooccurence.includes(idea.data.name)) {
-          this.nodes.push(idea)
+        if (feature.data.cooccurence.includes(idea.data.name)) {
+          this.nodes.push(idea);
         }
       });
-      let centerNode = feature
-      centerNode.children = []
-      this.nodes.push(centerNode)
+      let centerNode = feature;
+      centerNode.children = [];
+      this.nodes.push(centerNode);
       this.generateNetwork(this.nodes, []);
     } else {
       this.bigNetwork = false;
@@ -552,20 +552,25 @@ export default class Idea extends Vue {
   }
 
   routeLoaded() {
-    if (this.$route.params.id != undefined) {
+    /**if (this.$route.params.id != undefined) {
       this.displayReligionsOrIdeas = false;
-      let idea = this.allIdeas.filter((obj) => {
-        if (obj.name === this.$route.params.id) return obj;
+      this.ideaNetworkPot.filter((religion) => {
+        religion.children.forEach((idea) => {
+          if (idea.name === this.$route.params.id) {
+            console.log(idea)
+            this.onNodeClick(idea);
+          }
+        });
       });
       //go into idea view
-    }
+    }**/
   }
 
   initialNetwork() {
     this.nodes = [];
     this.links = [];
 
-    this.currentZoomLevel
+    this.currentZoomLevel = d3.zoomIdentity
       .translate(
         this.width ? this.width / 2 - 200 : 800,
         this.height ? this.height / 2 : 400

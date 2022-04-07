@@ -77,13 +77,7 @@ export default class Influencer extends Vue {
   height = document.querySelector("#network")?.clientHeight;
   width = document.querySelector("#network")?.clientWidth;
 
-  initialZoom = d3.zoomIdentity
-    .translate(
-      this.width ? this.width / 2 - 200 : 2000,
-      this.height ? this.height / 2 : 750
-    )
-    .scale(0.25);
-  currentZoomLevel = this.initialZoom;
+  currentZoomLevel = d3.zoomIdentity;
 
   //network variables
   nodes: any = [];
@@ -295,6 +289,14 @@ export default class Influencer extends Vue {
     this.nodes = [];
     this.links = [];
     let religions: any[] = [];
+
+    this.currentZoomLevel = d3.zoomIdentity
+      .translate(
+        this.width ? this.width / 2 - 100 : 800,
+        this.height ? this.height / 2 : 300
+      )
+      .scale(0.17);
+
     this.allInfluencer.forEach((religion) => {
       let tempHierarchy = d3.hierarchy(religion);
       if (religion.name != "multiple") {
@@ -539,7 +541,10 @@ export default class Influencer extends Vue {
 
   generateNetwork(nodes, links) {
     d3.selectAll("g").remove();
-    // set the dimensions and margins of the graph
+    let tempZoom = this.currentZoomLevel;
+
+    this.height = document.querySelector("#network")?.clientHeight;
+    this.width = document.querySelector("#network")?.clientWidth;
 
     // Let's list the force we wanna apply on the network
     const simulation = d3
@@ -663,6 +668,8 @@ export default class Influencer extends Vue {
         this.onNodeClick(d, i);
       });
 
+    console.log(node);
+
     var text = groups
       .selectAll("text")
       .data(function (d) {
@@ -676,7 +683,9 @@ export default class Influencer extends Vue {
       .attr("dx", function (d) {
         return d.children ? 50 : 25;
       })
-      .style("font-size", "14px");
+      .style("font-size", function (d) {
+        return d.children ? 14 / tempZoom.k + "px" : 14;
+      });
 
     // This function is run at each iteration of the force algorithm, updating the nodes position.
     simulation.on("tick", () => {
