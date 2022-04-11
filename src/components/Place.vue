@@ -229,15 +229,15 @@ export default class Place extends Vue {
   ideaJSON: any[] = [];
   allPlaces: any[] = [];
   colorsMaybe: any[] = [];
-  allColors = [
-    ["#e6194B", "#f5a3b7"], //Red
-    ["#3cb44b", "#aee4b5"], // Green
-    ["#ffe119", "#fff6ba"], // Yellow
-    ["#4363d8", "#b4c1ef"], //Blue
-    ["#f58231", "#fbcdad"], //Orange
-    ["#f032e6", "#f9adf5"], //Magenta
-    ["#42d4f4", "#b3eefb"], //Cyan
-  ];
+  allColors = {
+    "orthodoxes Christentum": ["#e6194B", "#f5a3b7"], //Red
+    Islam: ["#3cb44b", "#aee4b5"], // Green
+    Alevitentum: ["#ffe119", "#fff6ba"], // Yellow
+    Judentum: ["#4363d8", "#b4c1ef"], //Blue
+    Sikhismus: ["#f58231", "#fbcdad"], //Orange
+    "Evangelisches Christentum": ["#f032e6", "#f9adf5"], //Magenta
+    "Katholisches Christentum": ["#4F0AA8", "#9D78CE"], //Violet
+  };
 
   selectableReligions: string[] = [
     "alle accounts",
@@ -368,7 +368,7 @@ export default class Place extends Vue {
   get distanceVariableColor() {
     let color = "white";
     if (this.zoom < 6) {
-      color = "#e4625c";
+      color = "#999";
     }
     return {
       fillColor: color,
@@ -439,8 +439,7 @@ export default class Place extends Vue {
             tempBezeichnung = displayReligion[1];
           }
         });
-        let selColor = _.sample(this.allColors);
-        this.allColors.splice(this.allColors.indexOf(selColor), 1);
+        var selColor = this.allColors[religion.name]
         tempReligion = {
           id: religion.id,
           color: selColor[0],
