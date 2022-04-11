@@ -23,15 +23,30 @@
         </v-card>
       </v-col>
     </v-row>
-    <div id="network" />
-    <v-btn
-      v-if="!bigNetwork"
-      elevation="1"
-      @click="resetNetwork"
-      small
-      id="innitViewButton"
-      >Reset</v-btn
-    >
+    <div id="network" > 
+      <v-btn fab small id="zoom_in" class="zoomies control">
+        <v-icon>add</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        small
+        class="control zoomies"
+        id="zoom_out"
+        style="margin-top: 70px"
+      >
+        <v-icon>remove</v-icon>
+      </v-btn>
+      <v-btn
+        :disabled="bigNetwork"
+        style="margin-top: 120px"
+        class="control"
+        fab
+        small
+        @click="resetNetwork()"
+      >
+        <v-icon>home</v-icon>
+      </v-btn>
+    </div>
     <v-card v-if="ideaDetailed !== null" id="detailedView">
       <v-card-title>
         <v-row no-gutters>
@@ -470,6 +485,17 @@ export default class Idea extends Vue {
         return "translate(" + x + "," + y + ")";
       });
     });
+
+    
+    d3.selectAll(".zoomies").on("click", (e) => {
+      if(e.originalTarget.innerHTML === "add") {
+        this.currentZoomLevel.k = this.currentZoomLevel.k*1.3;
+        svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
+      } else {
+        this.currentZoomLevel.k = this.currentZoomLevel.k*0.7;
+        svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
+      }
+    });
   }
 
   resetNetwork() {
@@ -676,6 +702,13 @@ export default class Idea extends Vue {
   width: 450px;
   right: 30px;
   bottom: 30px;
+}
+
+.control {
+  position: absolute;
+  margin: 20px;
+  margin-left: 20px;
+  z-index: 5;
 }
 
 .colorDisplay {

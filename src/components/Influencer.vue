@@ -23,15 +23,30 @@
         </v-col>
       </v-row>
     </v-card>
-    <div id="network" />
-    <v-btn
-      v-if="!bigNetwork"
-      elevation="1"
-      @click="resetNetwork"
-      small
-      id="innitViewButton"
-      >Reset</v-btn
-    >
+    <div id="network">
+      <v-btn fab small id="zoom_in" class="zoomies control">
+        <v-icon>add</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        small
+        class="control zoomies"
+        id="zoom_out"
+        style="margin-top: 70px"
+      >
+        <v-icon>remove</v-icon>
+      </v-btn>
+      <v-btn
+        :disabled="bigNetwork"
+        style="margin-top: 120px"
+        class="control"
+        fab
+        small
+        @click="resetNetwork()"
+      >
+        <v-icon>home</v-icon>
+      </v-btn>
+    </div>
     <v-card v-if="influencerDetailed !== null" class="detailedView">
       <v-card-title>
         <v-row no-gutters>
@@ -541,7 +556,6 @@ export default class Influencer extends Vue {
 
   generateNetwork(nodes, links) {
     d3.selectAll("g").remove();
-    let tempZoom = this.currentZoomLevel;
 
     this.height = document.querySelector("#network")?.clientHeight;
     this.width = document.querySelector("#network")?.clientWidth;
@@ -583,7 +597,6 @@ export default class Influencer extends Vue {
       );
 
     let drag = (simulation) => {
-      const localforce = this.force;
       function dragstarted(event) {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         event.subject.fx = event.subject.x;
@@ -668,7 +681,6 @@ export default class Influencer extends Vue {
         this.onNodeClick(d, i);
       });
 
-    console.log(node);
 
     var text = groups
       .selectAll("text")
@@ -683,8 +695,8 @@ export default class Influencer extends Vue {
       .attr("dx", function (d) {
         return d.children ? 50 : 25;
       })
-      .style("font-size", function (d) {
-        return d.children ? 14 / tempZoom.k + "px" : 14;
+      .style("font-size", (d) => {
+        return d.children ? 14 / this.currentZoomLevel.k + "px" : 14;
       });
 
     // This function is run at each iteration of the force algorithm, updating the nodes position.
@@ -709,6 +721,16 @@ export default class Influencer extends Vue {
         return "translate(" + x + "," + y + ")";
       });
     });
+
+    d3.selectAll(".zoomies").on("click", (e) => {
+      if(e.originalTarget.innerHTML === "add") {
+        this.currentZoomLevel.k = this.currentZoomLevel.k*1.3;
+        svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
+      } else {
+        this.currentZoomLevel.k = this.currentZoomLevel.k*0.7;
+        svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
+      }
+    });
   }
 }
 </script>
@@ -727,6 +749,13 @@ export default class Influencer extends Vue {
   border-left: 2px solid #e5e5e5;
   height: 30px;
   margin-top: 7px;
+}
+
+.control {
+  position: absolute;
+  margin: 20px;
+  margin-left: 20px;
+  z-index: 5;
 }
 
 .detailedView {
