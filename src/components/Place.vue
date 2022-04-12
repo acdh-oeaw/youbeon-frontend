@@ -118,6 +118,17 @@
           :options="optionsReligion(item)"
         />
       </div>
+
+      <div v-if="religionJSON.length > 1">
+        <l-geo-json
+          :geojson="
+            filterReligiousPlaces(
+              displayLocationsMultipleReligions(religionJSON)
+            )
+          "
+          :options="optionsMultiple"
+        />
+      </div>
     </l-map>
     <v-col class="pa-0 flex-grow-1 mr-7 listHeight">
       <map-legende
@@ -324,6 +335,26 @@ export default class Place extends Vue {
     };
   }
 
+  optionsMultiple = {
+    onEachFeature: this.bindPopUpPlace(),
+    pointToLayer: (feature: any, latlng: any) => {
+      let color;
+      if (feature.properties.religiousPlace === true) {
+        color = "#967444";
+      } else {
+        color = "#BC9F86";
+      }
+      return L.circleMarker(latlng, {
+        radius: 5,
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 1,
+        color: "black",
+        fillColor: color,
+      });
+    },
+  };
+
   optionsIdea = {
     onEachFeature: this.bindPopUpPlace(),
     pointToLayer: (feature: any, latlng: any) => {
@@ -439,7 +470,7 @@ export default class Place extends Vue {
             tempBezeichnung = displayReligion[1];
           }
         });
-        var selColor = this.allColors[religion.name]
+        var selColor = this.allColors[religion.name];
         tempReligion = {
           id: religion.id,
           color: selColor[0],
@@ -483,20 +514,35 @@ export default class Place extends Vue {
     return places;
   }
 
+  //Ugly Method; if there is time => update it
+  displayLocationsMultipleReligions(selectedReligions) {
+    let selectedReligionPlaces = this.allPlaces.filter((f: any) => {
+      return f.properties.religion.length > 1;
+    });
+    return {
+      features: selectedReligionPlaces.filter((place: any) => {
+        let filteredPlaces = place.properties.religion.filter((f: any) => {
+          return selectedReligions.some((religion) => {
+            return (
+              this.namesAreWeird(
+                religion.properties.name.toLowerCase().substring(0, 4)
+              ) === f.toLowerCase().split("-")[1].substring(0, 4)
+            );
+          });
+        });
+        let trimmedFilteredPlace: any[] = [];
+        filteredPlaces.forEach((place) => {
+          trimmedFilteredPlace.push(place.split("-")[1].substring(0, 4));
+        });
+        let uniqueFilteredPlaces = [...new Set(trimmedFilteredPlace)];
+        return uniqueFilteredPlaces.length > 1;
+      }),
+    };
+  }
+
   displayLocationsReligion(religion: any) {
     return {
       features: this.allPlaces.filter((f: any) => {
-        /**if (this.filterNonReligionPlaces === true) {
-          if (
-            f.properties.religion.findIndex(
-              (item) =>
-                religion.properties.name.toLowerCase() === item.toLowerCase()
-            ) &&
-            f.properties.religiousPlace === true
-          ) {
-            return f;
-          }
-        } else {**/
         if (f.properties != undefined && f.properties.religion != undefined) {
           let value = f.properties.religion.findIndex(
             (item) =>
@@ -506,7 +552,6 @@ export default class Place extends Vue {
           );
           return value > -1;
         }
-        //}
       }),
     };
   }
