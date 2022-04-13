@@ -15,6 +15,16 @@
             <v-avatar color="#b0dcd9" size="20"></v-avatar>
           </v-list-item-action>
         </v-list-item>
+        <v-list-item class="legend_items" v-if="religions.length > 1">
+          <v-list-item-content style="margin-right: 30px">
+            <v-list-item-title>
+              Orte mit mehreren Religionen
+            </v-list-item-title>
+          </v-list-item-content>
+          <v-list-item-action>
+            <v-avatar color="#967444" size="20"></v-avatar>
+          </v-list-item-action>
+        </v-list-item>
         <v-list-item
           class="legend_items"
           v-for="item in religions.concat(ideas)"
