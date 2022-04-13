@@ -154,10 +154,19 @@
           </v-col>
         </v-row>
       </v-card-title>
-      <v-card-subtitle> {{ placeDetailed.bemerkung }} </v-card-subtitle>
+      <v-card-subtitle v-if="placeDetailed.bemerkung">
+        {{ placeDetailed.bemerkung }}
+      </v-card-subtitle>
       <v-card-text>
-        <u>Verknüpfte Ideen:</u>
+        <u>Verknüpfte Religionen:</u>
         <br />
+        <div
+          v-for="religion in placeDetailed.religion"
+          v-bind:key="religion.id"
+        >
+          {{ religion }}
+        </div>
+        <div class="detailedList"><u>Verknüpfte Ideen:</u></div>
         <div v-for="idea in placeDetailed.idee" v-bind:key="idea.id">
           <router-link
             class="link"
@@ -411,6 +420,9 @@ export default class Place extends Vue {
       layer.on("click", (e) => {
         this.placeDetailed = {
           idee: feature.properties.idee,
+          religion: this.turnInterviewIDintoReligion(
+            feature.properties.religion
+          ),
           name: feature.properties.bezeichnung,
           bermerkung: feature.properties.bemerkung,
         };
@@ -612,7 +624,7 @@ export default class Place extends Vue {
           bemerkung: item.bemerkung,
           idee: ideas,
           kategorie: categories,
-          religion: this.turnInterviewIDintoReligion(item.interview),
+          religion: item.interview,
           religiousPlace: item.religion[0] != undefined ? true : false,
         },
         geometry: {
@@ -633,32 +645,33 @@ export default class Place extends Vue {
   }
 
   turnInterviewIDintoReligion(shortForm: string[]) {
+    let longForm: any[] = [];
     shortForm.forEach((oneReligion) => {
       switch (oneReligion.split("-")[1]) {
         case "musl":
-          oneReligion = "Islam";
+          longForm.push("Islam");
           break;
         case "orth":
-          oneReligion = "Orthodoxes Christentum";
+          longForm.push("Orthodoxes Christentum");
           break;
         case "kath":
-          oneReligion = "Katholisches Christentum";
+          longForm.push("Katholisches Christentum");
           break;
         case "alev":
-          oneReligion = "Alevitentum";
+          longForm.push("Alevitentum");
           break;
         case "jued":
-          oneReligion = "Judentum";
+          longForm.push("Judentum");
           break;
         case "sikh":
-          oneReligion = "sikhismus";
+          longForm.push("Sikhismus");
           break;
         case "evan":
-          oneReligion = "evangelisches Christentum";
+          longForm.push("Evangelisches Christentum");
           break;
       }
     });
-    return shortForm;
+    return [...new Set(longForm)];
   }
 
   getCorrespondingCategories(categoryIDs: string[], allCategories: string[]) {
@@ -703,6 +716,11 @@ export default class Place extends Vue {
   margin: 3px;
   text-align: center;
   text-decoration: none !important;
+}
+
+.detailedList {
+  margin-top: 10px;
+  margin-bottom: 0px;
 }
 
 .switch {
