@@ -63,7 +63,19 @@
         </v-row>
       </v-card-title>
       <v-card-subtitle> {{ ideaDetailed.bemerkung }} </v-card-subtitle>
-      <v-card-text>
+      <v-card-text v-if="ideaDetailed.accounts.length > 0">
+        <u>Verknüpfte Accounts:</u>
+        <div v-for="account in ideaDetailed.accounts" v-bind:key="account.id">
+          {{ account.name }}
+        </div>
+      </v-card-text>
+      <v-card-text v-if="ideaDetailed.places.length > 0">
+        <u>Verknüpfte Orte:</u>
+        <div v-for="ort in ideaDetailed.places" v-bind:key="ort.id">
+          {{ ort.bezeichnung }}
+        </div>
+      </v-card-text>
+      <v-card-text v-if="ideaDetailed.idee.length > 0">
         <u>Verknüpfte Ideen:</u>
         <div v-for="idea in ideaDetailed.idee" v-bind:key="idea.id">
           {{ idea }}
@@ -91,6 +103,10 @@ export default class Idea extends Vue {
   force = 300;
   ideaNetworkPot: any[] = [];
   ideaDetailed: any = null;
+
+  //arrays for detailed View
+  places: any[] = []
+  accounts: any[] = []
 
   height = document.querySelector("#network")?.clientHeight;
   width = document.querySelector("#network")?.clientWidth;
@@ -504,10 +520,29 @@ export default class Idea extends Vue {
     this.initialNetwork();
   }
 
+  getDataforFeature(idee) {
+    let placesWithIdea: any[] = []
+    let accountsWithIdea: any[] = []
+    this.places.forEach(place => {
+      if(place.idee.includes(idee.data.id)) {
+        placesWithIdea.push(place)
+      }
+    });
+    this.accounts.forEach(account => {
+      if(account.idee.includes(idee.data.id)) {
+        accountsWithIdea.push(account)
+      }
+    });
+    return ({places: placesWithIdea, accounts: accountsWithIdea})
+  }
+
   onNodeClick(feature) {
     if (feature.data) {
+      let connectedInfo = this.getDataforFeature(feature)
       this.ideaDetailed = {
         name: feature.data.name,
+        accounts: connectedInfo.accounts,
+        places: connectedInfo.places,
         idee: feature.data.cooccurence,
       };
       this.bigNetwork = false;
@@ -661,6 +696,8 @@ export default class Idea extends Vue {
   }
 
   mounted() {
+    this.places = dataStore.orte;
+    this.accounts = dataStore.influencer
     this.ideaNetworkPot = this.formatIdeasIntoReligions(dataStore.ideen);
     this.initialNetwork();
   }
