@@ -23,7 +23,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <div id="network" > 
+    <div id="network">
       <v-btn fab small id="zoom_in" class="zoomies control">
         <v-icon>add</v-icon>
       </v-btn>
@@ -105,8 +105,8 @@ export default class Idea extends Vue {
   ideaDetailed: any = null;
 
   //arrays for detailed View
-  places: any[] = []
-  accounts: any[] = []
+  places: any[] = [];
+  accounts: any[] = [];
 
   height = document.querySelector("#network")?.clientHeight;
   width = document.querySelector("#network")?.clientWidth;
@@ -152,7 +152,7 @@ export default class Idea extends Vue {
 
   allIdeas: any = [];
   //saves the COOCCURENCE of the selected Idea in an Array
-  selectedIdea: any = null;
+  selectedIdea: any = [];
   bigNetwork = true;
 
   formatIdeasIntoReligions(ideas: any) {
@@ -502,13 +502,12 @@ export default class Idea extends Vue {
       });
     });
 
-    
     d3.selectAll(".zoomies").on("click", (e) => {
-      if(e.originalTarget.innerHTML === "add") {
-        this.currentZoomLevel.k = this.currentZoomLevel.k*1.3;
+      if (e.originalTarget.innerHTML === "add") {
+        this.currentZoomLevel.k = this.currentZoomLevel.k * 1.3;
         svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
       } else {
-        this.currentZoomLevel.k = this.currentZoomLevel.k*0.7;
+        this.currentZoomLevel.k = this.currentZoomLevel.k * 0.7;
         svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
       }
     });
@@ -521,24 +520,24 @@ export default class Idea extends Vue {
   }
 
   getDataforFeature(idee) {
-    let placesWithIdea: any[] = []
-    let accountsWithIdea: any[] = []
-    this.places.forEach(place => {
-      if(place.idee.includes(idee.data.id)) {
-        placesWithIdea.push(place)
+    let placesWithIdea: any[] = [];
+    let accountsWithIdea: any[] = [];
+    this.places.forEach((place) => {
+      if (place.idee.includes(idee.data.id)) {
+        placesWithIdea.push(place);
       }
     });
-    this.accounts.forEach(account => {
-      if(account.idee.includes(idee.data.id)) {
-        accountsWithIdea.push(account)
+    this.accounts.forEach((account) => {
+      if (account.idee.includes(idee.data.id)) {
+        accountsWithIdea.push(account);
       }
     });
-    return ({places: placesWithIdea, accounts: accountsWithIdea})
+    return { places: placesWithIdea, accounts: accountsWithIdea };
   }
 
   onNodeClick(feature) {
     if (feature.data) {
-      let connectedInfo = this.getDataforFeature(feature)
+      let connectedInfo = this.getDataforFeature(feature);
       this.ideaDetailed = {
         name: feature.data.name,
         accounts: connectedInfo.accounts,
@@ -613,18 +612,25 @@ export default class Idea extends Vue {
   }
 
   routeLoaded() {
-    /**if (this.$route.params.id != undefined) {
+    if (this.$route.params.id != undefined && this.$route.params.id != "") {
       this.displayReligionsOrIdeas = false;
-      this.ideaNetworkPot.filter((religion) => {
-        religion.children.forEach((idea) => {
-          if (idea.name === this.$route.params.id) {
-            console.log(idea)
-            this.onNodeClick(idea);
+      this.nodes.forEach((element) => {
+        if (element.data != undefined) {
+          if (element.data.name === this.$route.params.id) {
+            this.selectedIdea = []
+            let connectedInfo = this.getDataforFeature(element);
+            this.ideaDetailed = {
+              name: element.data.name,
+              accounts: connectedInfo.accounts,
+              places: connectedInfo.places,
+              idee: element.data.cooccurence,
+            };
+            this.selectedIdea.push(element.data.name)
+            this.$route.params.id = "";
           }
-        });
+        }
       });
-      //go into idea view
-    }**/
+    }
   }
 
   initialNetwork() {
@@ -697,7 +703,7 @@ export default class Idea extends Vue {
 
   mounted() {
     this.places = dataStore.orte;
-    this.accounts = dataStore.influencer
+    this.accounts = dataStore.influencer;
     this.ideaNetworkPot = this.formatIdeasIntoReligions(dataStore.ideen);
     this.initialNetwork();
   }

@@ -166,7 +166,9 @@
         >
           {{ religion }}
         </div>
-        <div class="detailedList"><u>Verknüpfte Ideen:</u></div>
+      </v-card-text>
+      <v-card-text v-if="placeDetailed.idee.length > 0">
+        <u>Verknüpfte Ideen:</u>
         <div v-for="idea in placeDetailed.idee" v-bind:key="idea.id">
           <router-link
             class="link"
@@ -716,11 +718,6 @@ export default class Place extends Vue {
   margin: 3px;
   text-align: center;
   text-decoration: none !important;
-}
-
-.detailedList {
-  margin-top: 10px;
-  margin-bottom: 0px;
 }
 
 .switch {

@@ -68,7 +68,12 @@
         <u>Verknüpfte Ideen:</u>
         <br />
         <div v-for="idea in influencerDetailed.idee" v-bind:key="idea.id">
-          {{ idea }}
+          <router-link
+            class="hoverLink"
+            tag="span"
+            :to="{ name: 'idea', params: { id: idea } }"
+            >{{ idea }}</router-link
+          >
         </div>
       </v-card-text>
     </v-card>
@@ -778,4 +783,5 @@ export default class Influencer extends Vue {
 .hoverLink:hover {
   cursor: pointer;
 }
+
 </style>
