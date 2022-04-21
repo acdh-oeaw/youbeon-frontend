@@ -72,7 +72,12 @@
       <v-card-text v-if="ideaDetailed.places.length > 0">
         <u>Verknüpfte Orte:</u>
         <div v-for="ort in ideaDetailed.places" v-bind:key="ort.id">
-          {{ ort.bezeichnung }}
+          <router-link
+            class="hoverLink"
+            tag="span"
+            :to="{ name: 'place', params: { ort_id: ort.id } }"
+            >{{ ort.bezeichnung }}</router-link
+          > 
         </div>
       </v-card-text>
       <v-card-text v-if="ideaDetailed.idee.length > 0">
@@ -612,11 +617,11 @@ export default class Idea extends Vue {
   }
 
   routeLoaded() {
-    if (this.$route.params.id != undefined && this.$route.params.id != "") {
+    if (this.$route.params.idea_name != undefined && this.$route.params.idea_name != "") {
       this.displayReligionsOrIdeas = false;
       this.nodes.forEach((element) => {
         if (element.data != undefined) {
-          if (element.data.name === this.$route.params.id) {
+          if (element.data.name === this.$route.params.idea_name) {
             this.selectedIdea = []
             let connectedInfo = this.getDataforFeature(element);
             this.ideaDetailed = {
@@ -626,7 +631,7 @@ export default class Idea extends Vue {
               idee: element.data.cooccurence,
             };
             this.selectedIdea.push(element.data.name)
-            this.$route.params.id = "";
+            this.$route.params.idea_name = "";
           }
         }
       });
@@ -724,6 +729,10 @@ export default class Idea extends Vue {
   border-left: 2px solid #e5e5e5;
   height: 30px;
   margin-top: 7px;
+}
+
+.hoverLink:hover {
+  cursor: pointer;
 }
 
 .stuff {

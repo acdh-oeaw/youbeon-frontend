@@ -173,7 +173,7 @@
           <router-link
             class="link"
             tag="span"
-            :to="{ name: 'idea', params: { id: idea } }"
+            :to="{ name: 'idea', params: { idea_name: idea } }"
             >{{ idea }}</router-link
           >
         </div>
@@ -674,6 +674,24 @@ export default class Place extends Vue {
       }
     });
     return [...new Set(longForm)];
+  }
+
+  @Watch("$route")
+  startLoaded() {
+    if (this.$route.params.ort_id != undefined) {
+      this.selectedFilter = { id: 2, name: "Alle Orte" }
+    }
+    this.$nextTick(this.routeLoaded);
+  }
+
+  routeLoaded() {
+    if (this.$route.params.ort_id != undefined) {
+      this.autocompleteItems.forEach(item => {
+        if(this.$route.params.ort_id === item.properties.id) {
+          this.selectedPlaces.push(item.properties)
+        }
+      });
+    }
   }
 
   getCorrespondingCategories(categoryIDs: string[], allCategories: string[]) {
