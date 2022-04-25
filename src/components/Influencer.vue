@@ -374,6 +374,36 @@ export default class Influencer extends Vue {
     this.generateNetwork(this.nodes, this.links);
   }
 
+  @Watch("$route")
+  startLoaded() {
+    if (this.$route.params.account_id != undefined && this.$route.params.account_id != "") {
+      this.resetNetwork()
+    }
+    this.$nextTick(this.routeLoaded);
+  }
+
+  routeLoaded() {
+    if (
+      this.$route.params.account_id != undefined &&
+      this.$route.params.account_id != ""
+    ) {
+      this.nodes.forEach((element) => {
+        if (element.data != undefined) {
+          if (element.data.id === this.$route.params.account_id) {
+            console.log(this.selectedInfluencer)
+            this.selectedInfluencer = [];
+            this.influencerDetailed = {
+              name: element.data.name,
+              idee: element.data.cooccurence,
+            };
+            this.selectedInfluencer.push(element.data.id);
+            this.$route.params.account_id = "";
+          }
+        }
+      });
+    }
+  }
+
   async mounted() {
     this.allInfluencer = this.formatInfluencerIntoReligions(
       dataStore.influencer

@@ -66,7 +66,12 @@
       <v-card-text v-if="ideaDetailed.accounts.length > 0">
         <u>Verknüpfte Accounts:</u>
         <div v-for="account in ideaDetailed.accounts" v-bind:key="account.id">
-          {{ account.name }}
+          <router-link
+            class="hoverLink"
+            tag="span"
+            :to="{ name: 'account', params: { account_id: account.id } }"
+          >{{ account.name }}</router-link
+          >
         </div>
       </v-card-text>
       <v-card-text v-if="ideaDetailed.places.length > 0">
@@ -77,7 +82,7 @@
             tag="span"
             :to="{ name: 'place', params: { ort_id: ort.id } }"
             >{{ ort.bezeichnung }}</router-link
-          > 
+          >
         </div>
       </v-card-text>
       <v-card-text v-if="ideaDetailed.idee.length > 0">
@@ -613,16 +618,25 @@ export default class Idea extends Vue {
 
   @Watch("$route")
   startLoaded() {
+    if (
+      this.$route.params.idea_name != undefined &&
+      this.$route.params.idea_name != ""
+    ) {
+      this.resetNetwork();
+    }
     this.$nextTick(this.routeLoaded);
   }
 
   routeLoaded() {
-    if (this.$route.params.idea_name != undefined && this.$route.params.idea_name != "") {
+    if (
+      this.$route.params.idea_name != undefined &&
+      this.$route.params.idea_name != ""
+    ) {
       this.displayReligionsOrIdeas = false;
       this.nodes.forEach((element) => {
         if (element.data != undefined) {
           if (element.data.name === this.$route.params.idea_name) {
-            this.selectedIdea = []
+            this.selectedIdea = [];
             let connectedInfo = this.getDataforFeature(element);
             this.ideaDetailed = {
               name: element.data.name,
@@ -630,7 +644,7 @@ export default class Idea extends Vue {
               places: connectedInfo.places,
               idee: element.data.cooccurence,
             };
-            this.selectedIdea.push(element.data.name)
+            this.selectedIdea.push(element.data.name);
             this.$route.params.idea_name = "";
           }
         }
