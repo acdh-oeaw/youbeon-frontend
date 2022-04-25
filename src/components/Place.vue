@@ -356,6 +356,7 @@ export default class Place extends Vue {
         color = "#BC9F86";
       }
       return L.circleMarker(latlng, {
+        zIndexOffset: 1000,
         radius: 5,
         weight: 1,
         opacity: 1,
@@ -464,9 +465,9 @@ export default class Place extends Vue {
         this.geoPlaces.push(place);
       }
     });
-    this.$nextTick(function() {
-      this.zoom++
-      this.zoom--
+    this.$nextTick(function () {
+      this.zoom++;
+      this.zoom--;
     });
   }
 
@@ -537,40 +538,52 @@ export default class Place extends Vue {
     let selectedReligionPlaces = this.allPlaces.filter((f: any) => {
       return f.properties.religion.length > 1;
     });
+
+    let returnedPlaces = selectedReligionPlaces.filter((place: any) => {
+      let filteredPlaces = place.properties.religion.filter((f: any) => {
+        return selectedReligions.some((religion) => {
+          return (
+            this.namesAreWeird(
+              religion.properties.name.toLowerCase().substring(0, 4)
+            ) === f.toLowerCase().split("-")[1].substring(0, 4)
+          );
+        });
+      });
+      let trimmedFilteredPlace: any[] = [];
+      filteredPlaces.forEach((place) => {
+        trimmedFilteredPlace.push(place.split("-")[1].substring(0, 4));
+      });
+      let uniqueFilteredPlaces = [...new Set(trimmedFilteredPlace)];
+      return uniqueFilteredPlaces.length > 1;
+    });
+
     return {
-      features: selectedReligionPlaces.filter((place: any) => {
-        let filteredPlaces = place.properties.religion.filter((f: any) => {
-          return selectedReligions.some((religion) => {
-            return (
-              this.namesAreWeird(
-                religion.properties.name.toLowerCase().substring(0, 4)
-              ) === f.toLowerCase().split("-")[1].substring(0, 4)
-            );
-          });
-        });
-        let trimmedFilteredPlace: any[] = [];
-        filteredPlaces.forEach((place) => {
-          trimmedFilteredPlace.push(place.split("-")[1].substring(0, 4));
-        });
-        let uniqueFilteredPlaces = [...new Set(trimmedFilteredPlace)];
-        return uniqueFilteredPlaces.length > 1;
-      }),
+      features: returnedPlaces,
     };
   }
 
   displayLocationsReligion(religion: any) {
+    let placesWithReligion = this.allPlaces.filter((f: any) => {
+      if (f.properties != undefined && f.properties.religion != undefined) {
+        let value = f.properties.religion.findIndex(
+          (item) =>
+            this.namesAreWeird(
+              religion.properties.name.toLowerCase().substring(0, 4)
+            ) === item.toLowerCase().split("-")[1].substring(0, 4)
+        );
+        return value > -1;
+      }
+    });
+    if (this.religionJSON.length > 1) {
+      let placesWithMultipleReligions = this.displayLocationsMultipleReligions(
+        this.religionJSON
+      );
+      placesWithReligion = placesWithReligion.filter(
+        (n) => !placesWithMultipleReligions.features.includes(n)
+      );
+    }
     return {
-      features: this.allPlaces.filter((f: any) => {
-        if (f.properties != undefined && f.properties.religion != undefined) {
-          let value = f.properties.religion.findIndex(
-            (item) =>
-              this.namesAreWeird(
-                religion.properties.name.toLowerCase().substring(0, 4)
-              ) === item.toLowerCase().split("-")[1].substring(0, 4)
-          );
-          return value > -1;
-        }
-      }),
+      features: placesWithReligion,
     };
   }
 
@@ -683,16 +696,16 @@ export default class Place extends Vue {
   @Watch("$route")
   startLoaded() {
     if (this.$route.params.ort_id != undefined) {
-      this.selectedFilter = { id: 2, name: "Alle Orte" }
+      this.selectedFilter = { id: 2, name: "Alle Orte" };
     }
     this.$nextTick(this.routeLoaded);
   }
 
   routeLoaded() {
     if (this.$route.params.ort_id != undefined) {
-      this.autocompleteItems.forEach(item => {
-        if(this.$route.params.ort_id === item.properties.id) {
-          this.selectedPlaces.push(item.properties)
+      this.autocompleteItems.forEach((item) => {
+        if (this.$route.params.ort_id === item.properties.id) {
+          this.selectedPlaces.push(item.properties);
         }
       });
     }
