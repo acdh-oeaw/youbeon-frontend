@@ -464,6 +464,10 @@ export default class Place extends Vue {
         this.geoPlaces.push(place);
       }
     });
+    this.$nextTick(function() {
+      this.zoom++
+      this.zoom--
+    });
   }
 
   get tileSetUrl(): string {
