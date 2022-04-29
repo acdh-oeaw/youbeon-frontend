@@ -435,6 +435,7 @@ export default class Place extends Vue {
 
   @Watch("selectedPlaces")
   displayPlaces() {
+    this.placeDetailed = null
     this.religionJSON = [];
     this.geoPlaces = [];
     this.ideaJSON = [];
@@ -456,12 +457,18 @@ export default class Place extends Vue {
           );
         })
       ) {
-        this.ideaJSON.push(place);
+        if (typeof place.color === "string") {
+          this.ideaJSON.push(place);
+        }
       } else if (
         this.selectedPlaces.some((sel) => {
           return sel.bezeichnung === place.properties.bezeichnung;
         })
       ) {
+        this.center = [
+          place.geometry.coordinates[1],
+          place.geometry.coordinates[0],
+        ];
         this.geoPlaces.push(place);
       }
     });

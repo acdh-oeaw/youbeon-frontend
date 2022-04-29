@@ -524,6 +524,7 @@ export default class Idea extends Vue {
   }
 
   resetNetwork() {
+    this.ideaDetailed = null
     this.selectedIdea = [];
     this.bigNetwork = true;
     this.initialNetwork();
@@ -569,6 +570,7 @@ export default class Idea extends Vue {
             let tempHierarchy = d3.hierarchy(religion);
             //@ts-ignore
             tempNodes.push(...tempHierarchy.descendants());
+            console.log(tempNodes)
           }
         } else if (tempReligion === "jüdische Jugendliche") {
           tempReligion = "jued";
@@ -577,9 +579,13 @@ export default class Idea extends Vue {
           let tempHierarchy = d3.hierarchy(religion);
           //@ts-ignore
           tempNodes.push(...tempHierarchy.descendants());
+          console.log(tempHierarchy.descendants)
+          console.log(tempNodes)
         }
       });
       tempNodes.forEach((idea) => {
+        //@ts-ignore
+        //console.log(idea.data.name,feature.data.cooccurence)
         //@ts-ignore
         if (feature.data.cooccurence.includes(idea.data.name)) {
           this.nodes.push(idea);

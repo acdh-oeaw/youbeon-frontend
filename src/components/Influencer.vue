@@ -300,6 +300,7 @@ export default class Influencer extends Vue {
   }
 
   resetNetwork() {
+    this.influencerDetailed = null;
     this.selectedInfluencer = [];
     this.bigNetwork = true;
     this.initialNetwork();
@@ -376,8 +377,11 @@ export default class Influencer extends Vue {
 
   @Watch("$route")
   startLoaded() {
-    if (this.$route.params.account_id != undefined && this.$route.params.account_id != "") {
-      this.resetNetwork()
+    if (
+      this.$route.params.account_id != undefined &&
+      this.$route.params.account_id != ""
+    ) {
+      this.resetNetwork();
     }
     this.$nextTick(this.routeLoaded);
   }
@@ -390,7 +394,7 @@ export default class Influencer extends Vue {
       this.nodes.forEach((element) => {
         if (element.data != undefined) {
           if (element.data.id === this.$route.params.account_id) {
-            console.log(this.selectedInfluencer)
+            console.log(this.selectedInfluencer);
             this.selectedInfluencer = [];
             this.influencerDetailed = {
               name: element.data.name,
@@ -716,7 +720,6 @@ export default class Influencer extends Vue {
         this.onNodeClick(d, i);
       });
 
-
     var text = groups
       .selectAll("text")
       .data(function (d) {
@@ -758,11 +761,11 @@ export default class Influencer extends Vue {
     });
 
     d3.selectAll(".zoomies").on("click", (e) => {
-      if(e.originalTarget.innerHTML === "add") {
-        this.currentZoomLevel.k = this.currentZoomLevel.k*1.3;
+      if (e.originalTarget.innerHTML === "add") {
+        this.currentZoomLevel.k = this.currentZoomLevel.k * 1.3;
         svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
       } else {
-        this.currentZoomLevel.k = this.currentZoomLevel.k*0.7;
+        this.currentZoomLevel.k = this.currentZoomLevel.k * 0.7;
         svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
       }
     });
@@ -813,5 +816,4 @@ export default class Influencer extends Vue {
 .hoverLink:hover {
   cursor: pointer;
 }
-
 </style>
