@@ -70,7 +70,7 @@
             class="hoverLink"
             tag="span"
             :to="{ name: 'account', params: { account_id: account.id } }"
-          >{{ account.name }}</router-link
+            >{{ account.name }}</router-link
           >
         </div>
       </v-card-text>
@@ -113,6 +113,8 @@ export default class Idea extends Vue {
   force = 300;
   ideaNetworkPot: any[] = [];
   ideaDetailed: any = null;
+
+  selectedIdeaLength = 0;
 
   //arrays for detailed View
   places: any[] = [];
@@ -241,6 +243,31 @@ export default class Idea extends Vue {
 
   @Watch("selectedIdea")
   buildInfluencerNetworkObject() {
+    if (this.selectedIdea.length > this.selectedIdeaLength) {
+      let searchedNode;
+      this.nodes.forEach((node) => {
+        if (node.data) {
+          if (
+            node.data.name === this.selectedIdea[this.selectedIdea.length - 1]
+          ) {
+            searchedNode = node;
+          }
+        }
+      });
+      if (searchedNode) {
+        let connectedInfo = this.getDataforFeature(searchedNode);
+        this.ideaDetailed = {
+          name: searchedNode.data.name,
+          accounts: connectedInfo.accounts,
+          places: connectedInfo.places,
+          idee: searchedNode.data.cooccurence,
+        };
+      } else {
+        console.log("No Node was found for the selected Idea");
+      }
+    } else {
+      this.ideaDetailed = null
+    }
     this.nodes.forEach((node) => {
       if (node.data) {
         if (this.selectedIdea.length > 0) {
@@ -272,6 +299,7 @@ export default class Idea extends Vue {
     } else {
       this.links = [];
     }
+    this.selectedIdeaLength = this.selectedIdea.length;
     this.generateNetwork(this.nodes, this.links);
   }
 
@@ -666,7 +694,7 @@ export default class Idea extends Vue {
   }
 
   resetNetwork() {
-    this.ideaDetailed = null
+    this.ideaDetailed = null;
     this.selectedIdea = [];
     this.bigNetwork = true;
     this.initialNetwork();
@@ -712,7 +740,6 @@ export default class Idea extends Vue {
             let tempHierarchy = d3.hierarchy(religion);
             //@ts-ignore
             tempNodes.push(...tempHierarchy.descendants());
-            console.log(tempNodes)
           }
         } else if (tempReligion === "jüdische Jugendliche") {
           tempReligion = "jued";
@@ -721,8 +748,6 @@ export default class Idea extends Vue {
           let tempHierarchy = d3.hierarchy(religion);
           //@ts-ignore
           tempNodes.push(...tempHierarchy.descendants());
-          console.log(tempHierarchy.descendants)
-          console.log(tempNodes)
         }
       });
       tempNodes.forEach((idea) => {
@@ -815,8 +840,6 @@ export default class Idea extends Vue {
       if (religion.name != "multiple") {
         this.nodes.push(...tempHierarchy.descendants().slice(1));
         religions.push(religion);
-      } else {
-        this.nodes.push(...tempHierarchy.descendants().slice(1));
       }
     });
     this.nodes.push(...religions);
