@@ -279,6 +279,148 @@ export default class Idea extends Vue {
     let returnValue = 0;
     if (width > height) {
       if (this.bigNetwork === false) {
+        return width / 2;
+      }
+      if (node.data != undefined && node.data.interviews != undefined) {
+        if (node.data.interviews.length > 1) {
+          if (
+            node.data.interviews.length === 2 &&
+            node.data.interviews.includes("evan") &&
+            node.data.interviews.includes("evang")
+          ) {
+            returnValue = this.coordinatesForcePoints[2].x;
+          } else {
+            returnValue = 700;
+          }
+        } else {
+          switch (node.data.interviews[0]) {
+            case "alev":
+              returnValue = this.coordinatesForcePoints[0].x;
+              break;
+            case "kath":
+              returnValue = this.coordinatesForcePoints[1].x;
+              break;
+            case "evan":
+              returnValue = this.coordinatesForcePoints[2].x;
+              break;
+            case "evang":
+              returnValue = this.coordinatesForcePoints[2].x;
+              break;
+            case "orth":
+              returnValue = this.coordinatesForcePoints[3].x;
+              break;
+            case "musl":
+              returnValue = this.coordinatesForcePoints[4].x;
+              break;
+            case "jued":
+              returnValue = this.coordinatesForcePoints[6].x;
+              break;
+            case "sikh":
+              returnValue = this.coordinatesForcePoints[5].x;
+              break;
+          }
+        }
+      } else {
+        switch (node.name) {
+          case "alevitische Jugendliche":
+            returnValue = this.coordinatesForcePoints[0].x;
+            break;
+          case "katholische Jugendliche":
+            returnValue = this.coordinatesForcePoints[1].x;
+            break;
+          case "evangelische Jugendliche":
+            returnValue = this.coordinatesForcePoints[2].x;
+            break;
+          case "orthodoxe Jugendliche":
+            returnValue = this.coordinatesForcePoints[3].x;
+            break;
+          case "muslimische Jugendliche":
+            returnValue = this.coordinatesForcePoints[4].x;
+            break;
+          case "jüdische Jugendliche":
+            returnValue = this.coordinatesForcePoints[6].x;
+            break;
+          case "sikh Jugendliche":
+            returnValue = this.coordinatesForcePoints[5].x;
+            break;
+        }
+      }
+    } else {
+      if (this.bigNetwork === false) {
+        return height / 2;
+      }
+      if (node.data != undefined && node.data.interviews != undefined) {
+        if (node.data.interviews.length > 1) {
+          if (
+            node.data.interviews.length === 2 &&
+            node.data.interviews.includes("evan") &&
+            node.data.interviews.includes("evang")
+          ) {
+            returnValue = this.coordinatesForcePoints[2].y;
+          } else {
+            returnValue = 0;
+          }
+        } else {
+          switch (node.data.interviews[0]) {
+            case "alev":
+              returnValue = this.coordinatesForcePoints[0].y;
+              break;
+            case "kath":
+              returnValue = this.coordinatesForcePoints[1].y;
+              break;
+            case "evan":
+              returnValue = this.coordinatesForcePoints[2].y;
+              break;
+            case "evang":
+              returnValue = this.coordinatesForcePoints[2].y;
+              break;
+            case "orth":
+              returnValue = this.coordinatesForcePoints[3].y;
+              break;
+            case "musl":
+              returnValue = this.coordinatesForcePoints[4].y;
+              break;
+            case "jued":
+              returnValue = this.coordinatesForcePoints[6].y;
+              break;
+            case "sikh":
+              returnValue = this.coordinatesForcePoints[5].y;
+              break;
+          }
+        }
+      } else {
+        switch (node.name) {
+          case "alevitische Jugendliche":
+            returnValue = this.coordinatesForcePoints[0].y;
+            break;
+          case "katholische Jugendliche":
+            returnValue = this.coordinatesForcePoints[1].y;
+            break;
+          case "evangelische Jugendliche":
+            returnValue = this.coordinatesForcePoints[2].y;
+            break;
+          case "orthodoxe Jugendliche":
+            returnValue = this.coordinatesForcePoints[3].y;
+            break;
+          case "muslimische Jugendliche":
+            returnValue = this.coordinatesForcePoints[4].y;
+            break;
+          case "jüdische Jugendliche":
+            returnValue = this.coordinatesForcePoints[6].y;
+            break;
+          case "sikh Jugendliche":
+            returnValue = this.coordinatesForcePoints[5].y;
+            break;
+        }
+      }
+    }
+    return returnValue;
+  }
+
+  /*determinePosition(node, width, height) {
+    let returnValue = 0;
+    if (width > height) {
+      if (this.bigNetwork === false) {
         //@ts-ignore
         return this.width / 2;
       }
@@ -344,7 +486,7 @@ export default class Idea extends Vue {
       }
     }
     return returnValue;
-  }
+  }*/
 
   generateNetwork(nodes, links) {
     d3.selectAll("g").remove();
@@ -585,8 +727,6 @@ export default class Idea extends Vue {
       });
       tempNodes.forEach((idea) => {
         //@ts-ignore
-        //console.log(idea.data.name,feature.data.cooccurence)
-        //@ts-ignore
         if (feature.data.cooccurence.includes(idea.data.name)) {
           this.nodes.push(idea);
         }
@@ -661,6 +801,7 @@ export default class Idea extends Vue {
   initialNetwork() {
     this.nodes = [];
     this.links = [];
+    let religions: any[] = [];
 
     this.currentZoomLevel = d3.zoomIdentity
       .translate(
@@ -672,11 +813,13 @@ export default class Idea extends Vue {
     this.ideaNetworkPot.forEach((religion) => {
       let tempHierarchy = d3.hierarchy(religion);
       if (religion.name != "multiple") {
-        this.nodes.push(religion);
+        this.nodes.push(...tempHierarchy.descendants().slice(1));
+        religions.push(religion);
       } else {
         this.nodes.push(...tempHierarchy.descendants().slice(1));
       }
     });
+    this.nodes.push(...religions);
 
     let numberOfNodes = this.nodes.length;
     this.nodes.forEach((node) => {
