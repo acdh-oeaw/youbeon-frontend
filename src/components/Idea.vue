@@ -115,6 +115,7 @@ export default class Idea extends Vue {
   ideaDetailed: any = null;
 
   selectedIdeaLength = 0;
+  keepDetail = false;
 
   //arrays for detailed View
   places: any[] = [];
@@ -265,7 +266,7 @@ export default class Idea extends Vue {
       } else {
         console.log("No Node was found for the selected Idea");
       }
-    } else {
+    } else if (this.selectedIdea.length < this.selectedIdeaLength && !this.keepDetail){
       this.ideaDetailed = null
     }
     this.nodes.forEach((node) => {
@@ -299,6 +300,7 @@ export default class Idea extends Vue {
     } else {
       this.links = [];
     }
+    this.keepDetail = false;
     this.selectedIdeaLength = this.selectedIdea.length;
     this.generateNetwork(this.nodes, this.links);
   }
@@ -717,6 +719,7 @@ export default class Idea extends Vue {
   }
 
   onNodeClick(feature) {
+    this.keepDetail = true;
     if (feature.data) {
       let connectedInfo = this.getDataforFeature(feature);
       this.ideaDetailed = {
@@ -731,20 +734,7 @@ export default class Idea extends Vue {
 
       let tempNodes = [];
       this.ideaNetworkPot.forEach((religion) => {
-        let tempReligion = religion.name;
-        if (tempReligion === "evangelische Jugendliche") {
-          if (
-            feature.data.interviews.includes("evang") ||
-            feature.data.interviews.includes("evan")
-          ) {
-            let tempHierarchy = d3.hierarchy(religion);
-            //@ts-ignore
-            tempNodes.push(...tempHierarchy.descendants());
-          }
-        } else if (tempReligion === "jüdische Jugendliche") {
-          tempReligion = "jued";
-        }
-        if (feature.data.interviews.includes(tempReligion.substring(0, 4))) {
+        if(religion.name != "multiple") {
           let tempHierarchy = d3.hierarchy(religion);
           //@ts-ignore
           tempNodes.push(...tempHierarchy.descendants());
