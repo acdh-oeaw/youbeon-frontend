@@ -71,7 +71,7 @@
           <router-link
             class="hoverLink"
             tag="span"
-            :to="{ name: 'idea', params: { id: idea } }"
+            :to="{ name: 'idea', params: { idea_name: idea } }"
             >{{ idea }}</router-link
           >
         </div>
