@@ -435,7 +435,6 @@ export default class Place extends Vue {
 
   @Watch("selectedPlaces")
   displayPlaces() {
-    this.placeDetailed = null
     this.religionJSON = [];
     this.geoPlaces = [];
     this.ideaJSON = [];
@@ -465,11 +464,16 @@ export default class Place extends Vue {
           return sel.bezeichnung === place.properties.bezeichnung;
         })
       ) {
-        this.center = [
-          place.geometry.coordinates[1],
-          place.geometry.coordinates[0],
-        ];
         this.geoPlaces.push(place);
+        let lastPlace = this.geoPlaces.filter((f: any) => {
+          return this.selectedPlaces[this.selectedPlaces.length - 1] === f.properties;
+        });
+        if (lastPlace.length > 0) {
+          this.center = [
+            lastPlace[0].geometry.coordinates[1],
+            lastPlace[0].geometry.coordinates[0],
+          ];
+        }
       }
     });
     this.$nextTick(function () {
@@ -713,6 +717,14 @@ export default class Place extends Vue {
       this.autocompleteItems.forEach((item) => {
         if (this.$route.params.ort_id === item.properties.id) {
           this.selectedPlaces.push(item.properties);
+          this.placeDetailed = {
+            idee: item.properties.idee,
+            religion: this.turnInterviewIDintoReligion(
+              item.properties.religion
+            ),
+            name: item.properties.bezeichnung,
+            bermerkung: item.properties.bemerkung,
+          };
         }
       });
     }

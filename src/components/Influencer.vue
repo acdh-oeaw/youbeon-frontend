@@ -108,6 +108,7 @@ export default class Influencer extends Vue {
 
   //Influencer Variables
   allInfluencer: any = [];
+  allIdeas: any = [];
   // Array of currently visible Influencers
   listInfluencer: any = [];
   // Array of selected Influencer in autocomplete field
@@ -199,6 +200,7 @@ export default class Influencer extends Vue {
             tempInfluencerDetailed.idee = tempIdee;
           });
       }
+      console.log(tempInfluencerDetailed);
       this.influencerDetailed = tempInfluencerDetailed;
     } else {
       this.selectedInfluencer = [];
@@ -391,15 +393,21 @@ export default class Influencer extends Vue {
       this.$route.params.account_id != undefined &&
       this.$route.params.account_id != ""
     ) {
-      this.nodes.forEach((element) => {
+      this.nodes.forEach(async (element) => {
         if (element.data != undefined) {
           if (element.data.id === this.$route.params.account_id) {
-            console.log(this.selectedInfluencer);
             this.selectedInfluencer = [];
-            this.influencerDetailed = {
-              name: element.data.name,
-              idee: element.data.cooccurence,
-            };
+            let tempInfluencerDetailed = element.data;
+            if (!isNaN(Number(tempInfluencerDetailed.idee[0]))) {
+              let filteredIdeas:any[] = []
+              this.allIdeas.forEach(idea => {
+                if(tempInfluencerDetailed.idee.includes(idea.id)){
+                  filteredIdeas.push(idea.name)
+                }
+              })
+              tempInfluencerDetailed.idee = filteredIdeas;
+            }
+            this.influencerDetailed = tempInfluencerDetailed;
             this.selectedInfluencer.push(element.data.id);
             this.$route.params.account_id = "";
           }
@@ -412,6 +420,7 @@ export default class Influencer extends Vue {
     this.allInfluencer = this.formatInfluencerIntoReligions(
       dataStore.influencer
     );
+    this.allIdeas = dataStore.ideen;
     this.initialNetwork();
   }
 
