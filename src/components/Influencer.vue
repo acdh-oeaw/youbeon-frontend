@@ -200,7 +200,6 @@ export default class Influencer extends Vue {
             tempInfluencerDetailed.idee = tempIdee;
           });
       }
-      console.log(tempInfluencerDetailed);
       this.influencerDetailed = tempInfluencerDetailed;
     } else {
       this.selectedInfluencer = [];
@@ -399,12 +398,12 @@ export default class Influencer extends Vue {
             this.selectedInfluencer = [];
             let tempInfluencerDetailed = element.data;
             if (!isNaN(Number(tempInfluencerDetailed.idee[0]))) {
-              let filteredIdeas:any[] = []
-              this.allIdeas.forEach(idea => {
-                if(tempInfluencerDetailed.idee.includes(idea.id)){
-                  filteredIdeas.push(idea.name)
+              let filteredIdeas: any[] = [];
+              this.allIdeas.forEach((idea) => {
+                if (tempInfluencerDetailed.idee.includes(idea.id)) {
+                  filteredIdeas.push(idea.name);
                 }
-              })
+              });
               tempInfluencerDetailed.idee = filteredIdeas;
             }
             this.influencerDetailed = tempInfluencerDetailed;
@@ -422,6 +421,7 @@ export default class Influencer extends Vue {
     );
     this.allIdeas = dataStore.ideen;
     this.initialNetwork();
+    this.$router.onReady(() => this.routeLoaded());
   }
 
   determinePosition(node, width, height) {
