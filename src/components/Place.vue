@@ -458,6 +458,24 @@ export default class Place extends Vue {
       ) {
         if (typeof place.color === "string") {
           this.ideaJSON.push(place);
+          let placesInIdea = this.allPlaces.filter((f: any) => {
+            return f.properties.idee.includes(place.properties.bezeichnung);
+          });
+          let placesNotInVienna = placesInIdea.filter((place) => {
+            //Vienna Coordinates
+            let latitudeRangeVienna = [48.165, 48.258];
+            let longitudeRangeVienna = [16.221, 16.524];
+            return (
+              place.geometry.coordinates[0] > longitudeRangeVienna[1] ||
+              place.geometry.coordinates[0] < longitudeRangeVienna[0] ||
+              place.geometry.coordinates[1] > latitudeRangeVienna[1] ||
+              place.geometry.coordinates[1] < latitudeRangeVienna[0]
+            );
+          });
+          if (placesNotInVienna.length === placesInIdea.length) {
+            this.zoom = 3;
+            this.center = defaultCenter;
+          }
         }
       } else if (
         this.selectedPlaces.some((sel) => {
@@ -466,7 +484,9 @@ export default class Place extends Vue {
       ) {
         this.geoPlaces.push(place);
         let lastPlace = this.geoPlaces.filter((f: any) => {
-          return this.selectedPlaces[this.selectedPlaces.length - 1] === f.properties;
+          return (
+            this.selectedPlaces[this.selectedPlaces.length - 1] === f.properties
+          );
         });
         if (lastPlace.length > 0) {
           this.center = [

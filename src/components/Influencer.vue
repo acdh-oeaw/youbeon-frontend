@@ -113,6 +113,7 @@ export default class Influencer extends Vue {
   listInfluencer: any = [];
   // Array of selected Influencer in autocomplete field
   selectedInfluencer: any = [];
+  selectedInfluencerLength = 0;
   influencerDetailed: any = null;
 
   coordinatesForcePoints: any = [
@@ -568,6 +569,28 @@ export default class Influencer extends Vue {
 
   @Watch("selectedInfluencer")
   buildInfluencerNetworkObject() {
+
+    if (this.selectedInfluencer.length > this.selectedInfluencerLength && this.selectedInfluencer != null) {
+      let searchedNode;
+      this.nodes.forEach((node) => {
+        if (node.data) {
+          if (
+            node.data.id ===
+            this.selectedInfluencer[this.selectedInfluencer.length - 1]
+          ) {
+            searchedNode = node;
+          }
+        }
+      });
+      if (searchedNode) {
+        this.onNodeClick(null, searchedNode);
+      } else {
+        console.log("No Node was found for the selected Idea");
+      }
+    } else if (this.selectedInfluencer.length < this.selectedInfluencerLength) {
+      this.influencerDetailed = null
+      //this.selectedInfluencer = null;
+    }
     this.nodes.forEach((node) => {
       if (node.data) {
         if (this.selectedInfluencer.length > 0) {
@@ -599,6 +622,7 @@ export default class Influencer extends Vue {
     } else {
       this.links = [];
     }
+    this.selectedInfluencerLength = this.selectedInfluencer.length;
     this.generateNetwork(this.nodes, this.links);
   }
 

@@ -87,8 +87,8 @@
       </v-card-text>
       <v-card-text v-if="ideaDetailed.idee.length > 0">
         <u>Verknüpfte Ideen:</u>
-        <div v-for="idea in ideaDetailed.idee" v-bind:key="idea.id">
-          {{ idea }}
+        <div @click="selectedIdea.push(idea)" v-for="idea in ideaDetailed.idee" v-bind:key="idea.id">
+          <a style="cursor: pointer; color: rgba(0,0,0,.6);">{{ idea }}</a>
         </div>
       </v-card-text>
     </v-card>
