@@ -62,7 +62,9 @@
           </v-col>
         </v-row>
       </v-card-title>
-      <v-card-subtitle> {{ ideaDetailed.bemerkung }} </v-card-subtitle>
+      <v-card-subtitle class="quotes" v-for="zitat in ideaDetailed.zitate" v-bind:key="zitat">
+        {{ zitat }}
+      </v-card-subtitle>
       <v-card-text v-if="ideaDetailed.accounts.length > 0">
         <u>Verknüpfte Accounts:</u>
         <div v-for="account in ideaDetailed.accounts" v-bind:key="account.id">
@@ -87,8 +89,12 @@
       </v-card-text>
       <v-card-text v-if="ideaDetailed.idee.length > 0">
         <u>Verknüpfte Ideen:</u>
-        <div @click="selectedIdea.push(idea)" v-for="idea in ideaDetailed.idee" v-bind:key="idea.id">
-          <a style="cursor: pointer; color: rgba(0,0,0,.6);">{{ idea }}</a>
+        <div
+          @click="selectedIdea.push(idea)"
+          v-for="idea in ideaDetailed.idee"
+          v-bind:key="idea.id"
+        >
+          <a style="cursor: pointer; color: rgba(0, 0, 0, 0.6)">{{ idea }}</a>
         </div>
       </v-card-text>
     </v-card>
@@ -256,8 +262,10 @@ export default class Idea extends Vue {
         }
       });
       if (searchedNode) {
+        console.log(searchedNode);
         let connectedInfo = this.getDataforFeature(searchedNode);
         this.ideaDetailed = {
+          zitate: searchedNode.data.zitate,
           name: searchedNode.data.name,
           accounts: connectedInfo.accounts,
           places: connectedInfo.places,
@@ -266,8 +274,11 @@ export default class Idea extends Vue {
       } else {
         console.log("No Node was found for the selected Idea");
       }
-    } else if (this.selectedIdea.length < this.selectedIdeaLength && !this.keepDetail){
-      this.ideaDetailed = null
+    } else if (
+      this.selectedIdea.length < this.selectedIdeaLength &&
+      !this.keepDetail
+    ) {
+      this.ideaDetailed = null;
     }
     this.nodes.forEach((node) => {
       if (node.data) {
@@ -723,6 +734,7 @@ export default class Idea extends Vue {
     if (feature.data) {
       let connectedInfo = this.getDataforFeature(feature);
       this.ideaDetailed = {
+        zitate: feature.data.zitate,
         name: feature.data.name,
         accounts: connectedInfo.accounts,
         places: connectedInfo.places,
@@ -734,7 +746,7 @@ export default class Idea extends Vue {
 
       let tempNodes = [];
       this.ideaNetworkPot.forEach((religion) => {
-        if(religion.name != "multiple") {
+        if (religion.name != "multiple") {
           let tempHierarchy = d3.hierarchy(religion);
           //@ts-ignore
           tempNodes.push(...tempHierarchy.descendants());
@@ -800,6 +812,7 @@ export default class Idea extends Vue {
             this.selectedIdea = [];
             let connectedInfo = this.getDataforFeature(element);
             this.ideaDetailed = {
+              zitate: element.data.zitate,
               name: element.data.name,
               accounts: connectedInfo.accounts,
               places: connectedInfo.places,
@@ -899,6 +912,11 @@ export default class Idea extends Vue {
   background-color: rgba(255, 219, 107, 0.5);
   //background-color: #ffdb6b;
   height: 70vh;
+}
+
+.quotes{
+  font-style: italic;
+  font-size: 13px;
 }
 
 .vl {
