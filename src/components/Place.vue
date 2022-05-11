@@ -611,7 +611,6 @@ export default class Place extends Vue {
         return value > -1;
       }
     });
-    console.log(placesWithReligion)
     if (this.religionJSON.length > 1) {
       let placesWithMultipleReligions = this.displayLocationsMultipleReligions(
         this.religionJSON
