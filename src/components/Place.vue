@@ -252,12 +252,12 @@ export default class Place extends Vue {
   allPlaces: any[] = [];
   colorsMaybe: any[] = [];
   allColors = {
-    "orthodoxes Christentum": ["#e6194B", "#f5a3b7"], //Red
+    "Christentum (orthodox)": ["#e6194B", "#f5a3b7"], //Red
     Islam: ["#3cb44b", "#aee4b5"], // Green
     Alevitentum: ["#ffe119", "#fff6ba"], // Yellow
     Judentum: ["#4363d8", "#b4c1ef"], //Blue
     Sikhismus: ["#f58231", "#fbcdad"], //Orange
-    "Evangelisches Christentum": ["#f032e6", "#f9adf5"], //Magenta
+    "Christentum (evangelisch)": ["#f032e6", "#f9adf5"], //Magenta
     "Katholisches Christentum": ["#4F0AA8", "#9D78CE"], //Violet
   };
 
@@ -265,8 +265,8 @@ export default class Place extends Vue {
     "alle accounts",
     "alevitentum",
     "katholisches christentum",
-    "evangelisches christentum",
-    "orthodoxes christentum",
+    "christentum (evangelisch)",
+    "christentum (orthodox)",
     "islam",
     "judentum",
     "sikhismus",
@@ -275,8 +275,8 @@ export default class Place extends Vue {
   displayNameReligions: any[] = [
     ["alevitentum", "alevitische Jugendliche"],
     ["katholisches christentum", "katholische Jugendliche"],
-    ["evangelisches christentum", "evangelische Jugendliche"],
-    ["orthodoxes christentum", "orthodoxe Jugendliche"],
+    ["christentum (evangelisch)", "evangelische Jugendliche"],
+    ["christentum (orthodox)", "orthodoxe Jugendliche"],
     ["islam", "muslimische Jugendliche"],
     ["judentum", "jüdische Jugendliche"],
     ["sikhismus", "sikh Jugendliche"],
@@ -596,15 +596,22 @@ export default class Place extends Vue {
   displayLocationsReligion(religion: any) {
     let placesWithReligion = this.allPlaces.filter((f: any) => {
       if (f.properties != undefined && f.properties.religion != undefined) {
+        let neueReligionsFormatierung = religion.properties.name.split("(")
+        if(neueReligionsFormatierung.length > 1) {
+          neueReligionsFormatierung = neueReligionsFormatierung[1]
+        } else {
+          neueReligionsFormatierung = neueReligionsFormatierung[0]
+        }
         let value = f.properties.religion.findIndex(
           (item) =>
             this.namesAreWeird(
-              religion.properties.name.toLowerCase().substring(0, 4)
+              neueReligionsFormatierung.toLowerCase().substring(0, 4)
             ) === item.toLowerCase().split("-")[1].substring(0, 4)
         );
         return value > -1;
       }
     });
+    console.log(placesWithReligion)
     if (this.religionJSON.length > 1) {
       let placesWithMultipleReligions = this.displayLocationsMultipleReligions(
         this.religionJSON
@@ -702,7 +709,7 @@ export default class Place extends Vue {
           longForm.push("Islam");
           break;
         case "orth":
-          longForm.push("Orthodoxes Christentum");
+          longForm.push("Christentum (orthodox)");
           break;
         case "kath":
           longForm.push("Katholisches Christentum");
@@ -717,7 +724,7 @@ export default class Place extends Vue {
           longForm.push("Sikhismus");
           break;
         case "evan":
-          longForm.push("Evangelisches Christentum");
+          longForm.push("Christentum (evangelisch)");
           break;
       }
     });
