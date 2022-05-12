@@ -24,13 +24,13 @@
       </v-row>
     </v-card>
     <div id="network">
-      <v-btn fab small id="zoom_in" class="zoomies control">
+      <v-btn fab small id="zoom_in" class="zoomies control d-none d-sm-block">
         <v-icon>add</v-icon>
       </v-btn>
       <v-btn
         fab
         small
-        class="control zoomies"
+        class="control zoomies d-none d-sm-block"
         id="zoom_out"
         style="margin-top: 70px"
       >
@@ -39,7 +39,7 @@
       <v-btn
         :disabled="bigNetwork"
         style="margin-top: 120px"
-        class="control"
+        class="control heightButton"
         fab
         small
         @click="resetNetwork()"

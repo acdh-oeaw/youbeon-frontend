@@ -9,7 +9,7 @@
               $route.name === 'place' && 'see_through',
             ]"
           >
-            <v-row style="height: 100px">
+            <v-row id="navrow" style="height: 100px">
               <v-col md="1">
                 <router-link to="/"
                   ><img class="logo mt-2" src="./static/logo.png"
@@ -17,7 +17,16 @@
               </v-col>
               <v-col md="5"></v-col>
               <v-col md="6">
+                <v-icon
+                  @click="drawer = true"
+                  x-large
+                  class="d-flex d-sm-none"
+                  id="phone_nav"
+                  style="margin:20px; float:right;"
+                  >menu</v-icon
+                >
                 <v-tabs
+                  class="d-none d-sm-block"
                   active-class="active-tab"
                   grow
                   height="76px"
@@ -60,6 +69,50 @@
               </v-col>
             </v-row>
           </div>
+          <v-menu
+            style="z-index: 9999; width:100%;"
+            v-model="drawer"
+            bottom
+            min-width="100%"
+            attach="#navrow"
+            content-class="elevation-0"
+            nudge-bottom="80"
+          >
+            <v-list nav dense>
+              <v-list-item-group>
+                <v-list-item to="/"
+                  ><div
+                  :class="[
+                      'tabs_top',
+                      $route.name === 'place' && 'underline',
+                    ]"
+                    @click="drawer = false"
+                  >
+                    Orte
+                  </div>
+                </v-list-item>
+                <v-list-item to="/account">
+                  <div
+                    :class="[
+                      'tabs_top',
+                      $route.name === 'account' && 'underline',
+                    ]"
+                    @click="drawer = false"
+                  >
+                    Accounts
+                  </div>
+                </v-list-item>
+                <v-list-item to="/idea">
+                  <div
+                    :class="['tabs_top', $route.name === 'idea' && 'underline']"
+                    @click="drawer = false"
+                  >
+                    Ideen
+                  </div>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </v-menu>
           <div
             style="
               width: 100%;
@@ -73,7 +126,7 @@
               <router-view v-if="loading === false" />
               <v-skeleton-loader
                 v-else
-                style="margin:5% auto"
+                style="margin: 5% auto"
                 max-width="90%"
                 max-height="800"
                 type="sentences, image, imagefb"
@@ -94,6 +147,7 @@ import { initialize as initData } from "./store/data";
 })
 export default class App extends Vue {
   loading = true;
+  drawer = false;
   mounted() {
     initData().then(() => {
       this.loading = false;
@@ -115,6 +169,10 @@ export default class App extends Vue {
   z-index: 8;
   transition: 0.5s;
   background-color: #e9e9e9;
+}
+
+#phone_nav:hover {
+  cursor: pointer;
 }
 
 .tabs_top {
