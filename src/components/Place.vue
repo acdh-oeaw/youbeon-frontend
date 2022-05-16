@@ -8,12 +8,11 @@
             :items="autocompleteItems"
             item-text="properties.bezeichnung"
             item-value="properties"
-            clearable
             flat
             multiple
             solo
-            chips
             deletable-chips
+            small-chips
             text
             hide-details
             elevation="0"
@@ -139,7 +138,7 @@
       >
       </map-legende>
     </v-col>
-    <v-card v-if="placeDetailed !== null" id="detailedView">
+    <!--<v-card v-if="placeDetailed !== null" id="detailedView">
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
@@ -177,6 +176,57 @@
             >{{ idea }}</router-link
           >
         </div>
+      </v-card-text>
+    </v-card>-->
+    <v-card v-if="placeDetailed !== null" id="detailedView">
+      <v-card-title>
+        <v-row no-gutters>
+          <v-col class="pa-0 ma-0 flex-grow-1">
+            <div style="float: left">
+              {{ placeDetailed.name }}
+            </div>
+          </v-col>
+          <v-col cols="2">
+            <div style="right: 60px; position: fixed">
+              <v-icon @click="placeDetailed = null"> close </v-icon>
+            </div>
+          </v-col>
+        </v-row>
+      </v-card-title>
+      <v-card-subtitle v-if="placeDetailed.bemerkung">
+        {{ placeDetailed.bemerkung }}
+      </v-card-subtitle>
+      <v-card-text>
+        <v-expansion-panels accordion flat hover>
+          <v-expansion-panel>
+            <v-expansion-panel-header>
+              Verknüpfte Religionen:
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <div
+                v-for="religion in placeDetailed.religion"
+                v-bind:key="religion.id"
+              >
+                {{ religion }}
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+          <v-expansion-panel v-if="placeDetailed.idee.length > 0">
+            <v-expansion-panel-header>
+              Verknüpfte Ideen:
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <div v-for="idea in placeDetailed.idee" v-bind:key="idea.id">
+                <router-link
+                  class="link"
+                  tag="span"
+                  :to="{ name: 'idea', params: { idea_name: idea } }"
+                  >{{ idea }}</router-link
+                >
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-card-text>
     </v-card>
   </vContainer>
@@ -596,11 +646,11 @@ export default class Place extends Vue {
   displayLocationsReligion(religion: any) {
     let placesWithReligion = this.allPlaces.filter((f: any) => {
       if (f.properties != undefined && f.properties.religion != undefined) {
-        let neueReligionsFormatierung = religion.properties.name.split("(")
-        if(neueReligionsFormatierung.length > 1) {
-          neueReligionsFormatierung = neueReligionsFormatierung[1]
+        let neueReligionsFormatierung = religion.properties.name.split("(");
+        if (neueReligionsFormatierung.length > 1) {
+          neueReligionsFormatierung = neueReligionsFormatierung[1];
         } else {
-          neueReligionsFormatierung = neueReligionsFormatierung[0]
+          neueReligionsFormatierung = neueReligionsFormatierung[0];
         }
         let value = f.properties.religion.findIndex(
           (item) =>

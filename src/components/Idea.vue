@@ -62,40 +62,65 @@
           </v-col>
         </v-row>
       </v-card-title>
-      <v-card-subtitle class="quotes" v-for="zitat in ideaDetailed.zitate" v-bind:key="zitat">
+      <v-card-subtitle
+        class="quotes"
+        v-for="zitat in ideaDetailed.zitate"
+        v-bind:key="zitat"
+      >
         {{ zitat }}
       </v-card-subtitle>
-      <v-card-text v-if="ideaDetailed.accounts.length > 0">
-        <u>Verknüpfte Accounts:</u>
-        <div v-for="account in ideaDetailed.accounts" v-bind:key="account.id">
-          <router-link
-            class="hoverLink"
-            tag="span"
-            :to="{ name: 'account', params: { account_id: account.id } }"
-            >{{ account.name }}</router-link
-          >
-        </div>
-      </v-card-text>
-      <v-card-text v-if="ideaDetailed.places.length > 0">
-        <u>Verknüpfte Orte:</u>
-        <div v-for="ort in ideaDetailed.places" v-bind:key="ort.id">
-          <router-link
-            class="hoverLink"
-            tag="span"
-            :to="{ name: 'place', params: { ort_id: ort.id } }"
-            >{{ ort.bezeichnung }}</router-link
-          >
-        </div>
-      </v-card-text>
-      <v-card-text v-if="ideaDetailed.idee.length > 0">
-        <u>Verknüpfte Ideen:</u>
-        <div
-          @click="selectedIdea.push(idea)"
-          v-for="idea in ideaDetailed.idee"
-          v-bind:key="idea.id"
-        >
-          <a style="cursor: pointer; color: rgba(0, 0, 0, 0.6)">{{ idea }}</a>
-        </div>
+      <v-card-text>
+        <v-expansion-panels accordion flat hover>
+          <v-expansion-panel v-if="ideaDetailed.accounts.length > 0">
+            <v-expansion-panel-header>
+              Verknüpfte Accounts:
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <div
+                v-for="account in ideaDetailed.accounts"
+                v-bind:key="account.id"
+              >
+                <router-link
+                  class="hoverLink"
+                  tag="span"
+                  :to="{ name: 'account', params: { account_id: account.id } }"
+                  >{{ account.name }}</router-link
+                >
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+          <v-expansion-panel v-if="ideaDetailed.places.length > 0">
+            <v-expansion-panel-header>
+              Verknüpfte Orte:
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <div v-for="ort in ideaDetailed.places" v-bind:key="ort.id">
+                <router-link
+                  class="hoverLink"
+                  tag="span"
+                  :to="{ name: 'place', params: { ort_id: ort.id } }"
+                  >{{ ort.bezeichnung }}</router-link
+                >
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+          <v-expansion-panel v-if="ideaDetailed.idee.length > 0">
+            <v-expansion-panel-header>
+              Verknüpfte Ideen:
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <div
+                @click="selectedIdea.push(idea)"
+                v-for="idea in ideaDetailed.idee"
+                v-bind:key="idea.id"
+              >
+                <a style="cursor: pointer; color: rgba(0, 0, 0, 0.6)">{{
+                  idea
+                }}</a>
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-card-text>
     </v-card>
   </vContainer>
@@ -914,7 +939,7 @@ export default class Idea extends Vue {
   height: 70vh;
 }
 
-.quotes{
+.quotes {
   font-style: italic;
   font-size: 13px;
 }

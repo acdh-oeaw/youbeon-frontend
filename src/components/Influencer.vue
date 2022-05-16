@@ -24,13 +24,13 @@
       </v-row>
     </v-card>
     <div id="network">
-      <v-btn fab small id="zoom_in" class="zoomies control d-none d-sm-block">
+      <v-btn fab small id="zoom_in" class="zoomies control">
         <v-icon>add</v-icon>
       </v-btn>
       <v-btn
         fab
         small
-        class="control zoomies d-none d-sm-block"
+        class="control zoomies"
         id="zoom_out"
         style="margin-top: 70px"
       >
@@ -64,18 +64,23 @@
         </v-row>
       </v-card-title>
       <v-card-subtitle> {{ influencerDetailed.bemerkung }} </v-card-subtitle>
-      <v-card-text>
-        <u>Verknüpfte Ideen:</u>
-        <br />
-        <div v-for="idea in influencerDetailed.idee" v-bind:key="idea.id">
-          <router-link
-            class="hoverLink"
-            tag="span"
-            :to="{ name: 'idea', params: { idea_name: idea } }"
-            >{{ idea }}</router-link
-          >
-        </div>
-      </v-card-text>
+      <v-expansion-panels accordion flat hover style="margin-bottom:30px;">
+        <v-expansion-panel>
+          <v-expansion-panel-header>
+            Verknüpfte Ideen:
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <div v-for="idea in influencerDetailed.idee" v-bind:key="idea.id">
+              <router-link
+                class="hoverLink"
+                tag="span"
+                :to="{ name: 'idea', params: { idea_name: idea } }"
+                >{{ idea }}</router-link
+              >
+            </div>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
     </v-card>
   </vContainer>
 </template>
@@ -569,8 +574,10 @@ export default class Influencer extends Vue {
 
   @Watch("selectedInfluencer")
   buildInfluencerNetworkObject() {
-
-    if (this.selectedInfluencer.length > this.selectedInfluencerLength && this.selectedInfluencer != null) {
+    if (
+      this.selectedInfluencer.length > this.selectedInfluencerLength &&
+      this.selectedInfluencer != null
+    ) {
       let searchedNode;
       this.nodes.forEach((node) => {
         if (node.data) {
@@ -588,7 +595,7 @@ export default class Influencer extends Vue {
         console.log("No Node was found for the selected Idea");
       }
     } else if (this.selectedInfluencer.length < this.selectedInfluencerLength) {
-      this.influencerDetailed = null
+      this.influencerDetailed = null;
       //this.selectedInfluencer = null;
     }
     this.nodes.forEach((node) => {

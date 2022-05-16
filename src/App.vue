@@ -22,7 +22,7 @@
                   x-large
                   class="d-flex d-sm-none"
                   id="phone_nav"
-                  style="margin:20px; float:right;"
+                  style="margin: 20px; float: right"
                   >menu</v-icon
                 >
                 <v-tabs
@@ -70,7 +70,7 @@
             </v-row>
           </div>
           <v-menu
-            style="z-index: 9999; width:100%;"
+            style="z-index: 9999; width: 100%"
             v-model="drawer"
             bottom
             min-width="100%"
@@ -82,7 +82,7 @@
               <v-list-item-group>
                 <v-list-item to="/"
                   ><div
-                  :class="[
+                    :class="[
                       'tabs_top',
                       $route.name === 'place' && 'underline',
                     ]"
@@ -140,6 +140,7 @@
 </template>
 
 <script lang="ts">
+import Vuetify from "vuetify";
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import { initialize as initData } from "./store/data";
 @Component({
