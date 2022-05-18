@@ -64,7 +64,8 @@
         </v-row>
       </v-card-title>
       <v-card-subtitle> {{ influencerDetailed.bemerkung }} </v-card-subtitle>
-      <v-expansion-panels accordion flat hover style="margin-bottom:30px;">
+      <v-card-text>
+      <v-expansion-panels accordion flat hover style="margin-bottom:15px;">
         <v-expansion-panel>
           <v-expansion-panel-header>
             Verknüpfte Ideen:
@@ -81,6 +82,7 @@
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
+      </v-card-text>
     </v-card>
   </vContainer>
 </template>
@@ -672,7 +674,7 @@ export default class Influencer extends Vue {
       )
       .force(
         "collision",
-        d3.forceCollide().radius((d) => (d.children ? 50 : 30))
+        d3.forceCollide().radius((d) => (d.children ? 200 : 30))
       );
 
     let drag = (simulation) => {
@@ -755,7 +757,7 @@ export default class Influencer extends Vue {
         d.children ? "#448A1C" : d._color ? d._color : d.data._color
       )
       .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
-      .attr("r", (d) => (d.children ? 40 : 20))
+      .attr("r", (d) => (d.children ? 150 : 20))
       .on("click", (d, i) => {
         this.onNodeClick(d, i);
       });
@@ -767,14 +769,40 @@ export default class Influencer extends Vue {
       })
       .enter()
       .append("text")
-      .text(function (d) {
-        return d.data ? d.data.name : d.name;
+      .html(function (d) {
+        if (!d.children) {
+          if (d.data) {
+            return d.data.name;
+          } else {
+            return d.name;
+          }
+        } else {
+          if(d.data) {
+             return (
+            "<tspan x='0' dy='-0.5em'>" +
+            d.data.name.split(" ")[0] +
+            "</tspan>" +
+            "<tspan x='0' dy='1.2em' dx='-3em'>" +
+            d.data.name.split(" ")[1] +
+            "</tspan>"
+          );
+          }else {
+          return (
+            "<tspan x='0' dy='-0.5em'>" +
+            d.name.split(" ")[0] +
+            "</tspan>" +
+            "<tspan x='0' dy='1.2em' dx='-3em'>" +
+            d.name.split(" ")[1] +
+            "</tspan>"
+          );
+        }
+        }
       })
       .attr("dx", function (d) {
-        return d.children ? 50 : 25;
+        return d.children ? -120 : 25;
       })
-      .style("font-size", (d) => {
-        return d.children ? 14 / this.currentZoomLevel.k + "px" : 14;
+      .style("font-size", function (d) {
+        return d.children ?  "2.5em" : 14;
       });
 
     // This function is run at each iteration of the force algorithm, updating the nodes position.
@@ -853,7 +881,16 @@ export default class Influencer extends Vue {
   top: 250px;
 }
 
+.v-expansion-panel-header{
+  padding: 0 !important;
+}
+
 .hoverLink:hover {
   cursor: pointer;
+}
+
+@font-face {
+  font-family: "ChicagoFLF";
+  src: local("ChicagoFLF"), url(../fonts/ChicagoFLF.ttf) format("truetype");
 }
 </style>

@@ -51,7 +51,9 @@
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
-            <div style="float: left">
+            <div
+              style="float: left font-family: 'ChicagoFLF', Helvetica, Arial, sans-serif"
+            >
               {{ ideaDetailed.name }}
             </div>
           </v-col>
@@ -72,7 +74,7 @@
       <v-card-text>
         <v-expansion-panels accordion flat hover>
           <v-expansion-panel v-if="ideaDetailed.accounts.length > 0">
-            <v-expansion-panel-header>
+            <v-expansion-panel-header style="padding-left: 0">
               Verknüpfte Accounts:
             </v-expansion-panel-header>
             <v-expansion-panel-content>
@@ -290,7 +292,7 @@ export default class Idea extends Vue {
         console.log(searchedNode);
         let connectedInfo = this.getDataforFeature(searchedNode);
         this.ideaDetailed = {
-          zitate: searchedNode.data.zitate,
+          zitate: [...new Set(searchedNode.data.zitate)],
           name: searchedNode.data.name,
           accounts: connectedInfo.accounts,
           places: connectedInfo.places,
@@ -593,7 +595,7 @@ export default class Idea extends Vue {
       )
       .force(
         "collision",
-        d3.forceCollide().radius((d) => (d.children ? 50 : 20))
+        d3.forceCollide().radius((d) => (d.children ? 200 : 20))
       );
 
     let drag = (simulation) => {
@@ -675,7 +677,7 @@ export default class Idea extends Vue {
         d.children ? "#fff" : d._color ? d._color : d.data._color
       )
       .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
-      .attr("r", (d) => (d.children ? 40 : 20))
+      .attr("r", (d) => (d.children ? 150 : 20))
       .on("click", (d, i) => {
         this.onNodeClick(i);
       });
@@ -687,14 +689,40 @@ export default class Idea extends Vue {
       })
       .enter()
       .append("text")
-      .text(function (d) {
-        return d.data ? d.data.name : d.name;
+      .html(function (d) {
+        if (!d.children) {
+          if (d.data) {
+            return d.data.name;
+          } else {
+            return d.name;
+          }
+        } else {
+          if(d.data) {
+             return (
+            "<tspan x='0' dy='-0.5em'>" +
+            d.data.name.split(" ")[0] +
+            "</tspan>" +
+            "<tspan x='0' dy='1.2em' dx='-3em'>" +
+            d.data.name.split(" ")[1] +
+            "</tspan>"
+          );
+          }else {
+          return (
+            "<tspan x='0' dy='-0.5em'>" +
+            d.name.split(" ")[0] +
+            "</tspan>" +
+            "<tspan x='0' dy='1.2em' dx='-3em'>" +
+            d.name.split(" ")[1] +
+            "</tspan>"
+          );
+        }
+        }
       })
       .attr("dx", function (d) {
-        return d.children ? 50 : 25;
+        return d.children ? -120 : 25;
       })
       .style("font-size", function (d) {
-        return d.children ? 14 / tempZoom.k + "px" : 14;
+        return d.children ? "2.5em" : 14;
       });
 
     // This function is run at each iteration of the force algorithm, updating the nodes position.
@@ -759,7 +787,7 @@ export default class Idea extends Vue {
     if (feature.data) {
       let connectedInfo = this.getDataforFeature(feature);
       this.ideaDetailed = {
-        zitate: feature.data.zitate,
+        zitate: [...new Set(feature.data.zitate)],
         name: feature.data.name,
         accounts: connectedInfo.accounts,
         places: connectedInfo.places,
@@ -837,7 +865,7 @@ export default class Idea extends Vue {
             this.selectedIdea = [];
             let connectedInfo = this.getDataforFeature(element);
             this.ideaDetailed = {
-              zitate: element.data.zitate,
+              zitate: [...new Set(element.data.zitate)],
               name: element.data.name,
               accounts: connectedInfo.accounts,
               places: connectedInfo.places,
@@ -975,6 +1003,10 @@ export default class Idea extends Vue {
   bottom: 30px;
 }
 
+.v-expansion-panel-header {
+  padding: 0 !important;
+}
+
 .control {
   position: absolute;
   margin: 20px;
@@ -988,5 +1020,10 @@ export default class Idea extends Vue {
   height: 30px;
   margin: 10px;
   margin-right: 10px;
+}
+
+@font-face {
+  font-family: "ChicagoFLF";
+  src: local("ChicagoFLF"), url(../fonts/ChicagoFLF.ttf) format("truetype");
 }
 </style>

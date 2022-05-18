@@ -39,9 +39,7 @@
                 v-on="on"
                 v-bind="attrs"
               >
-                <template>
-                  {{ selectedFilter.name }}
-                </template>
+                {{ selectedFilter.name }}
                 <v-icon style="margin-left: 10px">expand_more</v-icon>
               </v-btn>
             </template>
@@ -138,46 +136,6 @@
       >
       </map-legende>
     </v-col>
-    <!--<v-card v-if="placeDetailed !== null" id="detailedView">
-      <v-card-title>
-        <v-row no-gutters>
-          <v-col class="pa-0 ma-0 flex-grow-1">
-            <div style="float: left">
-              {{ placeDetailed.name }}
-            </div>
-          </v-col>
-          <v-col cols="2">
-            <div style="right: 60px; position: fixed">
-              <v-icon @click="placeDetailed = null"> close </v-icon>
-            </div>
-          </v-col>
-        </v-row>
-      </v-card-title>
-      <v-card-subtitle v-if="placeDetailed.bemerkung">
-        {{ placeDetailed.bemerkung }}
-      </v-card-subtitle>
-      <v-card-text>
-        <u>Verknüpfte Religionen:</u>
-        <br />
-        <div
-          v-for="religion in placeDetailed.religion"
-          v-bind:key="religion.id"
-        >
-          {{ religion }}
-        </div>
-      </v-card-text>
-      <v-card-text v-if="placeDetailed.idee.length > 0">
-        <u>Verknüpfte Ideen:</u>
-        <div v-for="idea in placeDetailed.idee" v-bind:key="idea.id">
-          <router-link
-            class="link"
-            tag="span"
-            :to="{ name: 'idea', params: { idea_name: idea } }"
-            >{{ idea }}</router-link
-          >
-        </div>
-      </v-card-text>
-    </v-card>-->
     <v-card v-if="placeDetailed !== null" id="detailedView">
       <v-card-title>
         <v-row no-gutters>
@@ -198,11 +156,11 @@
       </v-card-subtitle>
       <v-card-text>
         <v-expansion-panels accordion flat hover>
-          <v-expansion-panel>
-            <v-expansion-panel-header>
+          <v-expansion-panel style="background-color:rgba(0, 0, 0, 0.0)">
+            <v-expansion-panel-header color="rgba(0, 0, 0, 0.0)">
               Verknüpfte Religionen:
             </v-expansion-panel-header>
-            <v-expansion-panel-content>
+            <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
               <div
                 v-for="religion in placeDetailed.religion"
                 v-bind:key="religion.id"
@@ -211,11 +169,11 @@
               </div>
             </v-expansion-panel-content>
           </v-expansion-panel>
-          <v-expansion-panel v-if="placeDetailed.idee.length > 0">
-            <v-expansion-panel-header>
+          <v-expansion-panel style="background-color:rgba(0, 0, 0, 0.0)" v-if="placeDetailed.idee.length > 0">
+            <v-expansion-panel-header color="rgba(0, 0, 0, 0.0)">
               Verknüpfte Ideen:
             </v-expansion-panel-header>
-            <v-expansion-panel-content>
+            <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
               <div v-for="idea in placeDetailed.idee" v-bind:key="idea.id">
                 <router-link
                   class="link"
@@ -864,6 +822,10 @@ export default class Place extends Vue {
   float: right;
   z-index: 1;
   width: auto;
+}
+
+.v-expansion-panel-header{
+  padding: 0 !important;
 }
 
 .listHeight {
