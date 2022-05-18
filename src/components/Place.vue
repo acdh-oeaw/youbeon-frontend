@@ -260,13 +260,13 @@ export default class Place extends Vue {
   allPlaces: any[] = [];
   colorsMaybe: any[] = [];
   allColors = {
-    "Christentum (orthodox)": ["#e6194B", "#f5a3b7"], //Red
-    Islam: ["#3cb44b", "#aee4b5"], // Green
-    Alevitentum: ["#ffe119", "#fff6ba"], // Yellow
-    Judentum: ["#4363d8", "#b4c1ef"], //Blue
-    Sikhismus: ["#f58231", "#fbcdad"], //Orange
-    "Christentum (evangelisch)": ["#f032e6", "#f9adf5"], //Magenta
-    "Katholisches Christentum": ["#4F0AA8", "#9D78CE"], //Violet
+    "Christentum (orthodox)": ["#E5625E", "#f1a9a6"], //Red
+    Islam: ["#424C55", "#8e9499"], // Grey
+    Alevitentum: ["#623E88", "#a18bb8"], // Violet
+    Judentum: ["#B4DCD2", "#d6ece6"], //Blue
+    Sikhismus: ["#E8C547", "#f2df9a"], //yellow
+    "Christentum (evangelisch)": ["#B57795", "#d6b4c5"], //Magenta
+    "Katholisches Christentum": ["#698F3F", "#acc195"], //olive
   };
 
   selectableReligions: string[] = [
@@ -359,9 +359,9 @@ export default class Place extends Vue {
     pointToLayer: (feature: any, latlng: any) => {
       let color;
       if (feature.properties.religiousPlace === true) {
-        color = "#967444";
+        color = "#8F7E4F";
       } else {
-        color = "#BC9F86";
+        color = "#c1b89e";
       }
       return L.circleMarker(latlng, {
         zIndexOffset: 1000,
@@ -839,7 +839,7 @@ export default class Place extends Vue {
 }
 
 #detailedView {
-  border: 4px solid #b0dcd9 !important;
+  border: 5px solid #E4625E !important;
   background-color: rgba($color: #fff, $alpha: 0.8);
   max-height: 50%;
   overflow-y: auto;

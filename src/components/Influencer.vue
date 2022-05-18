@@ -455,7 +455,7 @@ export default class Influencer extends Vue {
               returnValue = this.coordinatesForcePoints[0].x;
               break;
             case "kath":
-              returnValue = this.coordinatesForcePoints[1].x;
+              returnValue = this.coordinatesForcePoints[3].x;
               break;
             case "evan":
               returnValue = this.coordinatesForcePoints[2].x;
@@ -464,7 +464,7 @@ export default class Influencer extends Vue {
               returnValue = this.coordinatesForcePoints[2].x;
               break;
             case "orth":
-              returnValue = this.coordinatesForcePoints[3].x;
+              returnValue = this.coordinatesForcePoints[1].x;
               break;
             case "musl":
               returnValue = this.coordinatesForcePoints[4].x;
@@ -483,13 +483,13 @@ export default class Influencer extends Vue {
             returnValue = this.coordinatesForcePoints[0].x;
             break;
           case "katholische Jugendliche":
-            returnValue = this.coordinatesForcePoints[1].x;
+            returnValue = this.coordinatesForcePoints[3].x;
             break;
           case "evangelische Jugendliche":
             returnValue = this.coordinatesForcePoints[2].x;
             break;
           case "orthodoxe Jugendliche":
-            returnValue = this.coordinatesForcePoints[3].x;
+            returnValue = this.coordinatesForcePoints[1].x;
             break;
           case "muslimische Jugendliche":
             returnValue = this.coordinatesForcePoints[4].x;
@@ -523,7 +523,7 @@ export default class Influencer extends Vue {
               returnValue = this.coordinatesForcePoints[0].y;
               break;
             case "kath":
-              returnValue = this.coordinatesForcePoints[1].y;
+              returnValue = this.coordinatesForcePoints[3].y;
               break;
             case "evan":
               returnValue = this.coordinatesForcePoints[2].y;
@@ -532,7 +532,7 @@ export default class Influencer extends Vue {
               returnValue = this.coordinatesForcePoints[2].y;
               break;
             case "orth":
-              returnValue = this.coordinatesForcePoints[3].y;
+              returnValue = this.coordinatesForcePoints[1].y;
               break;
             case "musl":
               returnValue = this.coordinatesForcePoints[4].y;
@@ -551,13 +551,13 @@ export default class Influencer extends Vue {
             returnValue = this.coordinatesForcePoints[0].y;
             break;
           case "katholische Jugendliche":
-            returnValue = this.coordinatesForcePoints[1].y;
+            returnValue = this.coordinatesForcePoints[3].y;
             break;
           case "evangelische Jugendliche":
             returnValue = this.coordinatesForcePoints[2].y;
             break;
           case "orthodoxe Jugendliche":
-            returnValue = this.coordinatesForcePoints[3].y;
+            returnValue = this.coordinatesForcePoints[1].y;
             break;
           case "muslimische Jugendliche":
             returnValue = this.coordinatesForcePoints[4].y;
@@ -865,7 +865,7 @@ export default class Influencer extends Vue {
 }
 
 .detailedView {
-  border: 4px solid #b0dcd9 !important;
+  border: 5px solid #E4625E !important;
   position: absolute;
   max-height: 50%;
   overflow-y: auto;
