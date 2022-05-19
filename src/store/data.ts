@@ -27,7 +27,7 @@ async function init() {
         .then((response) => response.json())
         .then((data) => {
             data.forEach(idea => {
-                idea._color = "#7D387D"
+                idea._color = "#f4e2a3"
             });
             return data
         });
@@ -42,7 +42,7 @@ async function init() {
         .then((response) => response.json())
         .then((data) => {
             data.forEach(idea => {
-                idea._color = "#dcfaf3"
+                idea._color = "#daeee8"
             });
             return data;
         });

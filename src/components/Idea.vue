@@ -1,8 +1,11 @@
 <template>
   <vContainer>
+    <div style="margin-top:0.5em" class="balls"></div><h1>Ideen</h1>
+    <div class="balls"></div><h2>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.</h2>
+    <div style="margin-top:20px;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</div>
     <v-row no-gutters class="mt-2">
       <v-col class="pa-0 flex-grow-1">
-        <v-card style="margin-top: 3vh">
+        <v-card style="margin-top: 1vh">
           <v-row no-gutters>
             <v-autocomplete
               flat
@@ -14,6 +17,7 @@
               solo
               multiple
               clearable
+              deletable-chips
               hide-details
               label="Ideen filtern nach..."
               prepend-inner-icon="search"
@@ -289,7 +293,6 @@ export default class Idea extends Vue {
         }
       });
       if (searchedNode) {
-        console.log(searchedNode);
         let connectedInfo = this.getDataforFeature(searchedNode);
         this.ideaDetailed = {
           zitate: [...new Set(searchedNode.data.zitate)],
@@ -313,10 +316,10 @@ export default class Idea extends Vue {
           if (this.selectedIdea.includes(node.data.name)) {
             node.data._color = "#82c782";
           } else {
-            node.data._color = "#7D387D";
+            node.data._color = "#f4e2a3";
           }
         } else {
-          node.data._color = "#7D387D";
+          node.data._color = "#f4e2a3";
         }
       }
     });
@@ -674,7 +677,7 @@ export default class Idea extends Vue {
       .attr("cx", 0)
       .attr("cy", 0)
       .attr("fill", (d) =>
-        d.children ? "#fff" : d._color ? d._color : d.data._color
+        d.children ? "#E8C547" : d._color ? d._color : d.data._color
       )
       .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
       .attr("r", (d) => (d.children ? 150 : 20))
@@ -960,11 +963,11 @@ export default class Idea extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 #network {
-  margin-top: 5vh;
-  border: 2px solid #b0dcd9;
-  background-color: rgba(255, 219, 107, 0.5);
+  margin-top: 3vh;
+  border: 5px solid #E8C547;
+  background-color: white;
   //background-color: #ffdb6b;
-  height: 70vh;
+  height: 60vh;
 }
 
 .quotes {
@@ -1012,6 +1015,19 @@ export default class Idea extends Vue {
   margin: 20px;
   margin-left: 20px;
   z-index: 5;
+}
+
+h1,h2 {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.balls{
+  border-radius: 50%;
+  background-color: #E8C547;
+  width: 2em;
+  height: 2em;
+  margin: 0.3em;
+  float: left;
 }
 
 .colorDisplay {

@@ -1,6 +1,9 @@
 <template>
   <vContainer>
-    <v-card class="sticky-card" style="margin-top: 4vh">
+    <div style="margin-top:0.5em" class="balls"></div><h1>Ideen</h1>
+    <div class="balls"></div><h2>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.</h2>
+    <div style="margin-top:20px;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</div>
+    <v-card class="sticky-card" style="margin-top: 1vh">
       <v-row no-gutters>
         <v-col class="pa-0 flex-grow-1">
           <v-autocomplete
@@ -604,12 +607,12 @@ export default class Influencer extends Vue {
       if (node.data) {
         if (this.selectedInfluencer.length > 0) {
           if (this.selectedInfluencer.includes(node.data.id)) {
-            node.data._color = "#82c782";
+            node.data._color = "#E4625E";
           } else {
-            node.data._color = "#dcfaf3";
+            node.data._color = "#daeee8";
           }
         } else {
-          node.data._color = "#dcfaf3";
+          node.data._color = "#daeee8";
         }
       }
     });
@@ -754,7 +757,7 @@ export default class Influencer extends Vue {
       .attr("cx", 0)
       .attr("cy", 0)
       .attr("fill", (d) =>
-        d.children ? "#448A1C" : d._color ? d._color : d.data._color
+        d.children ? "#B4DCD2" : d._color ? d._color : d.data._color
       )
       .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
       .attr("r", (d) => (d.children ? 150 : 20))
@@ -845,10 +848,10 @@ export default class Influencer extends Vue {
 <style scoped lang="scss">
 #network {
   max-width: 100%;
-  margin-top: 5vh;
-  border: 2px solid #b0dcd9;
-  background-color: rgba(255, 125, 127, 0.5);
-  height: 70vh;
+  margin-top: 3vh;
+  border: 5px solid #B4DCD2;
+  background-color: whitesmoke;
+  height: 60vh;
 }
 
 .vl {
@@ -874,6 +877,20 @@ export default class Influencer extends Vue {
   right: 30px;
   bottom: 30px;
 }
+
+h1,h2 {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.balls{
+  border-radius: 50%;
+  background-color: #B4DCD2;
+  width: 2em;
+  height: 2em;
+  margin: 0.3em;
+  float: left;
+}
+
 
 #innitViewButton {
   position: absolute;
