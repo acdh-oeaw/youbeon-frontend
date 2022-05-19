@@ -21,7 +21,7 @@
           >
           </v-autocomplete>
         </v-col>
-        <v-col class="pa-0 ma-0" cols="auto">
+        <v-col class="pa-0 ma-0 d-none d-sm-block" cols="auto">
           <v-switch
             dense
             class="switch"

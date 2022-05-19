@@ -1,8 +1,23 @@
 <template>
   <vContainer>
-    <div style="margin-top:0.5em" class="balls"></div><h1>Ideen</h1>
-    <div class="balls"></div><h2>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.</h2>
-    <div style="margin-top:20px;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</div>
+    <div style="margin-top: 0.5em" class="balls"></div>
+    <h1>Ideen</h1>
+    <div class="balls"></div>
+    <h2>
+      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+      eirmod tempor invidunt ut labore et dolore magna aliquyam erat.
+    </h2>
+    <div style="margin-top: 20px">
+      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+      eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
+      voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+      clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
+      amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+      nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
+      diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+      Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
+      sit amet.
+    </div>
     <v-row no-gutters class="mt-2">
       <v-col class="pa-0 flex-grow-1">
         <v-card style="margin-top: 1vh">
@@ -204,6 +219,16 @@ export default class Idea extends Vue {
   //saves the COOCCURENCE of the selected Idea in an Array
   selectedIdea: any = [];
   bigNetwork = true;
+
+  allReligions: any[] = [
+    "alevitische Jugendliche",
+    "katholische Jugendliche",
+    "evangelische Jugendliche",
+    "orthodoxe Jugendliche",
+    "muslimische Jugendliche",
+    "jüdische Jugendliche",
+    "sikh Jugendliche",
+  ];
 
   formatIdeasIntoReligions(ideas: any) {
     let returnIdeas = [
@@ -598,7 +623,19 @@ export default class Idea extends Vue {
       )
       .force(
         "collision",
-        d3.forceCollide().radius((d) => (d.children ? 200 : 20))
+        d3
+          .forceCollide()
+          .radius((d) =>
+            d.children
+              ? d.data
+                ? this.allReligions.includes(d.data.name)
+                  ? 200
+                  : 20
+                : this.allReligions.includes(d.name)
+                ? 200
+                : 25
+              : 20
+          )
       );
 
     let drag = (simulation) => {
@@ -677,10 +714,30 @@ export default class Idea extends Vue {
       .attr("cx", 0)
       .attr("cy", 0)
       .attr("fill", (d) =>
-        d.children ? "#E8C547" : d._color ? d._color : d.data._color
+        d.children
+          ? d.data
+            ? this.allReligions.includes(d.data.name)
+              ? "#E8C547"
+              : "#e4625e"
+            : this.allReligions.includes(d.name)
+            ? "#E8C547"
+            : "#e4625e"
+          : d.data
+          ? d.data._color
+          : d._color
       )
       .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
-      .attr("r", (d) => (d.children ? 150 : 20))
+      .attr("r", (d) =>
+        d.children
+          ? d.data
+            ? this.allReligions.includes(d.data.name)
+              ? 150
+              : 20
+            : this.allReligions.includes(d.name)
+            ? 150
+            : 20
+          : 20
+      )
       .on("click", (d, i) => {
         this.onNodeClick(i);
       });
@@ -700,34 +757,77 @@ export default class Idea extends Vue {
             return d.name;
           }
         } else {
-          if(d.data) {
-             return (
-            "<tspan x='0' dy='-0.5em'>" +
-            d.data.name.split(" ")[0] +
-            "</tspan>" +
-            "<tspan x='0' dy='1.2em' dx='-3em'>" +
-            d.data.name.split(" ")[1] +
-            "</tspan>"
-          );
-          }else {
-          return (
-            "<tspan x='0' dy='-0.5em'>" +
-            d.name.split(" ")[0] +
-            "</tspan>" +
-            "<tspan x='0' dy='1.2em' dx='-3em'>" +
-            d.name.split(" ")[1] +
-            "</tspan>"
-          );
-        }
+          if (d.data) {
+            if (
+              [
+                "alevitische Jugendliche",
+                "katholische Jugendliche",
+                "evangelische Jugendliche",
+                "orthodoxe Jugendliche",
+                "muslimische Jugendliche",
+                "jüdische Jugendliche",
+                "sikh Jugendliche",
+              ].includes(d.data.name)
+            ) {
+              return (
+                "<tspan x='0' dy='-0.5em'>" +
+                d.data.name.split(" ")[0] +
+                "</tspan>" +
+                "<tspan x='0' dy='1.2em' dx='-3em'>" +
+                d.data.name.split(" ")[1] +
+                "</tspan>"
+              );
+            } else {
+              return d.data.name;
+            }
+          } else {
+            if (
+              [
+                "alevitische Jugendliche",
+                "katholische Jugendliche",
+                "evangelische Jugendliche",
+                "orthodoxe Jugendliche",
+                "muslimische Jugendliche",
+                "jüdische Jugendliche",
+                "sikh Jugendliche",
+              ].includes(d.name)
+            ) {
+            return (
+              "<tspan x='0' dy='-0.5em'>" +
+              d.name.split(" ")[0] +
+              "</tspan>" +
+              "<tspan x='0' dy='1.2em' dx='-3em'>" +
+              d.name.split(" ")[1] +
+              "</tspan>"
+            );
+            } else {
+              return d.name
+            }
+          }
         }
       })
-      .attr("dx", function (d) {
-        return d.children ? -120 : 25;
-      })
-      .style("font-size", function (d) {
-        return d.children ? "2.5em" : 14;
-      });
-
+      .attr("dx", (d) =>
+        d.children
+          ? d.data
+            ? this.allReligions.includes(d.data.name)
+              ? -120
+              : 25
+            : this.allReligions.includes(d.name)
+            ? -120
+            : 25
+          : 25
+      )
+      .style("font-size", (d) =>
+        d.children
+          ? d.data
+            ? this.allReligions.includes(d.data.name)
+              ? "2.5em"
+              : 14
+            : this.allReligions.includes(d.name)
+            ? "2.5em"
+            : 14
+          : 14
+      );
     // This function is run at each iteration of the force algorithm, updating the nodes position.
     simulation.on("tick", () => {
       link
@@ -964,7 +1064,7 @@ export default class Idea extends Vue {
 <style scoped lang="scss">
 #network {
   margin-top: 3vh;
-  border: 5px solid #E8C547;
+  border: 5px solid #e8c547;
   background-color: white;
   //background-color: #ffdb6b;
   height: 60vh;
@@ -996,7 +1096,7 @@ export default class Idea extends Vue {
 }
 
 #detailedView {
-  border: 5px solid #E4625E !important;
+  border: 5px solid #e4625e !important;
   position: absolute;
   max-height: 50%;
   overflow-y: auto;
@@ -1017,13 +1117,14 @@ export default class Idea extends Vue {
   z-index: 5;
 }
 
-h1,h2 {
+h1,
+h2 {
   font-family: Helvetica, Arial, sans-serif;
 }
 
-.balls{
+.balls {
   border-radius: 50%;
-  background-color: #E8C547;
+  background-color: #e8c547;
   width: 2em;
   height: 2em;
   margin: 0.3em;
