@@ -136,7 +136,11 @@
       >
       </map-legende>
     </v-col>
-    <v-card v-if="placeDetailed !== null" id="detailedView">
+    <v-card
+      v-if="placeDetailed !== null"
+      id="detailedView"
+      class="d-none d-sm-block"
+    >
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
@@ -156,7 +160,7 @@
       </v-card-subtitle>
       <v-card-text>
         <v-expansion-panels accordion flat hover>
-          <v-expansion-panel style="background-color:rgba(0, 0, 0, 0.0)">
+          <v-expansion-panel style="background-color: rgba(0, 0, 0, 0)">
             <v-expansion-panel-header color="rgba(0, 0, 0, 0.0)">
               Verknüpfte Religionen:
             </v-expansion-panel-header>
@@ -169,7 +173,10 @@
               </div>
             </v-expansion-panel-content>
           </v-expansion-panel>
-          <v-expansion-panel style="background-color:rgba(0, 0, 0, 0.0)" v-if="placeDetailed.idee.length > 0">
+          <v-expansion-panel
+            style="background-color: rgba(0, 0, 0, 0)"
+            v-if="placeDetailed.idee.length > 0"
+          >
             <v-expansion-panel-header color="rgba(0, 0, 0, 0.0)">
               Verknüpfte Ideen:
             </v-expansion-panel-header>
@@ -187,6 +194,71 @@
         </v-expansion-panels>
       </v-card-text>
     </v-card>
+
+    <v-bottom-sheet
+      class="detailedViewMobile"
+      v-if="placeDetailed !== null"
+      v-model="placeDetetailedBoolean"
+      hide-overlay
+      no-click-animation
+      persistent
+      scrollable
+    >
+      <v-card height="40vh" style="border-top: 5px solid #e4625e !important" class="d-flex d-sm-none">
+        <v-card-title>
+          <v-row no-gutters>
+            <v-col class="pa-0 ma-0 flex-grow-1">
+              <div style="float: left">
+                {{ placeDetailed.name }}
+              </div>
+            </v-col>
+            <v-col cols="2">
+              <div style="right: 30px; position: fixed">
+                <v-icon @click="placeDetailed = null"> close </v-icon>
+              </div>
+            </v-col>
+          </v-row>
+        </v-card-title>
+        <v-card-subtitle v-if="placeDetailed.bemerkung">
+          {{ placeDetailed.bemerkung }}
+        </v-card-subtitle>
+        <v-card-text>
+          <v-expansion-panels accordion flat hover>
+            <v-expansion-panel style="background-color: rgba(0, 0, 0, 0)">
+              <v-expansion-panel-header color="rgba(0, 0, 0, 0.0)">
+                Verknüpfte Religionen:
+              </v-expansion-panel-header>
+              <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
+                <div
+                  v-for="religion in placeDetailed.religion"
+                  v-bind:key="religion.id"
+                >
+                  {{ religion }}
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            <v-expansion-panel
+              style="background-color: rgba(0, 0, 0, 0)"
+              v-if="placeDetailed.idee.length > 0"
+            >
+              <v-expansion-panel-header color="rgba(0, 0, 0, 0.0)">
+                Verknüpfte Ideen:
+              </v-expansion-panel-header>
+              <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
+                <div v-for="idea in placeDetailed.idee" v-bind:key="idea.id">
+                  <router-link
+                    class="link"
+                    tag="span"
+                    :to="{ name: 'idea', params: { idea_name: idea } }"
+                    >{{ idea }}</router-link
+                  >
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-card-text>
+      </v-card>
+    </v-bottom-sheet>
   </vContainer>
 </template>
 
@@ -268,6 +340,19 @@ export default class Place extends Vue {
     "Christentum (evangelisch)": ["#B57795", "#d6b4c5"], //Magenta
     "Katholisches Christentum": ["#698F3F", "#acc195"], //olive
   };
+
+  get placeDetetailedBoolean() {
+    if (this.placeDetailed != null) {
+      return true;
+    }
+    return false;
+  }
+
+  set placeDetetailedBoolean(value) {
+    if (value === false) {
+      this.placeDetailed = null;
+    }
+  }
 
   selectableReligions: string[] = [
     "alle accounts",
@@ -824,7 +909,7 @@ export default class Place extends Vue {
   width: auto;
 }
 
-.v-expansion-panel-header{
+.v-expansion-panel-header {
   padding: 0 !important;
 }
 
@@ -839,7 +924,7 @@ export default class Place extends Vue {
 }
 
 #detailedView {
-  border: 5px solid #E4625E !important;
+  border: 5px solid #e4625e !important;
   background-color: rgba($color: #fff, $alpha: 0.8);
   max-height: 50%;
   overflow-y: auto;

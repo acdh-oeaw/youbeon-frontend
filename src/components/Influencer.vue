@@ -1,8 +1,23 @@
 <template>
   <vContainer>
-    <div style="margin-top:0.5em" class="balls"></div><h1>Ideen</h1>
-    <div class="balls"></div><h2>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.</h2>
-    <div style="margin-top:20px;">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</div>
+    <div style="margin-top: 0.5em" class="balls"></div>
+    <h1>Ideen</h1>
+    <div class="balls"></div>
+    <h2>
+      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+      eirmod tempor.
+    </h2>
+    <div style="margin-top: 20px">
+      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+      eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
+      voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+      clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
+      amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+      nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
+      diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+      Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
+      sit amet.
+    </div>
     <v-card class="sticky-card" style="margin-top: 1vh">
       <v-row no-gutters>
         <v-col class="pa-0 flex-grow-1">
@@ -50,7 +65,10 @@
         <v-icon>home</v-icon>
       </v-btn>
     </div>
-    <v-card v-if="influencerDetailed !== null" class="detailedView">
+    <v-card
+      v-if="influencerDetailed !== null"
+      class="detailedView d-none d-sm-block"
+    >
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
@@ -68,25 +86,72 @@
       </v-card-title>
       <v-card-subtitle> {{ influencerDetailed.bemerkung }} </v-card-subtitle>
       <v-card-text>
-      <v-expansion-panels accordion flat hover style="margin-bottom:15px;">
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            Verknüpfte Ideen:
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <div v-for="idea in influencerDetailed.idee" v-bind:key="idea.id">
-              <router-link
-                class="hoverLink"
-                tag="span"
-                :to="{ name: 'idea', params: { idea_name: idea } }"
-                >{{ idea }}</router-link
-              >
-            </div>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
+        <v-expansion-panels accordion flat hover style="margin-bottom: 15px">
+          <v-expansion-panel>
+            <v-expansion-panel-header>
+              Verknüpfte Ideen:
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <div v-for="idea in influencerDetailed.idee" v-bind:key="idea.id">
+                <router-link
+                  class="hoverLink"
+                  tag="span"
+                  :to="{ name: 'idea', params: { idea_name: idea } }"
+                  >{{ idea }}</router-link
+                >
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-card-text>
     </v-card>
+
+    <v-bottom-sheet
+      class="detailedViewMobile"
+      v-if="influencerDetailed !== null"
+      v-model="influencerDetailedBoolean"
+      hide-overlay
+      persistent
+      no-click-animation
+      scrollable
+    >
+      <v-card height="40vh" style="border-top: 5px solid #e4625e !important" class="d-flex d-sm-none">
+        <v-card-title>
+        <v-row no-gutters>
+          <v-col class="pa-0 ma-0 flex-grow-1">
+            <div class="hoverLink" @click="openLinktoInsta(influencerDetailed)">
+              {{ influencerDetailed.name }}
+              <v-icon style="margin-left: 5px">link</v-icon>
+            </div>
+          </v-col>
+          <v-col cols="2">
+            <div style="right: 30px; position: fixed">
+              <v-icon @click="influencerDetailed = null"> close </v-icon>
+            </div>
+          </v-col>
+        </v-row>
+      </v-card-title>
+      <v-card-text>
+        <v-expansion-panels accordion flat hover style="margin-bottom: 15px">
+          <v-expansion-panel>
+            <v-expansion-panel-header>
+              Verknüpfte Ideen:
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <div v-for="idea in influencerDetailed.idee" v-bind:key="idea.id">
+                <router-link
+                  class="hoverLink"
+                  tag="span"
+                  :to="{ name: 'idea', params: { idea_name: idea } }"
+                  >{{ idea }}</router-link
+                >
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-card-text>
+      </v-card>
+    </v-bottom-sheet>
   </vContainer>
 </template>
 
@@ -171,6 +236,19 @@ export default class Influencer extends Vue {
 
   openLinktoInsta(influencer) {
     window.open(influencer.link, "_blank");
+  }
+
+  get influencerDetailedBoolean() {
+    if (this.influencerDetailed != null) {
+      return true;
+    }
+    return false;
+  }
+
+  set influencerDetailedBoolean(value) {
+    if (value === false) {
+      this.influencerDetailed = null;
+    }
   }
 
   async onNodeClick(event, node) {
@@ -780,32 +858,32 @@ export default class Influencer extends Vue {
             return d.name;
           }
         } else {
-          if(d.data) {
-             return (
-            "<tspan x='0' dy='-0.5em'>" +
-            d.data.name.split(" ")[0] +
-            "</tspan>" +
-            "<tspan x='0' dy='1.2em' dx='-3em'>" +
-            d.data.name.split(" ")[1] +
-            "</tspan>"
-          );
-          }else {
-          return (
-            "<tspan x='0' dy='-0.5em'>" +
-            d.name.split(" ")[0] +
-            "</tspan>" +
-            "<tspan x='0' dy='1.2em' dx='-3em'>" +
-            d.name.split(" ")[1] +
-            "</tspan>"
-          );
-        }
+          if (d.data) {
+            return (
+              "<tspan x='0' dy='-0.5em'>" +
+              d.data.name.split(" ")[0] +
+              "</tspan>" +
+              "<tspan x='0' dy='1.2em' dx='-3em'>" +
+              d.data.name.split(" ")[1] +
+              "</tspan>"
+            );
+          } else {
+            return (
+              "<tspan x='0' dy='-0.5em'>" +
+              d.name.split(" ")[0] +
+              "</tspan>" +
+              "<tspan x='0' dy='1.2em' dx='-3em'>" +
+              d.name.split(" ")[1] +
+              "</tspan>"
+            );
+          }
         }
       })
       .attr("dx", function (d) {
         return d.children ? -120 : 25;
       })
       .style("font-size", function (d) {
-        return d.children ?  "2.5em" : 14;
+        return d.children ? "2.5em" : 14;
       });
 
     // This function is run at each iteration of the force algorithm, updating the nodes position.
@@ -849,7 +927,7 @@ export default class Influencer extends Vue {
 #network {
   max-width: 100%;
   margin-top: 3vh;
-  border: 5px solid #B4DCD2;
+  border: 5px solid #b4dcd2;
   background-color: whitesmoke;
   height: 60vh;
 }
@@ -868,7 +946,7 @@ export default class Influencer extends Vue {
 }
 
 .detailedView {
-  border: 5px solid #E4625E !important;
+  border: 5px solid #e4625e !important;
   position: absolute;
   max-height: 50%;
   overflow-y: auto;
@@ -878,19 +956,20 @@ export default class Influencer extends Vue {
   bottom: 30px;
 }
 
-h1,h2 {
-  font-family: Helvetica, Arial, sans-serif;
+h1,
+h2 {
+  font-family: "ChicagoFLF", Helvetica, Arial, sans-serif;
 }
 
-.balls{
+
+.balls {
   border-radius: 50%;
-  background-color: #B4DCD2;
+  background-color: #b4dcd2;
   width: 2em;
   height: 2em;
   margin: 0.3em;
   float: left;
 }
-
 
 #innitViewButton {
   position: absolute;
@@ -898,7 +977,7 @@ h1,h2 {
   top: 250px;
 }
 
-.v-expansion-panel-header{
+.v-expansion-panel-header {
   padding: 0 !important;
 }
 

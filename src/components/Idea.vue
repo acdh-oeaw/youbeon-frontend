@@ -5,7 +5,7 @@
     <div class="balls"></div>
     <h2>
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-      eirmod tempor invidunt ut labore et dolore magna aliquyam erat.
+      eirmod tempor.
     </h2>
     <div style="margin-top: 20px">
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
@@ -66,7 +66,11 @@
         <v-icon>home</v-icon>
       </v-btn>
     </div>
-    <v-card v-if="ideaDetailed !== null" id="detailedView">
+    <v-card
+      v-if="ideaDetailed !== null"
+      id="detailedView"
+      class="d-none d-sm-block"
+    >
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
@@ -144,6 +148,103 @@
         </v-expansion-panels>
       </v-card-text>
     </v-card>
+
+    <v-bottom-sheet
+      class="detailedViewMobile"
+      v-if="ideaDetailed !== null"
+      v-model="ideaDetailedBoolean"
+      hide-overlay
+      persistent
+      no-click-animation
+      scrollable
+    >
+      <v-card height="40vh" style="border-top: 5px solid #e4625e !important" class="d-flex d-sm-none">
+        <v-card-title>
+        <v-row no-gutters>
+          <v-col class="pa-0 ma-0 flex-grow-1">
+            <div
+              style="float: left font-family: 'ChicagoFLF', Helvetica, Arial, sans-serif"
+            >
+              {{ ideaDetailed.name }}
+            </div>
+          </v-col>
+          <v-col cols="2">
+            <div style="right: 30px; position: fixed">
+              <v-icon @click="ideaDetailed = null"> close </v-icon>
+            </div>
+          </v-col>
+        </v-row>
+      </v-card-title>
+        <v-card-subtitle
+          class="quotes"
+          style="margin-top:0px"
+          v-for="zitat in ideaDetailed.zitate"
+          v-bind:key="zitat"
+        >
+          {{ zitat }}
+        </v-card-subtitle>
+        <v-card-text>
+          <v-expansion-panels
+            accordion
+            flat
+            hover
+          >
+            <v-expansion-panel v-if="ideaDetailed.accounts.length > 0">
+              <v-expansion-panel-header style="padding-left: 0">
+                Verknüpfte Accounts:
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <div
+                  v-for="account in ideaDetailed.accounts"
+                  v-bind:key="account.id"
+                >
+                  <router-link
+                    class="hoverLink"
+                    tag="span"
+                    :to="{
+                      name: 'account',
+                      params: { account_id: account.id },
+                    }"
+                    >{{ account.name }}</router-link
+                  >
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            <v-expansion-panel v-if="ideaDetailed.places.length > 0">
+              <v-expansion-panel-header>
+                Verknüpfte Orte:
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <div v-for="ort in ideaDetailed.places" v-bind:key="ort.id">
+                  <router-link
+                    class="hoverLink"
+                    tag="span"
+                    :to="{ name: 'place', params: { ort_id: ort.id } }"
+                    >{{ ort.bezeichnung }}</router-link
+                  >
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            <v-expansion-panel v-if="ideaDetailed.idee.length > 0">
+              <v-expansion-panel-header>
+                Verknüpfte Ideen:
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <div
+                  @click="selectedIdea.push(idea)"
+                  v-for="idea in ideaDetailed.idee"
+                  v-bind:key="idea.id"
+                >
+                  <a style="cursor: pointer; color: rgba(0, 0, 0, 0.6)">{{
+                    idea
+                  }}</a>
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-card-text>
+      </v-card>
+    </v-bottom-sheet>
   </vContainer>
 </template>
 
@@ -229,6 +330,19 @@ export default class Idea extends Vue {
     "jüdische Jugendliche",
     "sikh Jugendliche",
   ];
+
+  get ideaDetailedBoolean() {
+    if (this.ideaDetailed != null) {
+      return true;
+    }
+    return false;
+  }
+
+  set ideaDetailedBoolean(value) {
+    if (value === false) {
+      this.ideaDetailed = null;
+    }
+  }
 
   formatIdeasIntoReligions(ideas: any) {
     let returnIdeas = [
@@ -792,16 +906,16 @@ export default class Idea extends Vue {
                 "sikh Jugendliche",
               ].includes(d.name)
             ) {
-            return (
-              "<tspan x='0' dy='-0.5em'>" +
-              d.name.split(" ")[0] +
-              "</tspan>" +
-              "<tspan x='0' dy='1.2em' dx='-3em'>" +
-              d.name.split(" ")[1] +
-              "</tspan>"
-            );
+              return (
+                "<tspan x='0' dy='-0.5em'>" +
+                d.name.split(" ")[0] +
+                "</tspan>" +
+                "<tspan x='0' dy='1.2em' dx='-3em'>" +
+                d.name.split(" ")[1] +
+                "</tspan>"
+              );
             } else {
-              return d.name
+              return d.name;
             }
           }
         }
@@ -1119,7 +1233,7 @@ export default class Idea extends Vue {
 
 h1,
 h2 {
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: "ChicagoFLF", Helvetica, Arial, sans-serif;
 }
 
 .balls {
