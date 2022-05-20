@@ -1,6 +1,6 @@
 <template>
   <vContainer>
-    <v-card class="sticky-card mt-10 searchbar" outlined color="white)">
+    <v-card class="sticky-card mt-10 searchbar" outlined color="white">
       <v-row no-gutters>
         <v-col class="pa-0 flex-grow-1">
           <v-autocomplete
@@ -133,6 +133,7 @@
         :religions="religionJSON"
         :places="geoPlaces"
         :ideas="ideaJSON"
+        class="d-none d-sm-block"
       >
       </map-legende>
     </v-col>

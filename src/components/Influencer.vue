@@ -837,7 +837,7 @@ export default class Influencer extends Vue {
       .attr("fill", (d) =>
         d.children ? "#B4DCD2" : d._color ? d._color : d.data._color
       )
-      .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
+      .attr("stroke", "#fff")
       .attr("r", (d) => (d.children ? 150 : 20))
       .on("click", (d, i) => {
         this.onNodeClick(d, i);

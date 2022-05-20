@@ -179,6 +179,7 @@ export default class App extends Vue {
 .tabs_top {
   font-size: 1.6em;
   align-content: bottom;
+  text-transform: none !important;
 }
 
 .logo {

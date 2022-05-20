@@ -840,7 +840,7 @@ export default class Idea extends Vue {
           ? d.data._color
           : d._color
       )
-      .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
+      .attr("stroke", "#fff")
       .attr("r", (d) =>
         d.children
           ? d.data
