@@ -151,35 +151,37 @@
       no-click-animation
       scrollable
     >
-      <v-card
-        height="40vh"
-        style="border-top: 5px solid #e4625e !important"
-        class="d-flex d-sm-none"
-      >
+      <v-card height="40vh" style="border-top: 5px solid #e4625e !important" class="d-flex d-sm-none">
         <v-card-title>
-          <v-row no-gutters>
-            <v-col class="pa-0 ma-0 flex-grow-1">
-              <div id="detailedHeader">
-                {{ ideaDetailed.name }}
-              </div>
-            </v-col>
-            <v-col cols="2">
-              <div style="right: 30px; position: fixed">
-                <v-icon @click="ideaDetailed = null"> close </v-icon>
-              </div>
-            </v-col>
-          </v-row>
-        </v-card-title>
-        <v-card-text>
-          <div
-            class="quotes"
-            style="margin-top: 0px"
-            v-for="zitat in ideaDetailed.zitate"
-            v-bind:key="zitat"
+        <v-row no-gutters>
+          <v-col class="pa-0 ma-0 flex-grow-1">
+            <div id="detailedHeader"
+            >
+              {{ ideaDetailed.name }}
+            </div>
+          </v-col>
+          <v-col cols="2">
+            <div style="right: 30px; position: fixed">
+              <v-icon @click="ideaDetailed = null"> close </v-icon>
+            </div>
+          </v-col>
+        </v-row>
+        
+      </v-card-title>
+      <v-card-text>
+        <div
+          class="quotes"
+          style="margin-top:0px"
+          v-for="zitat in ideaDetailed.zitate"
+          v-bind:key="zitat"
+        >
+          {{ zitat }}
+        </div>
+          <v-expansion-panels
+            accordion
+            flat
+            hover
           >
-            {{ zitat }}
-          </div>
-          <v-expansion-panels accordion flat hover>
             <v-expansion-panel v-if="ideaDetailed.accounts.length > 0">
               <v-expansion-panel-header id="detailedHeader">
                 Verknüpfte Accounts
@@ -910,9 +912,29 @@ export default class Idea extends Vue {
           }
         }
       })
-      .attr("dx", (d) => (d.children ? -120 : 25))
-      .attr("font-weight", (d) => (d.children ? 600 : 400))
-      .style("font-size", (d) => (d.children ? "2.3em" : 14));
+      .attr("dx", (d) =>
+        d.children
+          ? d.data
+            ? this.allReligions.includes(d.data.name)
+              ? -120
+              : 25
+            : this.allReligions.includes(d.name)
+            ? -120
+            : 25
+          : 25
+      )
+      .attr("font-weight",  (d) => (d.children ? 600 : 400))
+      .style("font-size", (d) =>
+        d.children
+          ? d.data
+            ? this.allReligions.includes(d.data.name)
+              ? "2.5em"
+              : 14
+            : this.allReligions.includes(d.name)
+            ? "2.5em"
+            : 14
+          : 14
+      );
     // This function is run at each iteration of the force algorithm, updating the nodes position.
     simulation.on("tick", () => {
       link
@@ -1155,7 +1177,7 @@ export default class Idea extends Vue {
   height: 65vh;
 }
 
-#detailedHeader {
+#detailedHeader{
   font-family: "ChicagoFLF", Helvetica, Arial, sans-serif;
 }
 

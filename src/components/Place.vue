@@ -5,11 +5,29 @@
         <v-col class="pa-0 flex-grow-1">
           <v-autocomplete
             v-model="selectedPlaces"
+            class="d-none d-sm-block"
             :items="autocompleteItems"
             item-text="properties.bezeichnung"
             item-value="properties"
             flat
             multiple
+            solo
+            deletable-chips
+            small-chips
+            text
+            hide-details
+            elevation="0"
+            label="Suche..."
+            prepend-inner-icon="search"
+          >
+          </v-autocomplete>
+          <v-autocomplete
+            class="d-flex d-sm-none"
+            v-model="selectedPlaces"
+            :items="autocompleteItems"
+            item-text="properties.bezeichnung"
+            item-value="properties"
+            flat
             solo
             deletable-chips
             small-chips
@@ -162,7 +180,10 @@
       <v-card-text>
         <v-expansion-panels accordion flat hover>
           <v-expansion-panel style="background-color: rgba(0, 0, 0, 0)">
-            <v-expansion-panel-header id="detailedHeader" color="rgba(0, 0, 0, 0.0)">
+            <v-expansion-panel-header
+              id="detailedHeader"
+              color="rgba(0, 0, 0, 0.0)"
+            >
               Verknüpfte Religionen
             </v-expansion-panel-header>
             <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
@@ -178,7 +199,10 @@
             style="background-color: rgba(0, 0, 0, 0)"
             v-if="placeDetailed.idee.length > 0"
           >
-            <v-expansion-panel-header id="detailedHeader" color="rgba(0, 0, 0, 0.0)">
+            <v-expansion-panel-header
+              id="detailedHeader"
+              color="rgba(0, 0, 0, 0.0)"
+            >
               Verknüpfte Ideen
             </v-expansion-panel-header>
             <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
@@ -205,7 +229,11 @@
       persistent
       scrollable
     >
-      <v-card height="40vh" style="border-top: 5px solid #e4625e !important" class="d-flex d-sm-none">
+      <v-card
+        height="40vh"
+        style="border-top: 5px solid #e4625e !important"
+        class="d-flex d-sm-none"
+      >
         <v-card-title>
           <v-row no-gutters>
             <v-col class="pa-0 ma-0 flex-grow-1">
@@ -223,7 +251,10 @@
         <v-card-text>
           <v-expansion-panels accordion flat hover>
             <v-expansion-panel style="background-color: rgba(0, 0, 0, 0)">
-              <v-expansion-panel-header id="detailedHeader" color="rgba(0, 0, 0, 0.0)">
+              <v-expansion-panel-header
+                id="detailedHeader"
+                color="rgba(0, 0, 0, 0.0)"
+              >
                 Verknüpfte Religionen
               </v-expansion-panel-header>
               <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
@@ -239,7 +270,10 @@
               style="background-color: rgba(0, 0, 0, 0)"
               v-if="placeDetailed.idee.length > 0"
             >
-              <v-expansion-panel-header id="detailedHeader" color="rgba(0, 0, 0, 0.0)">
+              <v-expansion-panel-header
+                id="detailedHeader"
+                color="rgba(0, 0, 0, 0.0)"
+              >
                 Verknüpfte Ideen
               </v-expansion-panel-header>
               <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
@@ -529,9 +563,16 @@ export default class Place extends Vue {
     this.religionJSON = [];
     this.geoPlaces = [];
     this.ideaJSON = [];
+    let tempSelectedPlaces
+    if(Object.prototype.toString.call(this.selectedPlaces) === '[object Array]') {
+      tempSelectedPlaces = this.selectedPlaces
+    } else {
+      tempSelectedPlaces = [this.selectedPlaces]
+    }
+
     this.placesJSON.forEach((place) => {
       if (
-        this.selectedPlaces.some((sel) => {
+        tempSelectedPlaces.some((sel) => {
           return (
             sel.bezeichnung === place.properties.bezeichnung &&
             sel.religion === true
@@ -540,7 +581,7 @@ export default class Place extends Vue {
       ) {
         this.religionJSON.push(place);
       } else if (
-        this.selectedPlaces.some((sel) => {
+        tempSelectedPlaces.some((sel) => {
           return (
             sel.bezeichnung === place.properties.bezeichnung &&
             sel.idea === true
@@ -569,14 +610,14 @@ export default class Place extends Vue {
           }
         }
       } else if (
-        this.selectedPlaces.some((sel) => {
+        tempSelectedPlaces.some((sel) => {
           return sel.bezeichnung === place.properties.bezeichnung;
         })
       ) {
         this.geoPlaces.push(place);
         let lastPlace = this.geoPlaces.filter((f: any) => {
           return (
-            this.selectedPlaces[this.selectedPlaces.length - 1] === f.properties
+            tempSelectedPlaces[tempSelectedPlaces.length - 1] === f.properties
           );
         });
         if (lastPlace.length > 0) {
@@ -933,7 +974,7 @@ export default class Place extends Vue {
   bottom: 30px;
 }
 
-#detailedHeader{
+#detailedHeader {
   font-family: "ChicagoFLF", Helvetica, Arial, sans-serif;
 }
 
