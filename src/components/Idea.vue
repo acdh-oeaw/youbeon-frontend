@@ -774,8 +774,7 @@ export default class Idea extends Vue {
       svg = d3
         .select("#network")
         .append("svg")
-        .attr("width", this.width)
-        .attr("height", this.height);
+        .attr("viewBox", `0 0 ${this.width} ${this.height}`)
     } else {
       svg = d3.select("svg");
     }
@@ -1151,7 +1150,7 @@ export default class Idea extends Vue {
 #network {
   margin-top: 3vh;
   border: 5px solid #e8c547;
-  background-color: white;
+  background-color: whitesmoke;
   //background-color: #ffdb6b;
   height: 65vh;
 }

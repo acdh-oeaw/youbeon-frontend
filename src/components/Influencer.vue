@@ -799,8 +799,8 @@ export default class Influencer extends Vue {
       svg = d3
         .select("#network")
         .append("svg")
-        .attr("width", this.width)
-        .attr("height", this.height);
+        .attr("viewBox", `0 0 ${this.width} ${this.height}`)
+        //.attr("preserveAspectRatio", "xMinYMin meet")
     } else {
       svg = d3.select("svg");
     }
