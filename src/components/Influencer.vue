@@ -1,13 +1,8 @@
 <template>
   <vContainer>
-    <div style="margin-top: 0.5em" class="balls"></div>
-    <h1>Ideen</h1>
-    <div class="balls"></div>
-    <h2>
-      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-      eirmod tempor.
-    </h2>
-    <div style="margin-top: 20px">
+    <!--<div class="balls"></div>
+    <div class="balls"></div>-->
+    <div style="margin: 20px 0px 20px 0px">
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
       eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
       voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
@@ -34,7 +29,7 @@
             text
             flat
             hide-details
-            label="Suche..."
+            label="Accounts durchsuchen nach..."
             prepend-inner-icon="search"
           >
           </v-autocomplete>
@@ -72,7 +67,11 @@
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
-            <div class="hoverLink" @click="openLinktoInsta(influencerDetailed)">
+            <div
+              class="hoverLink"
+              id="detailedHeader"
+              @click="openLinktoInsta(influencerDetailed)"
+            >
               {{ influencerDetailed.name }}
               <v-icon style="margin-left: 5px">link</v-icon>
             </div>
@@ -88,8 +87,8 @@
       <v-card-text>
         <v-expansion-panels accordion flat hover style="margin-bottom: 15px">
           <v-expansion-panel>
-            <v-expansion-panel-header>
-              Verknüpfte Ideen:
+            <v-expansion-panel-header id="detailedHeader">
+              Verknüpfte Ideen
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <div v-for="idea in influencerDetailed.idee" v-bind:key="idea.id">
@@ -115,41 +114,52 @@
       no-click-animation
       scrollable
     >
-      <v-card height="40vh" style="border-top: 5px solid #e4625e !important" class="d-flex d-sm-none">
+      <v-card
+        height="40vh"
+        style="border-top: 5px solid #e4625e !important"
+        class="d-flex d-sm-none"
+      >
         <v-card-title>
-        <v-row no-gutters>
-          <v-col class="pa-0 ma-0 flex-grow-1">
-            <div class="hoverLink" @click="openLinktoInsta(influencerDetailed)">
-              {{ influencerDetailed.name }}
-              <v-icon style="margin-left: 5px">link</v-icon>
-            </div>
-          </v-col>
-          <v-col cols="2">
-            <div style="right: 30px; position: fixed">
-              <v-icon @click="influencerDetailed = null"> close </v-icon>
-            </div>
-          </v-col>
-        </v-row>
-      </v-card-title>
-      <v-card-text>
-        <v-expansion-panels accordion flat hover style="margin-bottom: 15px">
-          <v-expansion-panel>
-            <v-expansion-panel-header>
-              Verknüpfte Ideen:
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <div v-for="idea in influencerDetailed.idee" v-bind:key="idea.id">
-                <router-link
-                  class="hoverLink"
-                  tag="span"
-                  :to="{ name: 'idea', params: { idea_name: idea } }"
-                  >{{ idea }}</router-link
-                >
+          <v-row no-gutters>
+            <v-col class="pa-0 ma-0 flex-grow-1">
+              <div
+                class="hoverLink"
+                id="detailedHeader"
+                @click="openLinktoInsta(influencerDetailed)"
+              >
+                {{ influencerDetailed.name }}
+                <v-icon style="margin-left: 5px">link</v-icon>
               </div>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </v-card-text>
+            </v-col>
+            <v-col cols="2">
+              <div style="right: 30px; position: fixed">
+                <v-icon @click="influencerDetailed = null"> close </v-icon>
+              </div>
+            </v-col>
+          </v-row>
+        </v-card-title>
+        <v-card-text>
+          <v-expansion-panels accordion flat hover style="margin-bottom: 15px">
+            <v-expansion-panel>
+              <v-expansion-panel-header id="detailedHeader">
+                Verknüpfte Ideen
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <div
+                  v-for="idea in influencerDetailed.idee"
+                  v-bind:key="idea.id"
+                >
+                  <router-link
+                    class="hoverLink"
+                    tag="span"
+                    :to="{ name: 'idea', params: { idea_name: idea } }"
+                    >{{ idea }}</router-link
+                  >
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-card-text>
       </v-card>
     </v-bottom-sheet>
   </vContainer>
@@ -879,11 +889,12 @@ export default class Influencer extends Vue {
           }
         }
       })
+      .attr("font-weight", (d) => (d.children ? 600 : 400))
       .attr("dx", function (d) {
         return d.children ? -120 : 25;
       })
       .style("font-size", function (d) {
-        return d.children ? "2.5em" : 14;
+        return d.children ? "2.3em" : 14;
       });
 
     // This function is run at each iteration of the force algorithm, updating the nodes position.
@@ -929,7 +940,7 @@ export default class Influencer extends Vue {
   margin-top: 3vh;
   border: 5px solid #b4dcd2;
   background-color: whitesmoke;
-  height: 60vh;
+  height: 65vh;
 }
 
 .vl {
@@ -961,8 +972,12 @@ h2 {
   font-family: "ChicagoFLF", Helvetica, Arial, sans-serif;
 }
 
+#detailedHeader {
+  font-family: "ChicagoFLF", Helvetica, Arial, sans-serif;
+}
 
 .balls {
+  margin-top: 0.5em;
   border-radius: 50%;
   background-color: #b4dcd2;
   width: 2em;

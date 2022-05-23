@@ -1,13 +1,8 @@
 <template>
   <vContainer>
-    <div style="margin-top: 0.5em" class="balls"></div>
-    <h1>Ideen</h1>
-    <div class="balls"></div>
-    <h2>
-      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-      eirmod tempor.
-    </h2>
-    <div style="margin-top: 20px">
+    <!--<div style="margin-top: 0.5em" class="balls"></div>
+    <div class="balls"></div>-->
+    <div style="margin: 20px 0px 20px 0px">
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
       eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
       voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
@@ -20,7 +15,7 @@
     </div>
     <v-row no-gutters class="mt-2">
       <v-col class="pa-0 flex-grow-1">
-        <v-card style="margin-top: 1vh">
+        <v-card>
           <v-row no-gutters>
             <v-autocomplete
               flat
@@ -34,7 +29,7 @@
               clearable
               deletable-chips
               hide-details
-              label="Ideen filtern nach..."
+              label="Ideen durchsuchen nach..."
               prepend-inner-icon="search"
             >
             </v-autocomplete>
@@ -74,9 +69,7 @@
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
-            <div
-              style="float: left font-family: 'ChicagoFLF', Helvetica, Arial, sans-serif"
-            >
+            <div id="detailedHeader">
               {{ ideaDetailed.name }}
             </div>
           </v-col>
@@ -97,8 +90,8 @@
       <v-card-text>
         <v-expansion-panels accordion flat hover>
           <v-expansion-panel v-if="ideaDetailed.accounts.length > 0">
-            <v-expansion-panel-header style="padding-left: 0">
-              Verknüpfte Accounts:
+            <v-expansion-panel-header id="detailedHeader">
+              Verknüpfte Accounts
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <div
@@ -115,8 +108,8 @@
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel v-if="ideaDetailed.places.length > 0">
-            <v-expansion-panel-header>
-              Verknüpfte Orte:
+            <v-expansion-panel-header id="detailedHeader">
+              Verknüpfte Orte
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <div v-for="ort in ideaDetailed.places" v-bind:key="ort.id">
@@ -130,8 +123,8 @@
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel v-if="ideaDetailed.idee.length > 0">
-            <v-expansion-panel-header>
-              Verknüpfte Ideen:
+            <v-expansion-panel-header id="detailedHeader">
+              Verknüpfte Ideen
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <div
@@ -158,40 +151,38 @@
       no-click-animation
       scrollable
     >
-      <v-card height="40vh" style="border-top: 5px solid #e4625e !important" class="d-flex d-sm-none">
+      <v-card
+        height="40vh"
+        style="border-top: 5px solid #e4625e !important"
+        class="d-flex d-sm-none"
+      >
         <v-card-title>
-        <v-row no-gutters>
-          <v-col class="pa-0 ma-0 flex-grow-1">
-            <div
-              style="float: left font-family: 'ChicagoFLF', Helvetica, Arial, sans-serif"
-            >
-              {{ ideaDetailed.name }}
-            </div>
-          </v-col>
-          <v-col cols="2">
-            <div style="right: 30px; position: fixed">
-              <v-icon @click="ideaDetailed = null"> close </v-icon>
-            </div>
-          </v-col>
-        </v-row>
-      </v-card-title>
-        <v-card-subtitle
-          class="quotes"
-          style="margin-top:0px"
-          v-for="zitat in ideaDetailed.zitate"
-          v-bind:key="zitat"
-        >
-          {{ zitat }}
-        </v-card-subtitle>
+          <v-row no-gutters>
+            <v-col class="pa-0 ma-0 flex-grow-1">
+              <div id="detailedHeader">
+                {{ ideaDetailed.name }}
+              </div>
+            </v-col>
+            <v-col cols="2">
+              <div style="right: 30px; position: fixed">
+                <v-icon @click="ideaDetailed = null"> close </v-icon>
+              </div>
+            </v-col>
+          </v-row>
+        </v-card-title>
         <v-card-text>
-          <v-expansion-panels
-            accordion
-            flat
-            hover
+          <div
+            class="quotes"
+            style="margin-top: 0px"
+            v-for="zitat in ideaDetailed.zitate"
+            v-bind:key="zitat"
           >
+            {{ zitat }}
+          </div>
+          <v-expansion-panels accordion flat hover>
             <v-expansion-panel v-if="ideaDetailed.accounts.length > 0">
-              <v-expansion-panel-header style="padding-left: 0">
-                Verknüpfte Accounts:
+              <v-expansion-panel-header id="detailedHeader">
+                Verknüpfte Accounts
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <div
@@ -211,8 +202,8 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
             <v-expansion-panel v-if="ideaDetailed.places.length > 0">
-              <v-expansion-panel-header>
-                Verknüpfte Orte:
+              <v-expansion-panel-header id="detailedHeader">
+                Verknüpfte Orte
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <div v-for="ort in ideaDetailed.places" v-bind:key="ort.id">
@@ -226,8 +217,8 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
             <v-expansion-panel v-if="ideaDetailed.idee.length > 0">
-              <v-expansion-panel-header>
-                Verknüpfte Ideen:
+              <v-expansion-panel-header id="detailedHeader">
+                Verknüpfte Ideen
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <div
@@ -920,28 +911,9 @@ export default class Idea extends Vue {
           }
         }
       })
-      .attr("dx", (d) =>
-        d.children
-          ? d.data
-            ? this.allReligions.includes(d.data.name)
-              ? -120
-              : 25
-            : this.allReligions.includes(d.name)
-            ? -120
-            : 25
-          : 25
-      )
-      .style("font-size", (d) =>
-        d.children
-          ? d.data
-            ? this.allReligions.includes(d.data.name)
-              ? "2.5em"
-              : 14
-            : this.allReligions.includes(d.name)
-            ? "2.5em"
-            : 14
-          : 14
-      );
+      .attr("dx", (d) => (d.children ? -120 : 25))
+      .attr("font-weight", (d) => (d.children ? 600 : 400))
+      .style("font-size", (d) => (d.children ? "2.3em" : 14));
     // This function is run at each iteration of the force algorithm, updating the nodes position.
     simulation.on("tick", () => {
       link
@@ -1181,7 +1153,11 @@ export default class Idea extends Vue {
   border: 5px solid #e8c547;
   background-color: white;
   //background-color: #ffdb6b;
-  height: 60vh;
+  height: 65vh;
+}
+
+#detailedHeader {
+  font-family: "ChicagoFLF", Helvetica, Arial, sans-serif;
 }
 
 .quotes {

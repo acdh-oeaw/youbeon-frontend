@@ -145,7 +145,7 @@
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
-            <div style="float: left">
+            <div style="float: left" id="detailedHeader">
               {{ placeDetailed.name }}
             </div>
           </v-col>
@@ -162,8 +162,8 @@
       <v-card-text>
         <v-expansion-panels accordion flat hover>
           <v-expansion-panel style="background-color: rgba(0, 0, 0, 0)">
-            <v-expansion-panel-header color="rgba(0, 0, 0, 0.0)">
-              Verknüpfte Religionen:
+            <v-expansion-panel-header id="detailedHeader" color="rgba(0, 0, 0, 0.0)">
+              Verknüpfte Religionen
             </v-expansion-panel-header>
             <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
               <div
@@ -178,8 +178,8 @@
             style="background-color: rgba(0, 0, 0, 0)"
             v-if="placeDetailed.idee.length > 0"
           >
-            <v-expansion-panel-header color="rgba(0, 0, 0, 0.0)">
-              Verknüpfte Ideen:
+            <v-expansion-panel-header id="detailedHeader" color="rgba(0, 0, 0, 0.0)">
+              Verknüpfte Ideen
             </v-expansion-panel-header>
             <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
               <div v-for="idea in placeDetailed.idee" v-bind:key="idea.id">
@@ -209,7 +209,7 @@
         <v-card-title>
           <v-row no-gutters>
             <v-col class="pa-0 ma-0 flex-grow-1">
-              <div style="float: left">
+              <div style="float: left" id="detailedHeader">
                 {{ placeDetailed.name }}
               </div>
             </v-col>
@@ -220,14 +220,11 @@
             </v-col>
           </v-row>
         </v-card-title>
-        <v-card-subtitle v-if="placeDetailed.bemerkung">
-          {{ placeDetailed.bemerkung }}
-        </v-card-subtitle>
         <v-card-text>
           <v-expansion-panels accordion flat hover>
             <v-expansion-panel style="background-color: rgba(0, 0, 0, 0)">
-              <v-expansion-panel-header color="rgba(0, 0, 0, 0.0)">
-                Verknüpfte Religionen:
+              <v-expansion-panel-header id="detailedHeader" color="rgba(0, 0, 0, 0.0)">
+                Verknüpfte Religionen
               </v-expansion-panel-header>
               <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
                 <div
@@ -242,8 +239,8 @@
               style="background-color: rgba(0, 0, 0, 0)"
               v-if="placeDetailed.idee.length > 0"
             >
-              <v-expansion-panel-header color="rgba(0, 0, 0, 0.0)">
-                Verknüpfte Ideen:
+              <v-expansion-panel-header id="detailedHeader" color="rgba(0, 0, 0, 0.0)">
+                Verknüpfte Ideen
               </v-expansion-panel-header>
               <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
                 <div v-for="idea in placeDetailed.idee" v-bind:key="idea.id">
@@ -333,13 +330,13 @@ export default class Place extends Vue {
   allPlaces: any[] = [];
   colorsMaybe: any[] = [];
   allColors = {
-    "Christentum (orthodox)": ["#E5625E", "#f1a9a6"], //Red
-    Islam: ["#424C55", "#8e9499"], // Grey
+    "Christentum (orthodox)": ["#E54E51", "#ed8385"], //Red
+    Islam: ["#7ECC3E", "#bfe69f"], // Green
     Alevitentum: ["#623E88", "#a18bb8"], // Violet
-    Judentum: ["#B4DCD2", "#d6ece6"], //Blue
-    Sikhismus: ["#E8C547", "#f2df9a"], //yellow
-    "Christentum (evangelisch)": ["#B57795", "#d6b4c5"], //Magenta
-    "Katholisches Christentum": ["#698F3F", "#acc195"], //olive
+    Judentum: ["#42DBD1", "#a1ede8"], //Blue
+    Sikhismus: ["#FFA513", "#ffd289"], //yellow
+    "Christentum (evangelisch)": ["#E166B9", "#f6d1ea"], //Magenta
+    "Katholisches Christentum": ["#2366DD", "#91b3ee"], //olive
   };
 
   get placeDetetailedBoolean() {
@@ -445,9 +442,9 @@ export default class Place extends Vue {
     pointToLayer: (feature: any, latlng: any) => {
       let color;
       if (feature.properties.religiousPlace === true) {
-        color = "#8F7E4F";
+        color = "#425C66";
       } else {
-        color = "#c1b89e";
+        color = "#a1aeb3";
       }
       return L.circleMarker(latlng, {
         zIndexOffset: 1000,
@@ -934,6 +931,10 @@ export default class Place extends Vue {
   width: 450px;
   right: 30px;
   bottom: 30px;
+}
+
+#detailedHeader{
+  font-family: "ChicagoFLF", Helvetica, Arial, sans-serif;
 }
 
 .searchbar {
