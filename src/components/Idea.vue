@@ -446,7 +446,7 @@ export default class Idea extends Vue {
       if (node.data) {
         if (this.selectedIdea.length > 0) {
           if (this.selectedIdea.includes(node.data.name)) {
-            node.data._color = "#82c782";
+            node.data._color = "#e4625e";
           } else {
             node.data._color = "#f4e2a3";
           }
