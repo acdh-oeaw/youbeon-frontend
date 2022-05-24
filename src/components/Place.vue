@@ -37,6 +37,19 @@
             label="Suche..."
             prepend-inner-icon="search"
           >
+            <template v-slot:selection="data">
+              <v-chip
+                v-bind="data.attrs"
+                :input-value="data.selected"
+                close
+                @click="data.select"
+                @click:close="remove(data.item)"
+              >
+                <v-avatar :color="data.item.color" left>
+                </v-avatar>
+                {{ data.item.properties.bezeichnung.substring(0,8) + "..." }}
+              </v-chip>
+            </template>
           </v-autocomplete>
         </v-col>
         <v-col class="pa-0 ma-0 d-none d-sm-block" cols="auto">
@@ -563,11 +576,13 @@ export default class Place extends Vue {
     this.religionJSON = [];
     this.geoPlaces = [];
     this.ideaJSON = [];
-    let tempSelectedPlaces
-    if(Object.prototype.toString.call(this.selectedPlaces) === '[object Array]') {
-      tempSelectedPlaces = this.selectedPlaces
+    let tempSelectedPlaces;
+    if (
+      Object.prototype.toString.call(this.selectedPlaces) === "[object Array]"
+    ) {
+      tempSelectedPlaces = this.selectedPlaces;
     } else {
-      tempSelectedPlaces = [this.selectedPlaces]
+      tempSelectedPlaces = [this.selectedPlaces];
     }
 
     this.placesJSON.forEach((place) => {
