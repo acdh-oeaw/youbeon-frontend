@@ -43,9 +43,9 @@
                 :input-value="data.selected"
                 close
                 @click="data.select"
-                @click:close="remove(data.item)"
+                @click:close="selectedPlaces=[]"
               >
-                <v-avatar :color="data.item.color" left>
+                <v-avatar :color="data.item.color ? data.item.color : '#b0dcd9' " left>
                 </v-avatar>
                 {{ data.item.properties.bezeichnung.substring(0,8) + "..." }}
               </v-chip>
