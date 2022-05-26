@@ -20,7 +20,7 @@
             v-model="selectedInfluencer"
             :items="nodes"
             item-text="data.name"
-            item-value="data.id"
+            item-value="data"
             clearable
             chips
             solo
@@ -261,9 +261,8 @@ export default class Influencer extends Vue {
     }
   }
 
-  async onNodeClick(event, node) {
-    if (!node.children) {
-      const headers = { "Content-Type": "application/json" };
+  async showNodeDetails(node){
+    const headers = { "Content-Type": "application/json" };
       let tempInfluencerDetailed = node.data;
       if (!isNaN(Number(tempInfluencerDetailed.kategorie[0]))) {
         await fetch(
@@ -300,6 +299,12 @@ export default class Influencer extends Vue {
           });
       }
       this.influencerDetailed = tempInfluencerDetailed;
+  }
+
+  onNodeClick(event, node) {
+    if (!node.children) {
+      this.selectedInfluencer = [node.data]
+      //this.showNodeDetails(node)
     } else {
       this.selectedInfluencer = [];
       this.bigNetwork = false;
@@ -676,14 +681,14 @@ export default class Influencer extends Vue {
         if (node.data) {
           if (
             node.data.id ===
-            this.selectedInfluencer[this.selectedInfluencer.length - 1]
+            this.selectedInfluencer[this.selectedInfluencer.length - 1].id
           ) {
             searchedNode = node;
           }
         }
       });
       if (searchedNode) {
-        this.onNodeClick(null, searchedNode);
+        this.showNodeDetails(searchedNode)
       } else {
         console.log("No Node was found for the selected Idea");
       }
@@ -694,7 +699,7 @@ export default class Influencer extends Vue {
     this.nodes.forEach((node) => {
       if (node.data) {
         if (this.selectedInfluencer.length > 0) {
-          if (this.selectedInfluencer.includes(node.data.id)) {
+          if (this.selectedInfluencer.includes(node.data)) {
             node.data._color = "#E4625E";
           } else {
             node.data._color = "#daeee8";
