@@ -19,6 +19,7 @@
           <v-autocomplete
             v-model="selectedInfluencer"
             :items="nodes"
+            @input="buildInfluencerNetworkObject()"
             item-text="data.name"
             item-value="data"
             clearable
@@ -304,7 +305,8 @@ export default class Influencer extends Vue {
   onNodeClick(event, node) {
     if (!node.children) {
       this.selectedInfluencer = [node.data]
-      //this.showNodeDetails(node)
+      this.buildInfluencerNetworkObject()
+      this.showNodeDetails(node)
     } else {
       this.selectedInfluencer = [];
       this.bigNetwork = false;
@@ -670,7 +672,7 @@ export default class Influencer extends Vue {
     return returnValue;
   }
 
-  @Watch("selectedInfluencer")
+  //@Watch("selectedInfluencer")
   buildInfluencerNetworkObject() {
     if (
       this.selectedInfluencer.length > this.selectedInfluencerLength &&
