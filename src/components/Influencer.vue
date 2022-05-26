@@ -2,7 +2,7 @@
   <vContainer>
     <!--<div class="balls"></div>
     <div class="balls"></div>-->
-    <div style="margin: 20px 0px 20px 0px">
+    <div style="margin: 20px 0px 20px 0px" class="d-none d-sm-block">
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
       eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
       voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
@@ -73,7 +73,7 @@
               @click="openLinktoInsta(influencerDetailed)"
             >
               {{ influencerDetailed.name }}
-              <v-icon style="margin-left: 5px">link</v-icon>
+              <img id="instaLogo" src="../icons/glyph-logo_May2016.png" />
             </div>
           </v-col>
           <v-col cols="2">
@@ -128,7 +128,7 @@
                 @click="openLinktoInsta(influencerDetailed)"
               >
                 {{ influencerDetailed.name }}
-                <v-icon style="margin-left: 5px">link</v-icon>
+                <img id="instaLogo" src="../icons/glyph-logo_May2016.png" />
               </div>
             </v-col>
             <v-col cols="2">
@@ -799,8 +799,8 @@ export default class Influencer extends Vue {
       svg = d3
         .select("#network")
         .append("svg")
-        .attr("viewBox", `0 0 ${this.width} ${this.height}`)
-        //.attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", `0 0 ${this.width} ${this.height}`);
+      //.attr("preserveAspectRatio", "xMinYMin meet")
     } else {
       svg = d3.select("svg");
     }
@@ -984,6 +984,12 @@ h2 {
   height: 2em;
   margin: 0.3em;
   float: left;
+}
+
+#instaLogo {
+  height: 20px;
+  width: 20px;
+  margin-left: 10px;
 }
 
 #innitViewButton {

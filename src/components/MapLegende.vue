@@ -22,7 +22,7 @@
             </v-list-item-title>
           </v-list-item-content>
           <v-list-item-action>
-            <v-avatar color="#967444" size="20"></v-avatar>
+            <v-avatar color="#425C66" size="20"></v-avatar>
           </v-list-item-action>
         </v-list-item>
         <v-list-item

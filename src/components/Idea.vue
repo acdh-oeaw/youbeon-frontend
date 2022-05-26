@@ -2,7 +2,7 @@
   <vContainer>
     <!--<div style="margin-top: 0.5em" class="balls"></div>
     <div class="balls"></div>-->
-    <div style="margin: 20px 0px 20px 0px">
+    <div style="margin: 20px 0px 20px 0px" class="d-none d-sm-block">
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
       eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
       voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
@@ -74,7 +74,7 @@
             </div>
           </v-col>
           <v-col cols="2">
-            <div style="right: 60px; position: fixed">
+            <div style="right: 20px; position: absolute">
               <v-icon @click="ideaDetailed = null"> close </v-icon>
             </div>
           </v-col>
@@ -128,7 +128,7 @@
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <div
-                @click="selectedIdea.push(idea)"
+                @click="!selectedIdea.includes(idea) && selectedIdea.push(idea)"
                 v-for="idea in ideaDetailed.idee"
                 v-bind:key="idea.id"
               >
@@ -161,7 +161,7 @@
             </div>
           </v-col>
           <v-col cols="2">
-            <div style="right: 30px; position: fixed">
+            <div style="right: 20px; position: absolute">
               <v-icon @click="ideaDetailed = null"> close </v-icon>
             </div>
           </v-col>
