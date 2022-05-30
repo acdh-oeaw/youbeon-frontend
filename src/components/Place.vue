@@ -1,6 +1,6 @@
 <template>
   <vContainer>
-    <v-card class="sticky-card mt-10 searchbar" outlined color="white">
+    <v-card class="sticky-card mt-10 searchbar" id="mobileSearchDistance" outlined color="white">
       <v-row no-gutters>
         <v-col class="pa-0 flex-grow-1">
           <v-autocomplete
@@ -35,7 +35,6 @@
             hide-details
             elevation="0"
             label="Suche..."
-            prepend-inner-icon="search"
           >
             <template v-slot:selection="data">
               <v-chip
@@ -994,6 +993,12 @@ export default class Place extends Vue {
   width: 450px;
   right: 30px;
   bottom: 30px;
+}
+
+@media only screen and (max-width: 700px) {
+  #mobileSearchDistance {
+    margin-top: 10px !important;
+  }
 }
 
 #detailedHeader {
