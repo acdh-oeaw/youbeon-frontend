@@ -151,37 +151,35 @@
       no-click-animation
       scrollable
     >
-      <v-card height="40vh" style="border-top: 5px solid #e4625e !important" class="d-flex d-sm-none">
+      <v-card
+        height="40vh"
+        style="border-top: 5px solid #e4625e !important"
+        class="d-flex d-sm-none"
+      >
         <v-card-title>
-        <v-row no-gutters>
-          <v-col class="pa-0 ma-0 flex-grow-1">
-            <div id="detailedHeader"
-            >
-              {{ ideaDetailed.name }}
-            </div>
-          </v-col>
-          <v-col cols="2">
-            <div style="right: 20px; position: absolute">
-              <v-icon @click="ideaDetailed = null"> close </v-icon>
-            </div>
-          </v-col>
-        </v-row>
-        
-      </v-card-title>
-      <v-card-text>
-        <div
-          class="quotes"
-          style="margin-top:0px"
-          v-for="zitat in ideaDetailed.zitate"
-          v-bind:key="zitat"
-        >
-          {{ zitat }}
-        </div>
-          <v-expansion-panels
-            accordion
-            flat
-            hover
+          <v-row no-gutters>
+            <v-col class="pa-0 ma-0 flex-grow-1">
+              <div id="detailedHeader">
+                {{ ideaDetailed.name }}
+              </div>
+            </v-col>
+            <v-col cols="2">
+              <div style="right: 20px; position: absolute">
+                <v-icon @click="ideaDetailed = null"> close </v-icon>
+              </div>
+            </v-col>
+          </v-row>
+        </v-card-title>
+        <v-card-text>
+          <div
+            class="quotes"
+            style="margin-top: 0px"
+            v-for="zitat in ideaDetailed.zitate"
+            v-bind:key="zitat"
           >
+            {{ zitat }}
+          </div>
+          <v-expansion-panels accordion flat hover>
             <v-expansion-panel v-if="ideaDetailed.accounts.length > 0">
               <v-expansion-panel-header id="detailedHeader">
                 Verknüpfte Accounts
@@ -267,8 +265,8 @@ export default class Idea extends Vue {
   places: any[] = [];
   accounts: any[] = [];
 
-  height = document.querySelector("#network")?.clientHeight;
-  width = document.querySelector("#network")?.clientWidth;
+  height: any = 800;
+  width: any = 400;
 
   currentZoomLevel = d3.zoomIdentity;
 
@@ -695,8 +693,6 @@ export default class Idea extends Vue {
     d3.selectAll("g").remove();
     let tempZoom = this.currentZoomLevel;
     // set the dimensions and margins of the graph
-    this.height = document.querySelector("#network")?.clientHeight;
-    this.width = document.querySelector("#network")?.clientWidth;
 
     // Let's list the force we wanna apply on the network
     const simulation = d3
@@ -776,7 +772,7 @@ export default class Idea extends Vue {
       svg = d3
         .select("#network")
         .append("svg")
-        .attr("viewBox", `0 0 ${this.width} ${this.height}`)
+        .attr("viewBox", `0 0 ${this.width} ${this.height}`);
     } else {
       svg = d3.select("svg");
     }
@@ -923,7 +919,7 @@ export default class Idea extends Vue {
             : 25
           : 25
       )
-      .attr("font-weight",  (d) => (d.children ? 600 : 400))
+      .attr("font-weight", (d) => (d.children ? 600 : 400))
       .style("font-size", (d) =>
         d.children
           ? d.data
@@ -1094,13 +1090,16 @@ export default class Idea extends Vue {
     this.links = [];
     let religions: any[] = [];
 
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     this.currentZoomLevel = d3.zoomIdentity
-      .translate(
-        this.width ? this.width / 2 - 200 : 800,
-        this.height ? this.height / 2 : 400
-      )
-      .scale(0.25);
-
+        .translate(this.width / 2 -100, this.height / 2)
+        .scale(0.13);
+    } else {
+      this.currentZoomLevel = d3.zoomIdentity
+        .translate(this.width / 2 - 200, this.height / 2)
+        .scale(0.25);
+    }
+    
     this.ideaNetworkPot.forEach((religion) => {
       let tempHierarchy = d3.hierarchy(religion);
       if (religion.name != "multiple") {
@@ -1160,6 +1159,8 @@ export default class Idea extends Vue {
 
   mounted() {
     this.places = dataStore.orte;
+    this.height = document.querySelector("#network")?.clientHeight;
+    this.width = document.querySelector("#network")?.clientWidth;
     this.accounts = dataStore.influencer;
     this.ideaNetworkPot = this.formatIdeasIntoReligions(dataStore.ideen);
     this.initialNetwork();
@@ -1177,7 +1178,7 @@ export default class Idea extends Vue {
   height: 65vh;
 }
 
-#detailedHeader{
+#detailedHeader {
   font-family: "ChicagoFLF", Helvetica, Arial, sans-serif;
 }
 

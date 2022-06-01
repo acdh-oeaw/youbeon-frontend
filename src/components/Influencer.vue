@@ -13,7 +13,7 @@
       Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
       sit amet.
     </div>
-    <v-card class="sticky-card" style="margin-top: 1vh">
+    <v-card class="sticky-card" style="margin-top: 1vh; z-index: 1">
       <v-row no-gutters>
         <v-col class="pa-0 flex-grow-1">
           <v-autocomplete
@@ -37,7 +37,7 @@
         </v-col>
       </v-row>
     </v-card>
-    <div id="network">
+    <div id="network" class="network_mobile">
       <v-btn fab small id="zoom_in" class="zoomies control">
         <v-icon>add</v-icon>
       </v-btn>
@@ -180,8 +180,8 @@ export default class Influencer extends Vue {
   //Religion Variables
   selectedReligion: any = { id: 0, name: "Alle Accounts" };
 
-  height = document.querySelector("#network")?.clientHeight;
-  width = document.querySelector("#network")?.clientWidth;
+  height: any = 800;
+  width: any = 400;
 
   currentZoomLevel = d3.zoomIdentity;
 
@@ -262,51 +262,51 @@ export default class Influencer extends Vue {
     }
   }
 
-  async showNodeDetails(node){
+  async showNodeDetails(node) {
     const headers = { "Content-Type": "application/json" };
-      let tempInfluencerDetailed = node.data;
-      if (!isNaN(Number(tempInfluencerDetailed.kategorie[0]))) {
-        await fetch(
-          "https://db.youbeon.eu/kategorie/filter/?ids=" +
-            tempInfluencerDetailed.kategorie.toString(),
-          { headers }
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            let tempKategorie: any[] = [];
-            data.forEach((kategorie: any) => {
-              if (kategorie.name) {
-                tempKategorie.push(kategorie.name);
-              }
-            });
-            tempInfluencerDetailed.kategorie = tempKategorie;
+    let tempInfluencerDetailed = node.data;
+    if (!isNaN(Number(tempInfluencerDetailed.kategorie[0]))) {
+      await fetch(
+        "https://db.youbeon.eu/kategorie/filter/?ids=" +
+          tempInfluencerDetailed.kategorie.toString(),
+        { headers }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          let tempKategorie: any[] = [];
+          data.forEach((kategorie: any) => {
+            if (kategorie.name) {
+              tempKategorie.push(kategorie.name);
+            }
           });
-      }
-      if (!isNaN(Number(tempInfluencerDetailed.idee[0]))) {
-        await fetch(
-          "https://db.youbeon.eu/idee/filter/?ids=" +
-            tempInfluencerDetailed.idee.toString(),
-          { headers }
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            let tempIdee: any[] = [];
-            data.forEach((idee: any) => {
-              if (idee.name) {
-                tempIdee.push(idee.name);
-              }
-            });
-            tempInfluencerDetailed.idee = tempIdee;
+          tempInfluencerDetailed.kategorie = tempKategorie;
+        });
+    }
+    if (!isNaN(Number(tempInfluencerDetailed.idee[0]))) {
+      await fetch(
+        "https://db.youbeon.eu/idee/filter/?ids=" +
+          tempInfluencerDetailed.idee.toString(),
+        { headers }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          let tempIdee: any[] = [];
+          data.forEach((idee: any) => {
+            if (idee.name) {
+              tempIdee.push(idee.name);
+            }
           });
-      }
-      this.influencerDetailed = tempInfluencerDetailed;
+          tempInfluencerDetailed.idee = tempIdee;
+        });
+    }
+    this.influencerDetailed = tempInfluencerDetailed;
   }
 
   onNodeClick(event, node) {
     if (!node.children) {
-      this.selectedInfluencer = [node.data]
-      this.buildInfluencerNetworkObject()
-      this.showNodeDetails(node)
+      this.selectedInfluencer = [node.data];
+      this.buildInfluencerNetworkObject();
+      this.showNodeDetails(node);
     } else {
       this.selectedInfluencer = [];
       this.bigNetwork = false;
@@ -417,13 +417,20 @@ export default class Influencer extends Vue {
     this.nodes = [];
     this.links = [];
     let religions: any[] = [];
-
-    this.currentZoomLevel = d3.zoomIdentity
-      .translate(
-        this.width ? this.width / 2 - 100 : 800,
-        this.height ? this.height / 2 : 300
+    
+    if (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
       )
-      .scale(0.17);
+    ) {
+      this.currentZoomLevel = d3.zoomIdentity
+        .translate(this.width / 2 - 75, this.height / 2)
+        .scale(0.1);
+    } else {
+      this.currentZoomLevel = d3.zoomIdentity
+        .translate(this.width / 2 - 100, this.height / 2)
+        .scale(0.17);
+    }
 
     this.allInfluencer.forEach((religion) => {
       let tempHierarchy = d3.hierarchy(religion);
@@ -525,6 +532,8 @@ export default class Influencer extends Vue {
     this.allInfluencer = this.formatInfluencerIntoReligions(
       dataStore.influencer
     );
+    this.height = document.querySelector("#network")?.clientHeight;
+    this.width = document.querySelector("#network")?.clientWidth;
     this.allIdeas = dataStore.ideen;
     this.initialNetwork();
     this.$router.onReady(() => this.routeLoaded());
@@ -690,7 +699,7 @@ export default class Influencer extends Vue {
         }
       });
       if (searchedNode) {
-        this.showNodeDetails(searchedNode)
+        this.showNodeDetails(searchedNode);
       } else {
         console.log("No Node was found for the selected Idea");
       }
@@ -949,6 +958,17 @@ export default class Influencer extends Vue {
   background-color: whitesmoke;
   height: 65vh;
 }
+
+/*@media only screen and (max-width: 700px) {
+  .network_mobile {
+    background-color: white !important;
+    position: absolute !important;
+    top: 76px !important;
+    left: 0px !important;
+    z-index:0;
+    border: none !important;
+  }
+}*/
 
 .vl {
   border-left: 2px solid #e5e5e5;
