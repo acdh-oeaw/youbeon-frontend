@@ -3,15 +3,13 @@
     <!--<div style="margin-top: 0.5em" class="balls"></div>
     <div class="balls"></div>-->
     <div style="margin: 20px 0px 20px 0px" class="d-none d-sm-block">
-      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-      eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-      voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
-      clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
-      amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-      nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
-      diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-      Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
-      sit amet.
+      Auf dieser Ebene der YouBeOn Map sehen Sie die Ideen, die in den
+      Interviews aufgekommen sind. Das YouBeOn Forscher*innen-Team hat diese
+      Ideen gesammelt und benannt. Mit Zitaten aus den Interviews möchten wir
+      Ihnen einen Eindruck vermitteln, was hinter diesen Benennungen steht. In
+      der Mitte sehen Sie Ideen, die von Personen aus mehreren
+      Religionstraditionen eingebracht wurden. Erkunden Sie wie Orte und
+      Accounts durch Ideen miteinander verbunden sind.
     </div>
     <v-row no-gutters class="mt-2">
       <v-col class="pa-0 flex-grow-1">
@@ -1090,16 +1088,20 @@ export default class Idea extends Vue {
     this.links = [];
     let religions: any[] = [];
 
-    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-    this.currentZoomLevel = d3.zoomIdentity
-        .translate(this.width / 2 -100, this.height / 2)
+    if (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      )
+    ) {
+      this.currentZoomLevel = d3.zoomIdentity
+        .translate(this.width / 2 - 100, this.height / 2)
         .scale(0.13);
     } else {
       this.currentZoomLevel = d3.zoomIdentity
         .translate(this.width / 2 - 200, this.height / 2)
         .scale(0.25);
     }
-    
+
     this.ideaNetworkPot.forEach((religion) => {
       let tempHierarchy = d3.hierarchy(religion);
       if (religion.name != "multiple") {
@@ -1175,7 +1177,7 @@ export default class Idea extends Vue {
   border: 5px solid #e8c547;
   background-color: whitesmoke;
   //background-color: #ffdb6b;
-  height: 65vh;
+  height: 70vh;
 }
 
 #detailedHeader {

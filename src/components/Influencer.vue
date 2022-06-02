@@ -3,15 +3,13 @@
     <!--<div class="balls"></div>
     <div class="balls"></div>-->
     <div style="margin: 20px 0px 20px 0px" class="d-none d-sm-block">
-      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-      eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-      voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
-      clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
-      amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-      nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
-      diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-      Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
-      sit amet.
+      Auf dieser Ebene der YouBeOn Map sehen Sie die Instagram-Accounts, von
+      denen die Interviewteilnehmer*innen im Gespräch erzählt haben. Sie sind
+      nach Religionstraditionen geclustert (das bedeutet, dass mindestens eine
+      Person aus einer Tradition einem Account in diesem Cluster folgt). In der
+      Mitte sehen Sie Accounts, denen Personen aus mehreren Religionstraditionen
+      folgen. Erkunden Sie die Insta-Profile und die mit den Accounts
+      assoziierten Ideen.
     </div>
     <v-card class="sticky-card" style="margin-top: 1vh; z-index: 1">
       <v-row no-gutters>
@@ -417,7 +415,7 @@ export default class Influencer extends Vue {
     this.nodes = [];
     this.links = [];
     let religions: any[] = [];
-    
+
     if (
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
         navigator.userAgent
@@ -956,7 +954,7 @@ export default class Influencer extends Vue {
   margin-top: 3vh;
   border: 5px solid #b4dcd2;
   background-color: whitesmoke;
-  height: 65vh;
+  height: 70vh;
 }
 
 /*@media only screen and (max-width: 700px) {

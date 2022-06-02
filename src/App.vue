@@ -121,6 +121,37 @@
               z-index: 8;
             "
           ></div>
+          <v-dialog
+            overlay-opacity="0"
+            width="20vw"
+            content-class="intro_popUp"
+            v-model="introPopUp"
+          >
+              <!--<img
+                id="image"
+                src="./static/sprechblase kontur_schwarz.svg"
+                height="50"
+                width="50"
+              />-->
+              <v-card-title id="popUp_title">Willkommen</v-card-title>
+              <v-card-text style="height: 375px">
+                {{ popUpcontent.para1 }}
+                <br />
+                <br />
+                {{ popUpcontent.para2 }}
+                <br />
+                <v-btn
+                  id="popUp_btn"
+                  color="#b0dcd9"
+                  elevation="0"
+                  width="150px"
+                  @click="introPopUp = false"
+                >
+                  Los Geht's >>>
+                </v-btn>
+              </v-card-text>
+          </v-dialog>
+
           <v-flex xs12 fill-height class="pa-0 ma-0">
             <keep-alive>
               <router-view v-if="loading === false" />
@@ -142,6 +173,7 @@
 <script lang="ts">
 import Vuetify from "vuetify";
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import { info_popUp } from "./store/data";
 import { initialize as initData } from "./store/data";
 @Component({
   components: {},
@@ -154,6 +186,9 @@ export default class App extends Vue {
       this.loading = false;
     });
   }
+
+  introPopUp = true;
+  popUpcontent = info_popUp;
 }
 </script>
 
@@ -163,6 +198,34 @@ export default class App extends Vue {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #000;
+}
+
+#popUp_title {
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgb(176, 220, 217);
+}
+
+.v-card__title {
+  background-color: white;
+  border: 5px solid rgb(176, 220, 217);
+  border-radius: 0px !important;
+  border-bottom: none;
+}
+
+.v-card__text {
+  background-color: white;
+  border: 5px solid rgb(176, 220, 217);
+  border-top: none;
+  border-radius: 0px !important;
+}
+
+#popUp_btn {
+  border-radius: 10px;
+  text-transform: none !important;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: 600;
 }
 
 .header_navigation {

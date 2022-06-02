@@ -180,31 +180,6 @@
       </map-legende>
     </v-col>
 
-    <v-dialog
-      overlay-opacity="0"
-      width="20vw"
-      content-class="intro_popUp"
-      v-model="introPopUp"
-    >
-      <v-card-title>Willkommen</v-card-title>
-      <v-card-text style="height: 375px">
-        {{ popUpcontent.para1 }}
-        <br>
-        <br>
-        {{ popUpcontent.para2 }}
-        <br>
-        <v-btn
-          id="popUp_btn"
-          color="#b0dcd9"
-          elevation="0"
-          width="150px"
-          @click="introPopUp = false"
-        >
-          Los Geht's >>>
-        </v-btn>
-      </v-card-text>
-    </v-dialog>
-
     <v-card
       v-if="placeDetailed !== null"
       id="detailedView"
@@ -385,7 +360,7 @@ export default class Place extends Vue {
   map: any = null;
   pointerSize = 5;
 
-  popUpcontent = info_popUp.place;
+  popUpcontent = info_popUp;
 
   tileSets = [
     {
@@ -410,8 +385,6 @@ export default class Place extends Vue {
   allIdeas: any[] = [];
   placeDetailed: any = null;
   filterNonReligionPlaces = false;
-
-  introPopUp = true;
 
   religionJSON: any[] = [];
   ideaJSON: any[] = [];
@@ -982,12 +955,6 @@ export default class Place extends Vue {
   cursor: pointer;
 }
 
-.categoryPopUps {
-  margin: 3px;
-  text-align: center;
-  text-decoration: none !important;
-}
-
 .switch {
   margin: 13px 5px 0px 5px;
   padding: 0px;
@@ -1028,28 +995,6 @@ export default class Place extends Vue {
   width: 450px;
   right: 30px;
   bottom: 30px;
-}
-
-.v-card__title {
-  background-color: white;
-  border: 5px solid rgb(176, 220, 217);
-  border-radius: 0px !important;
-  border-bottom: none;
-}
-
-.v-card__text {
-  background-color: white;
-  border: 5px solid rgb(176, 220, 217);
-  border-top: none;
-  border-radius: 0px !important;
-}
-
-#popUp_btn {
-  border-radius: 10px;
-  text-transform: none !important;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  font-weight: 600;
 }
 
 @media only screen and (max-width: 700px) {
