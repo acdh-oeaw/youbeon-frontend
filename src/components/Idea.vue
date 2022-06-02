@@ -1,8 +1,19 @@
 <template>
   <vContainer>
+    <!--<div style="margin-top: 0.5em" class="balls"></div>
+    <div class="balls"></div>-->
+    <div style="margin: 20px 0px 20px 0px" class="d-none d-sm-block">
+      Auf dieser Ebene der YouBeOn Map sehen Sie die Ideen, die in den
+      Interviews aufgekommen sind. Das YouBeOn Forscher*innen-Team hat diese
+      Ideen gesammelt und benannt. Mit Zitaten aus den Interviews möchten wir
+      Ihnen einen Eindruck vermitteln, was hinter diesen Benennungen steht. In
+      der Mitte sehen Sie Ideen, die von Personen aus mehreren
+      Religionstraditionen eingebracht wurden. Erkunden Sie wie Orte und
+      Accounts durch Ideen miteinander verbunden sind.
+    </div>
     <v-row no-gutters class="mt-2">
       <v-col class="pa-0 flex-grow-1">
-        <v-card style="margin-top: 3vh">
+        <v-card>
           <v-row no-gutters>
             <v-autocomplete
               flat
@@ -14,8 +25,9 @@
               solo
               multiple
               clearable
+              deletable-chips
               hide-details
-              label="Ideen filtern nach..."
+              label="Ideen durchsuchen nach..."
               prepend-inner-icon="search"
             >
             </v-autocomplete>
@@ -47,57 +59,181 @@
         <v-icon>home</v-icon>
       </v-btn>
     </div>
-    <v-card v-if="ideaDetailed !== null" id="detailedView">
+    <v-card
+      v-if="ideaDetailed !== null"
+      id="detailedView"
+      class="d-none d-sm-block"
+    >
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
-            <div style="float: left">
+            <div id="detailedHeader">
               {{ ideaDetailed.name }}
             </div>
           </v-col>
           <v-col cols="2">
-            <div style="right: 60px; position: fixed">
+            <div style="right: 20px; position: absolute">
               <v-icon @click="ideaDetailed = null"> close </v-icon>
             </div>
           </v-col>
         </v-row>
       </v-card-title>
-      <v-card-subtitle class="quotes" v-for="zitat in ideaDetailed.zitate" v-bind:key="zitat">
+      <v-card-subtitle
+        class="quotes"
+        v-for="zitat in ideaDetailed.zitate"
+        v-bind:key="zitat"
+      >
         {{ zitat }}
       </v-card-subtitle>
-      <v-card-text v-if="ideaDetailed.accounts.length > 0">
-        <u>Verknüpfte Accounts:</u>
-        <div v-for="account in ideaDetailed.accounts" v-bind:key="account.id">
-          <router-link
-            class="hoverLink"
-            tag="span"
-            :to="{ name: 'account', params: { account_id: account.id } }"
-            >{{ account.name }}</router-link
-          >
-        </div>
-      </v-card-text>
-      <v-card-text v-if="ideaDetailed.places.length > 0">
-        <u>Verknüpfte Orte:</u>
-        <div v-for="ort in ideaDetailed.places" v-bind:key="ort.id">
-          <router-link
-            class="hoverLink"
-            tag="span"
-            :to="{ name: 'place', params: { ort_id: ort.id } }"
-            >{{ ort.bezeichnung }}</router-link
-          >
-        </div>
-      </v-card-text>
-      <v-card-text v-if="ideaDetailed.idee.length > 0">
-        <u>Verknüpfte Ideen:</u>
-        <div
-          @click="selectedIdea.push(idea)"
-          v-for="idea in ideaDetailed.idee"
-          v-bind:key="idea.id"
-        >
-          <a style="cursor: pointer; color: rgba(0, 0, 0, 0.6)">{{ idea }}</a>
-        </div>
+      <v-card-text>
+        <v-expansion-panels accordion flat hover>
+          <v-expansion-panel v-if="ideaDetailed.accounts.length > 0">
+            <v-expansion-panel-header id="detailedHeader">
+              Verknüpfte Accounts
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <div
+                v-for="account in ideaDetailed.accounts"
+                v-bind:key="account.id"
+              >
+                <router-link
+                  class="hoverLink"
+                  tag="span"
+                  :to="{ name: 'account', params: { account_id: account.id } }"
+                  >{{ account.name }}</router-link
+                >
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+          <v-expansion-panel v-if="ideaDetailed.places.length > 0">
+            <v-expansion-panel-header id="detailedHeader">
+              Verknüpfte Orte
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <div v-for="ort in ideaDetailed.places" v-bind:key="ort.id">
+                <router-link
+                  class="hoverLink"
+                  tag="span"
+                  :to="{ name: 'place', params: { ort_id: ort.id } }"
+                  >{{ ort.bezeichnung }}</router-link
+                >
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+          <v-expansion-panel v-if="ideaDetailed.idee.length > 0">
+            <v-expansion-panel-header id="detailedHeader">
+              Verknüpfte Ideen
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <div
+                @click="!selectedIdea.includes(idea) && selectedIdea.push(idea)"
+                v-for="idea in ideaDetailed.idee"
+                v-bind:key="idea.id"
+              >
+                <a style="cursor: pointer; color: rgba(0, 0, 0, 0.6)">{{
+                  idea
+                }}</a>
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-card-text>
     </v-card>
+
+    <v-bottom-sheet
+      class="detailedViewMobile"
+      v-if="ideaDetailed !== null"
+      v-model="ideaDetailedBoolean"
+      hide-overlay
+      persistent
+      no-click-animation
+      scrollable
+    >
+      <v-card
+        height="40vh"
+        style="border-top: 5px solid #e4625e !important"
+        class="d-flex d-sm-none"
+      >
+        <v-card-title>
+          <v-row no-gutters>
+            <v-col class="pa-0 ma-0 flex-grow-1">
+              <div id="detailedHeader">
+                {{ ideaDetailed.name }}
+              </div>
+            </v-col>
+            <v-col cols="2">
+              <div style="right: 20px; position: absolute">
+                <v-icon @click="ideaDetailed = null"> close </v-icon>
+              </div>
+            </v-col>
+          </v-row>
+        </v-card-title>
+        <v-card-text>
+          <div
+            class="quotes"
+            style="margin-top: 0px"
+            v-for="zitat in ideaDetailed.zitate"
+            v-bind:key="zitat"
+          >
+            {{ zitat }}
+          </div>
+          <v-expansion-panels accordion flat hover>
+            <v-expansion-panel v-if="ideaDetailed.accounts.length > 0">
+              <v-expansion-panel-header id="detailedHeader">
+                Verknüpfte Accounts
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <div
+                  v-for="account in ideaDetailed.accounts"
+                  v-bind:key="account.id"
+                >
+                  <router-link
+                    class="hoverLink"
+                    tag="span"
+                    :to="{
+                      name: 'account',
+                      params: { account_id: account.id },
+                    }"
+                    >{{ account.name }}</router-link
+                  >
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            <v-expansion-panel v-if="ideaDetailed.places.length > 0">
+              <v-expansion-panel-header id="detailedHeader">
+                Verknüpfte Orte
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <div v-for="ort in ideaDetailed.places" v-bind:key="ort.id">
+                  <router-link
+                    class="hoverLink"
+                    tag="span"
+                    :to="{ name: 'place', params: { ort_id: ort.id } }"
+                    >{{ ort.bezeichnung }}</router-link
+                  >
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            <v-expansion-panel v-if="ideaDetailed.idee.length > 0">
+              <v-expansion-panel-header id="detailedHeader">
+                Verknüpfte Ideen
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <div
+                  @click="selectedIdea.push(idea)"
+                  v-for="idea in ideaDetailed.idee"
+                  v-bind:key="idea.id"
+                >
+                  <a style="cursor: pointer; color: rgba(0, 0, 0, 0.6)">{{
+                    idea
+                  }}</a>
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-card-text>
+      </v-card>
+    </v-bottom-sheet>
   </vContainer>
 </template>
 
@@ -127,8 +263,8 @@ export default class Idea extends Vue {
   places: any[] = [];
   accounts: any[] = [];
 
-  height = document.querySelector("#network")?.clientHeight;
-  width = document.querySelector("#network")?.clientWidth;
+  height: any = 800;
+  width: any = 400;
 
   currentZoomLevel = d3.zoomIdentity;
 
@@ -173,6 +309,29 @@ export default class Idea extends Vue {
   //saves the COOCCURENCE of the selected Idea in an Array
   selectedIdea: any = [];
   bigNetwork = true;
+
+  allReligions: any[] = [
+    "alevitische Jugendliche",
+    "katholische Jugendliche",
+    "evangelische Jugendliche",
+    "orthodoxe Jugendliche",
+    "muslimische Jugendliche",
+    "jüdische Jugendliche",
+    "sikh Jugendliche",
+  ];
+
+  get ideaDetailedBoolean() {
+    if (this.ideaDetailed != null) {
+      return true;
+    }
+    return false;
+  }
+
+  set ideaDetailedBoolean(value) {
+    if (value === false) {
+      this.ideaDetailed = null;
+    }
+  }
 
   formatIdeasIntoReligions(ideas: any) {
     let returnIdeas = [
@@ -262,10 +421,9 @@ export default class Idea extends Vue {
         }
       });
       if (searchedNode) {
-        console.log(searchedNode);
         let connectedInfo = this.getDataforFeature(searchedNode);
         this.ideaDetailed = {
-          zitate: searchedNode.data.zitate,
+          zitate: [...new Set(searchedNode.data.zitate)],
           name: searchedNode.data.name,
           accounts: connectedInfo.accounts,
           places: connectedInfo.places,
@@ -284,12 +442,12 @@ export default class Idea extends Vue {
       if (node.data) {
         if (this.selectedIdea.length > 0) {
           if (this.selectedIdea.includes(node.data.name)) {
-            node.data._color = "#82c782";
+            node.data._color = "#e4625e";
           } else {
-            node.data._color = "#7D387D";
+            node.data._color = "#f4e2a3";
           }
         } else {
-          node.data._color = "#7D387D";
+          node.data._color = "#f4e2a3";
         }
       }
     });
@@ -339,7 +497,7 @@ export default class Idea extends Vue {
               returnValue = this.coordinatesForcePoints[0].x;
               break;
             case "kath":
-              returnValue = this.coordinatesForcePoints[1].x;
+              returnValue = this.coordinatesForcePoints[3].x;
               break;
             case "evan":
               returnValue = this.coordinatesForcePoints[2].x;
@@ -348,7 +506,7 @@ export default class Idea extends Vue {
               returnValue = this.coordinatesForcePoints[2].x;
               break;
             case "orth":
-              returnValue = this.coordinatesForcePoints[3].x;
+              returnValue = this.coordinatesForcePoints[1].x;
               break;
             case "musl":
               returnValue = this.coordinatesForcePoints[4].x;
@@ -367,13 +525,13 @@ export default class Idea extends Vue {
             returnValue = this.coordinatesForcePoints[0].x;
             break;
           case "katholische Jugendliche":
-            returnValue = this.coordinatesForcePoints[1].x;
+            returnValue = this.coordinatesForcePoints[3].x;
             break;
           case "evangelische Jugendliche":
             returnValue = this.coordinatesForcePoints[2].x;
             break;
           case "orthodoxe Jugendliche":
-            returnValue = this.coordinatesForcePoints[3].x;
+            returnValue = this.coordinatesForcePoints[1].x;
             break;
           case "muslimische Jugendliche":
             returnValue = this.coordinatesForcePoints[4].x;
@@ -407,7 +565,7 @@ export default class Idea extends Vue {
               returnValue = this.coordinatesForcePoints[0].y;
               break;
             case "kath":
-              returnValue = this.coordinatesForcePoints[1].y;
+              returnValue = this.coordinatesForcePoints[3].y;
               break;
             case "evan":
               returnValue = this.coordinatesForcePoints[2].y;
@@ -416,7 +574,7 @@ export default class Idea extends Vue {
               returnValue = this.coordinatesForcePoints[2].y;
               break;
             case "orth":
-              returnValue = this.coordinatesForcePoints[3].y;
+              returnValue = this.coordinatesForcePoints[1].y;
               break;
             case "musl":
               returnValue = this.coordinatesForcePoints[4].y;
@@ -435,13 +593,13 @@ export default class Idea extends Vue {
             returnValue = this.coordinatesForcePoints[0].y;
             break;
           case "katholische Jugendliche":
-            returnValue = this.coordinatesForcePoints[1].y;
+            returnValue = this.coordinatesForcePoints[3].y;
             break;
           case "evangelische Jugendliche":
             returnValue = this.coordinatesForcePoints[2].y;
             break;
           case "orthodoxe Jugendliche":
-            returnValue = this.coordinatesForcePoints[3].y;
+            returnValue = this.coordinatesForcePoints[1].y;
             break;
           case "muslimische Jugendliche":
             returnValue = this.coordinatesForcePoints[4].y;
@@ -533,8 +691,6 @@ export default class Idea extends Vue {
     d3.selectAll("g").remove();
     let tempZoom = this.currentZoomLevel;
     // set the dimensions and margins of the graph
-    this.height = document.querySelector("#network")?.clientHeight;
-    this.width = document.querySelector("#network")?.clientWidth;
 
     // Let's list the force we wanna apply on the network
     const simulation = d3
@@ -568,7 +724,19 @@ export default class Idea extends Vue {
       )
       .force(
         "collision",
-        d3.forceCollide().radius((d) => (d.children ? 50 : 20))
+        d3
+          .forceCollide()
+          .radius((d) =>
+            d.children
+              ? d.data
+                ? this.allReligions.includes(d.data.name)
+                  ? 200
+                  : 20
+                : this.allReligions.includes(d.name)
+                ? 200
+                : 25
+              : 20
+          )
       );
 
     let drag = (simulation) => {
@@ -602,8 +770,7 @@ export default class Idea extends Vue {
       svg = d3
         .select("#network")
         .append("svg")
-        .attr("width", this.width)
-        .attr("height", this.height);
+        .attr("viewBox", `0 0 ${this.width} ${this.height}`);
     } else {
       svg = d3.select("svg");
     }
@@ -647,10 +814,30 @@ export default class Idea extends Vue {
       .attr("cx", 0)
       .attr("cy", 0)
       .attr("fill", (d) =>
-        d.children ? "#fff" : d._color ? d._color : d.data._color
+        d.children
+          ? d.data
+            ? this.allReligions.includes(d.data.name)
+              ? "#E8C547"
+              : "#e4625e"
+            : this.allReligions.includes(d.name)
+            ? "#E8C547"
+            : "#e4625e"
+          : d.data
+          ? d.data._color
+          : d._color
       )
-      .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
-      .attr("r", (d) => (d.children ? 40 : 20))
+      .attr("stroke", "#fff")
+      .attr("r", (d) =>
+        d.children
+          ? d.data
+            ? this.allReligions.includes(d.data.name)
+              ? 150
+              : 20
+            : this.allReligions.includes(d.name)
+            ? 150
+            : 20
+          : 20
+      )
       .on("click", (d, i) => {
         this.onNodeClick(i);
       });
@@ -662,16 +849,86 @@ export default class Idea extends Vue {
       })
       .enter()
       .append("text")
-      .text(function (d) {
-        return d.data ? d.data.name : d.name;
+      .html(function (d) {
+        if (!d.children) {
+          if (d.data) {
+            return d.data.name;
+          } else {
+            return d.name;
+          }
+        } else {
+          if (d.data) {
+            if (
+              [
+                "alevitische Jugendliche",
+                "katholische Jugendliche",
+                "evangelische Jugendliche",
+                "orthodoxe Jugendliche",
+                "muslimische Jugendliche",
+                "jüdische Jugendliche",
+                "sikh Jugendliche",
+              ].includes(d.data.name)
+            ) {
+              return (
+                "<tspan x='0' dy='-0.5em'>" +
+                d.data.name.split(" ")[0] +
+                "</tspan>" +
+                "<tspan x='0' dy='1.2em' dx='-3em'>" +
+                d.data.name.split(" ")[1] +
+                "</tspan>"
+              );
+            } else {
+              return d.data.name;
+            }
+          } else {
+            if (
+              [
+                "alevitische Jugendliche",
+                "katholische Jugendliche",
+                "evangelische Jugendliche",
+                "orthodoxe Jugendliche",
+                "muslimische Jugendliche",
+                "jüdische Jugendliche",
+                "sikh Jugendliche",
+              ].includes(d.name)
+            ) {
+              return (
+                "<tspan x='0' dy='-0.5em'>" +
+                d.name.split(" ")[0] +
+                "</tspan>" +
+                "<tspan x='0' dy='1.2em' dx='-3em'>" +
+                d.name.split(" ")[1] +
+                "</tspan>"
+              );
+            } else {
+              return d.name;
+            }
+          }
+        }
       })
-      .attr("dx", function (d) {
-        return d.children ? 50 : 25;
-      })
-      .style("font-size", function (d) {
-        return d.children ? 14 / tempZoom.k + "px" : 14;
-      });
-
+      .attr("dx", (d) =>
+        d.children
+          ? d.data
+            ? this.allReligions.includes(d.data.name)
+              ? -120
+              : 25
+            : this.allReligions.includes(d.name)
+            ? -120
+            : 25
+          : 25
+      )
+      .attr("font-weight", (d) => (d.children ? 600 : 400))
+      .style("font-size", (d) =>
+        d.children
+          ? d.data
+            ? this.allReligions.includes(d.data.name)
+              ? "2.5em"
+              : 14
+            : this.allReligions.includes(d.name)
+            ? "2.5em"
+            : 14
+          : 14
+      );
     // This function is run at each iteration of the force algorithm, updating the nodes position.
     simulation.on("tick", () => {
       link
@@ -734,7 +991,7 @@ export default class Idea extends Vue {
     if (feature.data) {
       let connectedInfo = this.getDataforFeature(feature);
       this.ideaDetailed = {
-        zitate: feature.data.zitate,
+        zitate: [...new Set(feature.data.zitate)],
         name: feature.data.name,
         accounts: connectedInfo.accounts,
         places: connectedInfo.places,
@@ -812,7 +1069,7 @@ export default class Idea extends Vue {
             this.selectedIdea = [];
             let connectedInfo = this.getDataforFeature(element);
             this.ideaDetailed = {
-              zitate: element.data.zitate,
+              zitate: [...new Set(element.data.zitate)],
               name: element.data.name,
               accounts: connectedInfo.accounts,
               places: connectedInfo.places,
@@ -831,12 +1088,19 @@ export default class Idea extends Vue {
     this.links = [];
     let religions: any[] = [];
 
-    this.currentZoomLevel = d3.zoomIdentity
-      .translate(
-        this.width ? this.width / 2 - 200 : 800,
-        this.height ? this.height / 2 : 400
+    if (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
       )
-      .scale(0.25);
+    ) {
+      this.currentZoomLevel = d3.zoomIdentity
+        .translate(this.width / 2 - 100, this.height / 2)
+        .scale(0.13);
+    } else {
+      this.currentZoomLevel = d3.zoomIdentity
+        .translate(this.width / 2 - 200, this.height / 2)
+        .scale(0.25);
+    }
 
     this.ideaNetworkPot.forEach((religion) => {
       let tempHierarchy = d3.hierarchy(religion);
@@ -897,6 +1161,8 @@ export default class Idea extends Vue {
 
   mounted() {
     this.places = dataStore.orte;
+    this.height = document.querySelector("#network")?.clientHeight;
+    this.width = document.querySelector("#network")?.clientWidth;
     this.accounts = dataStore.influencer;
     this.ideaNetworkPot = this.formatIdeasIntoReligions(dataStore.ideen);
     this.initialNetwork();
@@ -907,14 +1173,18 @@ export default class Idea extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 #network {
-  margin-top: 5vh;
-  border: 2px solid #b0dcd9;
-  background-color: rgba(255, 219, 107, 0.5);
+  margin-top: 3vh;
+  border: 5px solid #e8c547;
+  background-color: whitesmoke;
   //background-color: #ffdb6b;
   height: 70vh;
 }
 
-.quotes{
+#detailedHeader {
+  font-family: "ChicagoFLF", Helvetica, Arial, sans-serif;
+}
+
+.quotes {
   font-style: italic;
   font-size: 13px;
 }
@@ -940,7 +1210,7 @@ export default class Idea extends Vue {
 }
 
 #detailedView {
-  border: 4px solid #b0dcd9 !important;
+  border: 5px solid #e4625e !important;
   position: absolute;
   max-height: 50%;
   overflow-y: auto;
@@ -950,11 +1220,29 @@ export default class Idea extends Vue {
   bottom: 30px;
 }
 
+.v-expansion-panel-header {
+  padding: 0 !important;
+}
+
 .control {
   position: absolute;
   margin: 20px;
   margin-left: 20px;
   z-index: 5;
+}
+
+h1,
+h2 {
+  font-family: "ChicagoFLF", Helvetica, Arial, sans-serif;
+}
+
+.balls {
+  border-radius: 50%;
+  background-color: #e8c547;
+  width: 2em;
+  height: 2em;
+  margin: 0.3em;
+  float: left;
 }
 
 .colorDisplay {
@@ -963,5 +1251,10 @@ export default class Idea extends Vue {
   height: 30px;
   margin: 10px;
   margin-right: 10px;
+}
+
+@font-face {
+  font-family: "ChicagoFLF";
+  src: local("ChicagoFLF"), url(../fonts/ChicagoFLF.ttf) format("truetype");
 }
 </style>

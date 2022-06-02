@@ -1,13 +1,25 @@
 <template>
   <vContainer>
-    <v-card class="sticky-card" style="margin-top: 4vh">
+    <!--<div class="balls"></div>
+    <div class="balls"></div>-->
+    <div style="margin: 20px 0px 20px 0px" class="d-none d-sm-block">
+      Auf dieser Ebene der YouBeOn Map sehen Sie die Instagram-Accounts, von
+      denen die Interviewteilnehmer*innen im Gespräch erzählt haben. Sie sind
+      nach Religionstraditionen geclustert (das bedeutet, dass mindestens eine
+      Person aus einer Tradition einem Account in diesem Cluster folgt). In der
+      Mitte sehen Sie Accounts, denen Personen aus mehreren Religionstraditionen
+      folgen. Erkunden Sie die Insta-Profile und die mit den Accounts
+      assoziierten Ideen.
+    </div>
+    <v-card class="sticky-card" style="margin-top: 1vh; z-index: 1">
       <v-row no-gutters>
         <v-col class="pa-0 flex-grow-1">
           <v-autocomplete
             v-model="selectedInfluencer"
             :items="nodes"
+            @input="buildInfluencerNetworkObject()"
             item-text="data.name"
-            item-value="data.id"
+            item-value="data"
             clearable
             chips
             solo
@@ -16,14 +28,14 @@
             text
             flat
             hide-details
-            label="Suche..."
+            label="Accounts durchsuchen nach..."
             prepend-inner-icon="search"
           >
           </v-autocomplete>
         </v-col>
       </v-row>
     </v-card>
-    <div id="network">
+    <div id="network" class="network_mobile">
       <v-btn fab small id="zoom_in" class="zoomies control">
         <v-icon>add</v-icon>
       </v-btn>
@@ -39,7 +51,7 @@
       <v-btn
         :disabled="bigNetwork"
         style="margin-top: 120px"
-        class="control"
+        class="control heightButton"
         fab
         small
         @click="resetNetwork()"
@@ -47,13 +59,20 @@
         <v-icon>home</v-icon>
       </v-btn>
     </div>
-    <v-card v-if="influencerDetailed !== null" class="detailedView">
+    <v-card
+      v-if="influencerDetailed !== null"
+      class="detailedView d-none d-sm-block"
+    >
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
-            <div class="hoverLink" @click="openLinktoInsta(influencerDetailed)">
+            <div
+              class="hoverLink"
+              id="detailedHeader"
+              @click="openLinktoInsta(influencerDetailed)"
+            >
               {{ influencerDetailed.name }}
-              <v-icon style="margin-left: 5px">link</v-icon>
+              <img id="instaLogo" src="../icons/glyph-logo_May2016.png" />
             </div>
           </v-col>
           <v-col cols="2">
@@ -65,18 +84,83 @@
       </v-card-title>
       <v-card-subtitle> {{ influencerDetailed.bemerkung }} </v-card-subtitle>
       <v-card-text>
-        <u>Verknüpfte Ideen:</u>
-        <br />
-        <div v-for="idea in influencerDetailed.idee" v-bind:key="idea.id">
-          <router-link
-            class="hoverLink"
-            tag="span"
-            :to="{ name: 'idea', params: { idea_name: idea } }"
-            >{{ idea }}</router-link
-          >
-        </div>
+        <v-expansion-panels accordion flat hover style="margin-bottom: 15px">
+          <v-expansion-panel>
+            <v-expansion-panel-header id="detailedHeader">
+              Verknüpfte Ideen
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <div v-for="idea in influencerDetailed.idee" v-bind:key="idea.id">
+                <router-link
+                  class="hoverLink"
+                  tag="span"
+                  :to="{ name: 'idea', params: { idea_name: idea } }"
+                  >{{ idea }}</router-link
+                >
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-card-text>
     </v-card>
+
+    <v-bottom-sheet
+      class="detailedViewMobile"
+      v-if="influencerDetailed !== null"
+      v-model="influencerDetailedBoolean"
+      hide-overlay
+      persistent
+      no-click-animation
+      scrollable
+    >
+      <v-card
+        height="40vh"
+        style="border-top: 5px solid #e4625e !important"
+        class="d-flex d-sm-none"
+      >
+        <v-card-title>
+          <v-row no-gutters>
+            <v-col class="pa-0 ma-0 flex-grow-1">
+              <div
+                class="hoverLink"
+                id="detailedHeader"
+                @click="openLinktoInsta(influencerDetailed)"
+              >
+                {{ influencerDetailed.name }}
+                <img id="instaLogo" src="../icons/glyph-logo_May2016.png" />
+              </div>
+            </v-col>
+            <v-col cols="2">
+              <div style="right: 30px; position: fixed">
+                <v-icon @click="influencerDetailed = null"> close </v-icon>
+              </div>
+            </v-col>
+          </v-row>
+        </v-card-title>
+        <v-card-text>
+          <v-expansion-panels accordion flat hover style="margin-bottom: 15px">
+            <v-expansion-panel>
+              <v-expansion-panel-header id="detailedHeader">
+                Verknüpfte Ideen
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <div
+                  v-for="idea in influencerDetailed.idee"
+                  v-bind:key="idea.id"
+                >
+                  <router-link
+                    class="hoverLink"
+                    tag="span"
+                    :to="{ name: 'idea', params: { idea_name: idea } }"
+                    >{{ idea }}</router-link
+                  >
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-card-text>
+      </v-card>
+    </v-bottom-sheet>
   </vContainer>
 </template>
 
@@ -94,8 +178,8 @@ export default class Influencer extends Vue {
   //Religion Variables
   selectedReligion: any = { id: 0, name: "Alle Accounts" };
 
-  height = document.querySelector("#network")?.clientHeight;
-  width = document.querySelector("#network")?.clientWidth;
+  height: any = 800;
+  width: any = 400;
 
   currentZoomLevel = d3.zoomIdentity;
 
@@ -163,45 +247,64 @@ export default class Influencer extends Vue {
     window.open(influencer.link, "_blank");
   }
 
-  async onNodeClick(event, node) {
+  get influencerDetailedBoolean() {
+    if (this.influencerDetailed != null) {
+      return true;
+    }
+    return false;
+  }
+
+  set influencerDetailedBoolean(value) {
+    if (value === false) {
+      this.influencerDetailed = null;
+    }
+  }
+
+  async showNodeDetails(node) {
+    const headers = { "Content-Type": "application/json" };
+    let tempInfluencerDetailed = node.data;
+    if (!isNaN(Number(tempInfluencerDetailed.kategorie[0]))) {
+      await fetch(
+        "https://db.youbeon.eu/kategorie/filter/?ids=" +
+          tempInfluencerDetailed.kategorie.toString(),
+        { headers }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          let tempKategorie: any[] = [];
+          data.forEach((kategorie: any) => {
+            if (kategorie.name) {
+              tempKategorie.push(kategorie.name);
+            }
+          });
+          tempInfluencerDetailed.kategorie = tempKategorie;
+        });
+    }
+    if (!isNaN(Number(tempInfluencerDetailed.idee[0]))) {
+      await fetch(
+        "https://db.youbeon.eu/idee/filter/?ids=" +
+          tempInfluencerDetailed.idee.toString(),
+        { headers }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          let tempIdee: any[] = [];
+          data.forEach((idee: any) => {
+            if (idee.name) {
+              tempIdee.push(idee.name);
+            }
+          });
+          tempInfluencerDetailed.idee = tempIdee;
+        });
+    }
+    this.influencerDetailed = tempInfluencerDetailed;
+  }
+
+  onNodeClick(event, node) {
     if (!node.children) {
-      const headers = { "Content-Type": "application/json" };
-      let tempInfluencerDetailed = node.data;
-      if (!isNaN(Number(tempInfluencerDetailed.kategorie[0]))) {
-        await fetch(
-          "https://db.youbeon.eu/kategorie/filter/?ids=" +
-            tempInfluencerDetailed.kategorie.toString(),
-          { headers }
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            let tempKategorie: any[] = [];
-            data.forEach((kategorie: any) => {
-              if (kategorie.name) {
-                tempKategorie.push(kategorie.name);
-              }
-            });
-            tempInfluencerDetailed.kategorie = tempKategorie;
-          });
-      }
-      if (!isNaN(Number(tempInfluencerDetailed.idee[0]))) {
-        await fetch(
-          "https://db.youbeon.eu/idee/filter/?ids=" +
-            tempInfluencerDetailed.idee.toString(),
-          { headers }
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            let tempIdee: any[] = [];
-            data.forEach((idee: any) => {
-              if (idee.name) {
-                tempIdee.push(idee.name);
-              }
-            });
-            tempInfluencerDetailed.idee = tempIdee;
-          });
-      }
-      this.influencerDetailed = tempInfluencerDetailed;
+      this.selectedInfluencer = [node.data];
+      this.buildInfluencerNetworkObject();
+      this.showNodeDetails(node);
     } else {
       this.selectedInfluencer = [];
       this.bigNetwork = false;
@@ -313,12 +416,19 @@ export default class Influencer extends Vue {
     this.links = [];
     let religions: any[] = [];
 
-    this.currentZoomLevel = d3.zoomIdentity
-      .translate(
-        this.width ? this.width / 2 - 100 : 800,
-        this.height ? this.height / 2 : 300
+    if (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
       )
-      .scale(0.17);
+    ) {
+      this.currentZoomLevel = d3.zoomIdentity
+        .translate(this.width / 2 - 75, this.height / 2)
+        .scale(0.1);
+    } else {
+      this.currentZoomLevel = d3.zoomIdentity
+        .translate(this.width / 2 - 100, this.height / 2)
+        .scale(0.17);
+    }
 
     this.allInfluencer.forEach((religion) => {
       let tempHierarchy = d3.hierarchy(religion);
@@ -420,6 +530,8 @@ export default class Influencer extends Vue {
     this.allInfluencer = this.formatInfluencerIntoReligions(
       dataStore.influencer
     );
+    this.height = document.querySelector("#network")?.clientHeight;
+    this.width = document.querySelector("#network")?.clientWidth;
     this.allIdeas = dataStore.ideen;
     this.initialNetwork();
     this.$router.onReady(() => this.routeLoaded());
@@ -448,7 +560,7 @@ export default class Influencer extends Vue {
               returnValue = this.coordinatesForcePoints[0].x;
               break;
             case "kath":
-              returnValue = this.coordinatesForcePoints[1].x;
+              returnValue = this.coordinatesForcePoints[3].x;
               break;
             case "evan":
               returnValue = this.coordinatesForcePoints[2].x;
@@ -457,7 +569,7 @@ export default class Influencer extends Vue {
               returnValue = this.coordinatesForcePoints[2].x;
               break;
             case "orth":
-              returnValue = this.coordinatesForcePoints[3].x;
+              returnValue = this.coordinatesForcePoints[1].x;
               break;
             case "musl":
               returnValue = this.coordinatesForcePoints[4].x;
@@ -476,13 +588,13 @@ export default class Influencer extends Vue {
             returnValue = this.coordinatesForcePoints[0].x;
             break;
           case "katholische Jugendliche":
-            returnValue = this.coordinatesForcePoints[1].x;
+            returnValue = this.coordinatesForcePoints[3].x;
             break;
           case "evangelische Jugendliche":
             returnValue = this.coordinatesForcePoints[2].x;
             break;
           case "orthodoxe Jugendliche":
-            returnValue = this.coordinatesForcePoints[3].x;
+            returnValue = this.coordinatesForcePoints[1].x;
             break;
           case "muslimische Jugendliche":
             returnValue = this.coordinatesForcePoints[4].x;
@@ -516,7 +628,7 @@ export default class Influencer extends Vue {
               returnValue = this.coordinatesForcePoints[0].y;
               break;
             case "kath":
-              returnValue = this.coordinatesForcePoints[1].y;
+              returnValue = this.coordinatesForcePoints[3].y;
               break;
             case "evan":
               returnValue = this.coordinatesForcePoints[2].y;
@@ -525,7 +637,7 @@ export default class Influencer extends Vue {
               returnValue = this.coordinatesForcePoints[2].y;
               break;
             case "orth":
-              returnValue = this.coordinatesForcePoints[3].y;
+              returnValue = this.coordinatesForcePoints[1].y;
               break;
             case "musl":
               returnValue = this.coordinatesForcePoints[4].y;
@@ -544,13 +656,13 @@ export default class Influencer extends Vue {
             returnValue = this.coordinatesForcePoints[0].y;
             break;
           case "katholische Jugendliche":
-            returnValue = this.coordinatesForcePoints[1].y;
+            returnValue = this.coordinatesForcePoints[3].y;
             break;
           case "evangelische Jugendliche":
             returnValue = this.coordinatesForcePoints[2].y;
             break;
           case "orthodoxe Jugendliche":
-            returnValue = this.coordinatesForcePoints[3].y;
+            returnValue = this.coordinatesForcePoints[1].y;
             break;
           case "muslimische Jugendliche":
             returnValue = this.coordinatesForcePoints[4].y;
@@ -567,40 +679,42 @@ export default class Influencer extends Vue {
     return returnValue;
   }
 
-  @Watch("selectedInfluencer")
+  //@Watch("selectedInfluencer")
   buildInfluencerNetworkObject() {
-
-    if (this.selectedInfluencer.length > this.selectedInfluencerLength && this.selectedInfluencer != null) {
+    if (
+      this.selectedInfluencer.length > this.selectedInfluencerLength &&
+      this.selectedInfluencer != null
+    ) {
       let searchedNode;
       this.nodes.forEach((node) => {
         if (node.data) {
           if (
             node.data.id ===
-            this.selectedInfluencer[this.selectedInfluencer.length - 1]
+            this.selectedInfluencer[this.selectedInfluencer.length - 1].id
           ) {
             searchedNode = node;
           }
         }
       });
       if (searchedNode) {
-        this.onNodeClick(null, searchedNode);
+        this.showNodeDetails(searchedNode);
       } else {
         console.log("No Node was found for the selected Idea");
       }
     } else if (this.selectedInfluencer.length < this.selectedInfluencerLength) {
-      this.influencerDetailed = null
+      this.influencerDetailed = null;
       //this.selectedInfluencer = null;
     }
     this.nodes.forEach((node) => {
       if (node.data) {
         if (this.selectedInfluencer.length > 0) {
-          if (this.selectedInfluencer.includes(node.data.id)) {
-            node.data._color = "#82c782";
+          if (this.selectedInfluencer.includes(node.data)) {
+            node.data._color = "#E4625E";
           } else {
-            node.data._color = "#dcfaf3";
+            node.data._color = "#daeee8";
           }
         } else {
-          node.data._color = "#dcfaf3";
+          node.data._color = "#daeee8";
         }
       }
     });
@@ -665,7 +779,7 @@ export default class Influencer extends Vue {
       )
       .force(
         "collision",
-        d3.forceCollide().radius((d) => (d.children ? 50 : 30))
+        d3.forceCollide().radius((d) => (d.children ? 200 : 30))
       );
 
     let drag = (simulation) => {
@@ -699,8 +813,8 @@ export default class Influencer extends Vue {
       svg = d3
         .select("#network")
         .append("svg")
-        .attr("width", this.width)
-        .attr("height", this.height);
+        .attr("viewBox", `0 0 ${this.width} ${this.height}`);
+      //.attr("preserveAspectRatio", "xMinYMin meet")
     } else {
       svg = d3.select("svg");
     }
@@ -745,10 +859,10 @@ export default class Influencer extends Vue {
       .attr("cx", 0)
       .attr("cy", 0)
       .attr("fill", (d) =>
-        d.children ? "#448A1C" : d._color ? d._color : d.data._color
+        d.children ? "#B4DCD2" : d._color ? d._color : d.data._color
       )
-      .attr("stroke", (d) => (d.children ? "#000" : "#fff"))
-      .attr("r", (d) => (d.children ? 40 : 20))
+      .attr("stroke", "#fff")
+      .attr("r", (d) => (d.children ? 150 : 20))
       .on("click", (d, i) => {
         this.onNodeClick(d, i);
       });
@@ -760,14 +874,41 @@ export default class Influencer extends Vue {
       })
       .enter()
       .append("text")
-      .text(function (d) {
-        return d.data ? d.data.name : d.name;
+      .html(function (d) {
+        if (!d.children) {
+          if (d.data) {
+            return d.data.name;
+          } else {
+            return d.name;
+          }
+        } else {
+          if (d.data) {
+            return (
+              "<tspan x='0' dy='-0.5em'>" +
+              d.data.name.split(" ")[0] +
+              "</tspan>" +
+              "<tspan x='0' dy='1.2em' dx='-3em'>" +
+              d.data.name.split(" ")[1] +
+              "</tspan>"
+            );
+          } else {
+            return (
+              "<tspan x='0' dy='-0.5em'>" +
+              d.name.split(" ")[0] +
+              "</tspan>" +
+              "<tspan x='0' dy='1.2em' dx='-3em'>" +
+              d.name.split(" ")[1] +
+              "</tspan>"
+            );
+          }
+        }
       })
+      .attr("font-weight", (d) => (d.children ? 600 : 400))
       .attr("dx", function (d) {
-        return d.children ? 50 : 25;
+        return d.children ? -120 : 25;
       })
-      .style("font-size", (d) => {
-        return d.children ? 14 / this.currentZoomLevel.k + "px" : 14;
+      .style("font-size", function (d) {
+        return d.children ? "2.3em" : 14;
       });
 
     // This function is run at each iteration of the force algorithm, updating the nodes position.
@@ -810,11 +951,22 @@ export default class Influencer extends Vue {
 <style scoped lang="scss">
 #network {
   max-width: 100%;
-  margin-top: 5vh;
-  border: 2px solid #b0dcd9;
-  background-color: rgba(255, 125, 127, 0.5);
+  margin-top: 3vh;
+  border: 5px solid #b4dcd2;
+  background-color: whitesmoke;
   height: 70vh;
 }
+
+/*@media only screen and (max-width: 700px) {
+  .network_mobile {
+    background-color: white !important;
+    position: absolute !important;
+    top: 76px !important;
+    left: 0px !important;
+    z-index:0;
+    border: none !important;
+  }
+}*/
 
 .vl {
   border-left: 2px solid #e5e5e5;
@@ -830,7 +982,7 @@ export default class Influencer extends Vue {
 }
 
 .detailedView {
-  border: 4px solid #b0dcd9 !important;
+  border: 5px solid #e4625e !important;
   position: absolute;
   max-height: 50%;
   overflow-y: auto;
@@ -840,13 +992,47 @@ export default class Influencer extends Vue {
   bottom: 30px;
 }
 
+h1,
+h2 {
+  font-family: "ChicagoFLF", Helvetica, Arial, sans-serif;
+}
+
+#detailedHeader {
+  font-family: "ChicagoFLF", Helvetica, Arial, sans-serif;
+}
+
+.balls {
+  margin-top: 0.5em;
+  border-radius: 50%;
+  background-color: #b4dcd2;
+  width: 2em;
+  height: 2em;
+  margin: 0.3em;
+  float: left;
+}
+
+#instaLogo {
+  height: 20px;
+  width: 20px;
+  margin-left: 10px;
+}
+
 #innitViewButton {
   position: absolute;
   right: 100px;
   top: 250px;
 }
 
+.v-expansion-panel-header {
+  padding: 0 !important;
+}
+
 .hoverLink:hover {
   cursor: pointer;
+}
+
+@font-face {
+  font-family: "ChicagoFLF";
+  src: local("ChicagoFLF"), url(../fonts/ChicagoFLF.ttf) format("truetype");
 }
 </style>
