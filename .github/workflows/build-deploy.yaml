@@ -18,7 +18,10 @@ jobs:
         with:
           args: 'build tmp-cnb-image --builder heroku/buildpacks:18'
       - name: Suggest default port 5000 within image
+        env:
+          SECRETS_CONTEXT: ${{ toJson(secrets) }}
         run: |
+          echo -n "$SECRETS_CONTEXT" | jq -r '[to_entries[]|select(.key|startswith("K8S_SECRET_"))]|map("\(.key|sub("K8S_SECRET_"; ""))=\(.value|tostring|@sh)")|.[]' > secrets.env 
           cat >> Dockerfile <<EOF  
           FROM tmp-cnb-image
           ENV PORT=5000
@@ -30,14 +33,28 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: build and push to ghcr.io      
+      - name: Create tags based on git data
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+             ${{ env.DOCKER_TAG }}/${{ github.ref_name }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value={{sha}}
+      - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: .
           build-args: |
-          tags: |
-            ${{ env.DOCKER_TAG }}:${{ github.ref_name }}
+          platforms: linux/amd64
           push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
   deploy:
     needs: [build]
     name: Deploy Docker image from the branch ${{ github.ref_name }}
