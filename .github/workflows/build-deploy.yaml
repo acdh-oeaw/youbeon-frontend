@@ -17,7 +17,7 @@ jobs:
         uses: dfreilich/pack-action@v2.0.0
         with:
           args: 'build tmp-cnb-image --builder heroku/buildpacks:18'
-      - name: Suggest default port 5000 within image
+      - name: Set default port 5000 within image
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
         run: |
