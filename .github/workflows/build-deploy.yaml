@@ -83,7 +83,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ${{ secrets.DOCKER_TAG }}
+            ${{ secrets.DOCKER_TAG }}/${{ github.ref_name }}
           tags: |
             type=raw,value={{sha}}
       - name: Create auto-deploy-app-values.yaml
