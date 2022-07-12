@@ -901,14 +901,7 @@ export default class Idea extends Vue {
                 "</tspan>"
               );
             } else {
-              return (
-                "<tspan x='0' dx='0' dy='-.2em' text-anchor='middle'>" +
-                d.name.split(" ")[0] +
-                "</tspan>" +
-                "<tspan x='0' dy='1em' text-anchor='middle'>" +
-                d.name.split(" ")[1] +
-                "</tspan>"
-              );
+              return d.name;
             }
           }
         }
