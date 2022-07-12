@@ -884,21 +884,21 @@ export default class Influencer extends Vue {
         } else {
           if (d.data) {
             return (
-              "<tspan x='0' dy='-0.5em'>" +
-              d.data.name.split(" ")[0] +
-              "</tspan>" +
-              "<tspan x='0' dy='1.2em' dx='-3em'>" +
-              d.data.name.split(" ")[1] +
-              "</tspan>"
+              "<tspan x='0' dx='0' dy='-.2em' text-anchor='middle'>" +
+                d.name.split(" ")[0] +
+                "</tspan>" +
+                "<tspan x='0' dy='1em' text-anchor='middle'>" +
+                d.name.split(" ")[1] +
+                "</tspan>"
             );
           } else {
             return (
-              "<tspan x='0' dy='-0.5em'>" +
-              d.name.split(" ")[0] +
-              "</tspan>" +
-              "<tspan x='0' dy='1.2em' dx='-3em'>" +
-              d.name.split(" ")[1] +
-              "</tspan>"
+              "<tspan x='0' dx='0' dy='-.2em' text-anchor='middle'>" +
+                d.name.split(" ")[0] +
+                "</tspan>" +
+                "<tspan x='0' dy='1em' text-anchor='middle'>" +
+                d.name.split(" ")[1] +
+                "</tspan>"
             );
           }
         }
