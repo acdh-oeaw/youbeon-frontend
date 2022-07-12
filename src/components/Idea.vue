@@ -871,10 +871,10 @@ export default class Idea extends Vue {
             ) {
               return (
                 "<tspan x='0' dx='0' dy='-.2em' text-anchor='middle'>" +
-                d.name.split(" ")[0] +
+                d.data.name.split(" ")[0] +
                 "</tspan>" +
                 "<tspan x='0' dy='1em' text-anchor='middle'>" +
-                d.name.split(" ")[1] +
+                d.datad.name.split(" ")[1] +
                 "</tspan>"
               );
             } else {
@@ -901,7 +901,14 @@ export default class Idea extends Vue {
                 "</tspan>"
               );
             } else {
-              return d.name;
+              return (
+                "<tspan x='0' dx='0' dy='-.2em' text-anchor='middle'>" +
+                d.name.split(" ")[0] +
+                "</tspan>" +
+                "<tspan x='0' dy='1em' text-anchor='middle'>" +
+                d.name.split(" ")[1] +
+                "</tspan>"
+              );
             }
           }
         }

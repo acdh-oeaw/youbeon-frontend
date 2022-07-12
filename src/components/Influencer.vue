@@ -885,10 +885,10 @@ export default class Influencer extends Vue {
           if (d.data) {
             return (
               "<tspan x='0' dx='0' dy='-.2em' text-anchor='middle'>" +
-                d.name.split(" ")[0] +
+                d.data.name.split(" ")[0] +
                 "</tspan>" +
                 "<tspan x='0' dy='1em' text-anchor='middle'>" +
-                d.name.split(" ")[1] +
+                d.data.name.split(" ")[1] +
                 "</tspan>"
             );
           } else {
