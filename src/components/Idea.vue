@@ -238,11 +238,14 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { dataStore } from "../store/data";
 // eslint-disable-next-line
 import * as d3 from "d3";
-import * as _ from "lodash";
 
 @Component({
   components: {},
@@ -473,7 +476,6 @@ export default class Idea extends Vue {
     this.selectedIdeaLength = this.selectedIdea.length;
     this.generateNetwork(this.nodes, this.links);
   }
-
   determinePosition(node, width, height) {
     let returnValue = 0;
     if (width > height) {
@@ -851,10 +853,38 @@ export default class Idea extends Vue {
       .append("text")
       .html(function (d) {
         if (!d.children) {
-          if (d.data) {
-            return d.data.name;
+          const words = (d.data.name || d.name).split(' ');
+          if (words.length <= 1) {
+            "<tspan x='0' dx='0' text-anchor='middle'>" +
+            words[0] +
+            "</tspan>"
           } else {
-            return d.name;
+            // algorithm for best aesthetic
+            console.log('words untouched', words);
+            
+            const sortedWords = [...words].sort((a, b) => b.length - a.length);
+            console.log('sortedWords', sortedWords, words);
+            let longestWord = sortedWords[0].length;
+            console.log('longestWord', longestWord);
+            if (longestWord < 10) longestWord = 7;
+            let ret = [];
+            for (let i = 1; i < words.length; i++) {
+              if (words[i-1].length + words[i].length <= longestWord + 3) {
+                ret.push(words[i-1] + ' ' + words[i])
+                i++;
+              }
+              else if (i === words.length) ret.push(words[i]);
+              else ret.push(words[i-1])
+            }
+            console.log('words', words, ret);
+            
+            return ret.map((word, i) => (
+              "<tspan x='0' dx='0' dy='" +
+              i +
+              "em' text-anchor='middle'>" +
+              word +
+              "</tspan>"
+            )).join('');
           }
         } else {
           if (d.data) {
