@@ -855,9 +855,11 @@ export default class Idea extends Vue {
         if (!d.children) {
           const words = (d.data.name || d.name).split(' ');
           if (words.length <= 1) {
-            "<tspan x='0' dx='0' text-anchor='middle'>" +
-            words[0] +
-            "</tspan>"
+            return (
+              "<tspan x='0' dx='0' dy='0.3rem' text-anchor='middle' class='nodelabel'>" +
+              words[0] +
+              "</tspan>"
+            )
           } else {
             // algorithm for best aesthetic
             console.log('words untouched', words);
@@ -866,22 +868,20 @@ export default class Idea extends Vue {
             console.log('sortedWords', sortedWords, words);
             let longestWord = sortedWords[0].length;
             console.log('longestWord', longestWord);
-            if (longestWord < 10) longestWord = 7;
-            let ret = [];
+            if (longestWord < 8) longestWord = 8;
+            let ret = [words[0]];
+
             for (let i = 1; i < words.length; i++) {
-              if (words[i-1].length + words[i].length <= longestWord + 3) {
-                ret.push(words[i-1] + ' ' + words[i])
-                i++;
-              }
-              else if (i === words.length) ret.push(words[i]);
-              else ret.push(words[i-1])
+              if (ret[ret.length - 1].length + words[i].length <= longestWord + 2) {
+                ret[ret.length - 1] += (' ' + words[i]);
+              } else ret.push(words[i]);             
             }
             console.log('words', words, ret);
             
             return ret.map((word, i) => (
               "<tspan x='0' dx='0' dy='" +
-              i +
-              "em' text-anchor='middle'>" +
+              (i === 0 ? (0.7 - 0.5 * ret.length) : 1) +
+              "rem' text-anchor='middle' class='nodelabel'>" +
               word +
               "</tspan>"
             )).join('');
@@ -948,6 +948,9 @@ export default class Idea extends Vue {
           : 25
       )
       .attr("font-weight", (d) => (d.children ? 600 : 400))
+      .on("click", (d, i) => {
+        this.onNodeClick(i);
+      })
       .style("font-size", (d) =>
         d.children
           ? d.data
@@ -1200,8 +1203,7 @@ export default class Idea extends Vue {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
+<style lang="scss">
 #network {
   margin-top: 3vh;
   border: 5px solid #e8c547;
@@ -1231,6 +1233,13 @@ export default class Idea extends Vue {
 
 .stuff {
   color: rgb(0, 0, 0);
+}
+.nodelabel {
+  paint-order: stroke;
+  stroke: #F4E2A3;
+  stroke-width: 2px;
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
 }
 
 #innitViewButton {
