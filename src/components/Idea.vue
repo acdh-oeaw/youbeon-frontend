@@ -705,7 +705,7 @@ export default class Idea extends Vue {
           .distance(0)
           .strength(0.005)
       )
-      .force("charge", d3.forceManyBody().strength(-200)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+      .force("charge", d3.forceManyBody().strength(-250)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
       .force(
         "x",
         d3
@@ -728,16 +728,14 @@ export default class Idea extends Vue {
         "collision",
         d3
           .forceCollide()
-          .radius((d) =>
-            d.children
-              ? d.data
-                ? this.allReligions.includes(d.data.name)
-                  ? 200
-                  : 20
-                : this.allReligions.includes(d.name)
-                ? 200
-                : 25
-              : 20
+          .radius((d) => {
+            console.log('node', d);            
+            const name = (d.name || d.data.name);
+            const customRadius = [...(name.split(' '))].sort((a, b) => b.length - a.length)[0].length * 3;
+            const weight = customRadius < 20 ? 20 : customRadius;
+            return d.children && this.allReligions.includes(name)
+              ? 200 : weight
+            }
           )
       );
 
@@ -853,7 +851,7 @@ export default class Idea extends Vue {
       .append("text")
       .html(function (d) {
         if (!d.children) {
-          const words = (d.data.name || d.name).split(' ');
+          const words = (d.name || d.data.name).split(' ');
           if (words.length <= 1) {
             return (
               "<tspan x='0' dx='0' dy='0.3rem' text-anchor='middle' class='nodelabel'>" +
@@ -862,12 +860,7 @@ export default class Idea extends Vue {
             )
           } else {
             // algorithm for best aesthetic
-            console.log('words untouched', words);
-            
-            const sortedWords = [...words].sort((a, b) => b.length - a.length);
-            console.log('sortedWords', sortedWords, words);
-            let longestWord = sortedWords[0].length;
-            console.log('longestWord', longestWord);
+            let longestWord = [...words].sort((a, b) => b.length - a.length)[0].length;
             if (longestWord < 8) longestWord = 8;
             let ret = [words[0]];
 
@@ -904,7 +897,7 @@ export default class Idea extends Vue {
                 d.data.name.split(" ")[0] +
                 "</tspan>" +
                 "<tspan x='0' dy='1em' text-anchor='middle'>" +
-                d.datad.name.split(" ")[1] +
+                d.data.name.split(" ")[1] +
                 "</tspan>"
               );
             } else {
@@ -1191,7 +1184,6 @@ export default class Idea extends Vue {
     this.$router.onReady(() => this.routeLoaded());
     this.generateNetwork(this.nodes, this.links);
   }
-
   mounted() {
     this.places = dataStore.orte;
     this.height = document.querySelector("#network")?.clientHeight;
@@ -1237,7 +1229,7 @@ export default class Idea extends Vue {
 .nodelabel {
   paint-order: stroke;
   stroke: #F4E2A3;
-  stroke-width: 2px;
+  stroke-width: 1.5px;
   stroke-linecap: butt;
   stroke-linejoin: miter;
 }
@@ -1251,8 +1243,8 @@ export default class Idea extends Vue {
 #detailedView {
   border: 5px solid #e4625e !important;
   position: absolute;
-  max-height: 50%;
-  overflow-y: auto;
+  max-height: 100%;
+  overflow-y: scroll;
   overflow-x: hidden;
   width: 450px;
   right: 30px;
@@ -1264,7 +1256,7 @@ export default class Idea extends Vue {
 }
 
 .control {
-  position: absolute;
+  position: absolute !important;
   margin: 20px;
   margin-left: 20px;
   z-index: 5;
