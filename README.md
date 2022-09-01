@@ -23,14 +23,14 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### API:
 
-Zugriff auf die API erfolgt über [db.youbeon.eu](db.youbeon.eu). Abgesehen davon kann auf spezifische Ideen mit 'db.youbeon.eu/idee/filter/?ids=a,b,c' (a,b,c) steht für gewünschte ids auf spezifische Ideen zugegriffen werden. 
+Zugriff auf die API erfolgt über [db.youbeon.eu](https://db.youbeon.eu/). Abgesehen davon kann auf spezifische Ideen mit 'db.youbeon.eu/idee/filter/?ids=a,b,c' (a,b,c) steht für gewünschte ids auf spezifische Ideen zugegriffen werden. 
 
 
 ### Daten hinzufügen
 
 Das hinzufügen neuer Daten kann entweder durch einzelne Einheiten in der Api, oder mithilfe von 4 excel Dateien hinzugefügt werden. Der Momentane Ablauf dafür ist die api lokal laufen zu lassen (mit VPN zu ACDH), die momentanen Daten zu löschen (python manage.py flush), einen neuen user hinzuzufügen (python manage.py createsuperuser) und dann das entsprechende Formular unter /upload mit den Excel Dateien zu befüllen.
 
-Wichtig hierbei ist, dass die Spalten die richtige Form haben ('ID', 'Referenz', 'Kodes', 'Dokument'). Der Upload selber dauert länger, meistens um die 20 Minuten. Die Django Application ist unter [youbeon_django](https://gitlab.com/acdh-oeaw/youbeon/youbeon_django) aufrufbar.
+Wichtig hierbei ist, dass die Spalten die richtige Form haben ('ID', 'Referenz', 'Kodes', 'Dokument'). Der Upload selber dauert länger, meistens um die 20 Minuten. Die Django Application ist unter [youbeon_django](https://github.com/acdh-oeaw/youbeon_django) aufrufbar.
 
 ### Excelsheets auswerten
 Um Daten hinzuzufügen müssen 4 Excelfiles angegeben werden:
