@@ -48,7 +48,7 @@ jobs:
       - name: Deploy to cluster
         env:
           RANCHER_PROJECT_ID: c-zdbh8:p-xdxkl
-          RANCHER_DEPLOYMENT: youbeon-frontend:frontend-master
+          RANCHER_DEPLOYMENT: youbeon-frontend:youbeon-frontend
         run: |
           curl \
             -X POST \
