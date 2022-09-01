@@ -8,7 +8,7 @@ WORKDIR /app
 USER node
 
 COPY --chown=node:node package.json package-lock.json ./
-COPY --chown=node:node babel.config.js tsconfig.json .browserslistrc  ./
+COPY --chown=node:node babel.config.js tsconfig.json .browserslistrc .eslintrc.js ./
 COPY --chown=node:node public ./public
 COPY --chown=node:node src ./src
 
