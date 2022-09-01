@@ -939,8 +939,7 @@ export default class Place extends Vue {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
+<style scoped>
 @import "../../node_modules/leaflet/dist/leaflet.css";
 
 .zoom {

@@ -947,8 +947,7 @@ export default class Influencer extends Vue {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
+<style scoped>
 #network {
   max-width: 100%;
   margin-top: 3vh;

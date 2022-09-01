@@ -1195,7 +1195,7 @@ export default class Idea extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style>
 #network {
   margin-top: 3vh;
   border: 5px solid #e8c547;
