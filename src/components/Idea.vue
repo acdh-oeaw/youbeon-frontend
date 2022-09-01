@@ -238,11 +238,14 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { dataStore } from "../store/data";
 // eslint-disable-next-line
 import * as d3 from "d3";
-import * as _ from "lodash";
 
 @Component({
   components: {},
@@ -473,7 +476,6 @@ export default class Idea extends Vue {
     this.selectedIdeaLength = this.selectedIdea.length;
     this.generateNetwork(this.nodes, this.links);
   }
-
   determinePosition(node, width, height) {
     let returnValue = 0;
     if (width > height) {
@@ -703,7 +705,7 @@ export default class Idea extends Vue {
           .distance(0)
           .strength(0.005)
       )
-      .force("charge", d3.forceManyBody().strength(-200)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+      .force("charge", d3.forceManyBody().strength(-250)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
       .force(
         "x",
         d3
@@ -726,16 +728,14 @@ export default class Idea extends Vue {
         "collision",
         d3
           .forceCollide()
-          .radius((d) =>
-            d.children
-              ? d.data
-                ? this.allReligions.includes(d.data.name)
-                  ? 200
-                  : 20
-                : this.allReligions.includes(d.name)
-                ? 200
-                : 25
-              : 20
+          .radius((d) => {
+            console.log('node', d);            
+            const name = (d.name || d.data.name);
+            const customRadius = [...(name.split(' '))].sort((a, b) => b.length - a.length)[0].length * 3;
+            const weight = customRadius < 20 ? 20 : customRadius;
+            return d.children && this.allReligions.includes(name)
+              ? 200 : weight
+            }
           )
       );
 
@@ -851,10 +851,33 @@ export default class Idea extends Vue {
       .append("text")
       .html(function (d) {
         if (!d.children) {
-          if (d.data) {
-            return d.data.name;
+          const words = (d.name || d.data.name).split(' ');
+          if (words.length <= 1) {
+            return (
+              "<tspan x='0' dx='0' dy='0.3rem' text-anchor='middle' class='nodelabel'>" +
+              words[0] +
+              "</tspan>"
+            )
           } else {
-            return d.name;
+            // algorithm for best aesthetic
+            let longestWord = [...words].sort((a, b) => b.length - a.length)[0].length;
+            if (longestWord < 8) longestWord = 8;
+            let ret = [words[0]];
+
+            for (let i = 1; i < words.length; i++) {
+              if (ret[ret.length - 1].length + words[i].length <= longestWord + 2) {
+                ret[ret.length - 1] += (' ' + words[i]);
+              } else ret.push(words[i]);             
+            }
+            console.log('words', words, ret);
+            
+            return ret.map((word, i) => (
+              "<tspan x='0' dx='0' dy='" +
+              (i === 0 ? (0.7 - 0.5 * ret.length) : 1) +
+              "rem' text-anchor='middle' class='nodelabel'>" +
+              word +
+              "</tspan>"
+            )).join('');
           }
         } else {
           if (d.data) {
@@ -874,7 +897,7 @@ export default class Idea extends Vue {
                 d.data.name.split(" ")[0] +
                 "</tspan>" +
                 "<tspan x='0' dy='1em' text-anchor='middle'>" +
-                d.datad.name.split(" ")[1] +
+                d.data.name.split(" ")[1] +
                 "</tspan>"
               );
             } else {
@@ -918,6 +941,9 @@ export default class Idea extends Vue {
           : 25
       )
       .attr("font-weight", (d) => (d.children ? 600 : 400))
+      .on("click", (d, i) => {
+        this.onNodeClick(i);
+      })
       .style("font-size", (d) =>
         d.children
           ? d.data
@@ -1158,7 +1184,6 @@ export default class Idea extends Vue {
     this.$router.onReady(() => this.routeLoaded());
     this.generateNetwork(this.nodes, this.links);
   }
-
   mounted() {
     this.places = dataStore.orte;
     this.height = document.querySelector("#network")?.clientHeight;
@@ -1170,8 +1195,7 @@ export default class Idea extends Vue {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
+<style lang="scss">
 #network {
   margin-top: 3vh;
   border: 5px solid #e8c547;
@@ -1202,6 +1226,13 @@ export default class Idea extends Vue {
 .stuff {
   color: rgb(0, 0, 0);
 }
+.nodelabel {
+  paint-order: stroke;
+  stroke: #F4E2A3;
+  stroke-width: 1.5px;
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
+}
 
 #innitViewButton {
   position: absolute;
@@ -1212,8 +1243,8 @@ export default class Idea extends Vue {
 #detailedView {
   border: 5px solid #e4625e !important;
   position: absolute;
-  max-height: 50%;
-  overflow-y: auto;
+  max-height: 100%;
+  overflow-y: scroll;
   overflow-x: hidden;
   width: 450px;
   right: 30px;
@@ -1225,7 +1256,7 @@ export default class Idea extends Vue {
 }
 
 .control {
-  position: absolute;
+  position: absolute !important;
   margin: 20px;
   margin-left: 20px;
   z-index: 5;
