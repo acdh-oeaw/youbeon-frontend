@@ -19,22 +19,20 @@
     ],
     "paths": {
       "@/*": [
-        "src/*"
+        "./src/*"
       ]
     },
     "lib": [
-      "esnext",
       "dom",
       "dom.iterable",
+      "esnext",
       "scripthost"
     ]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "./src/**/*.vue"
   ],
   "exclude": [
     "node_modules"

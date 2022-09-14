@@ -21,3 +21,14 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# .xlsx data for import
+/data
+
+# generated db
+src/db/accounts.ts
+src/db/ideas.ts
+src/db/interviews.ts
+src/db/interviewReligions.ts
+src/db/places.ts
+src/db/religions.ts
