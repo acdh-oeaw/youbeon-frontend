@@ -137,14 +137,14 @@
       </div>
     </l-map>
     <v-col class="pa-0 flex-grow-1 mr-7 list-height">
-      <map-legende
-        id="legende"
+      <map-legend
+        id="legend"
         :religions="religionJSON"
         :places="geoPlaces"
         :ideas="ideaJSON"
         class="d-none d-sm-block"
       >
-      </map-legende>
+      </map-legend>
     </v-col>
 
     <v-card v-if="placeDetailed !== null" id="detailedView" class="d-none d-sm-block">
@@ -267,7 +267,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { LMap, LTileLayer, LMarker, LGeoJson, LWMSTileLayer as LWmsTileLayer } from 'vue2-leaflet'
-import MapLegende from '@/components/MapLegende.vue'
+import MapLegend from '@/components/map-legend.vue'
 import { dataStore, info_popUp } from '@/app/data'
 import * as L from 'leaflet'
 import randomColor from 'randomcolor'
@@ -279,12 +279,12 @@ const defaultZoom = 13
 
 @Component({
   components: {
-    MapLegende,
-    LMap,
-    LTileLayer,
     LGeoJson,
+    LMap,
     LMarker,
+    LTileLayer,
     LWmsTileLayer,
+    MapLegend,
   },
   name: 'Place',
 })
@@ -879,7 +879,7 @@ export default class Place extends Vue {
   padding: 0;
 }
 
-#legende {
+#legend {
   position: fixed;
   bottom: 30px;
   left: 60px;

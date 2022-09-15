@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import Idea from '@/components/Idea.vue'
-import Influencer from '@/components/Influencer.vue'
-import Place from '@/components/Place.vue'
+import Idea from '@/components/idea.vue'
+import Influencer from '@/components/influencer.vue'
+import Place from '@/components/place.vue'
 
 Vue.use(VueRouter)
 
