@@ -8,9 +8,12 @@ WORKDIR /app
 USER node
 
 COPY --chown=node:node package.json package-lock.json ./
-COPY --chown=node:node babel.config.js tsconfig.json .browserslistrc .eslintrc.js .npmrc ./
+COPY --chown=node:node babel.config.js tsconfig.json tsconfig.node.json .browserslistrc .eslintrc.js .npmrc ./
 COPY --chown=node:node public ./public
+COPY --chown=node:node scripts ./scripts
+COPY --chown=node:node data ./data
 COPY --chown=node:node src ./src
+
 
 RUN npm install --ci --no-audit --no-fund
 
