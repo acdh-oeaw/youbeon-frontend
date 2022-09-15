@@ -171,8 +171,8 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import { info_popUp } from "./store/data";
-import { initialize as initData } from "./store/data";
+import { info_popUp } from "@/app/data";
+import { initialize as initData } from "@/app/data";
 
 @Component({
   components: {},

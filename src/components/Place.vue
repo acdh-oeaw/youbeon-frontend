@@ -329,7 +329,7 @@ import {
   LWMSTileLayer as LWmsTileLayer,
 } from "vue2-leaflet";
 import MapLegende from "@/components/MapLegende.vue";
-import { dataStore, info_popUp } from "@/store/data";
+import { dataStore, info_popUp } from "@/app/data";
 import * as L from "leaflet";
 import * as randomColor from "randomcolor";
 import "leaflet/dist/leaflet.css";

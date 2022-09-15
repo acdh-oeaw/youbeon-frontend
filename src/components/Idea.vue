@@ -241,7 +241,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { Component, Vue, Watch } from "vue-property-decorator";
-import { dataStore } from "@/store/data";
+import { dataStore } from "@/app/data";
 import * as d3 from "d3";
 
 @Component({
