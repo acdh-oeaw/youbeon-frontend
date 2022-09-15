@@ -70,7 +70,7 @@
               @click="openLinktoInsta(influencerDetailed)"
             >
               {{ influencerDetailed.name }}
-              <img id="instaLogo" src="../icons/glyph-logo_May2016.png" />
+              <img id="instaLogo" src="@/assets/icons/camera.png" />
             </div>
           </v-col>
           <v-col cols="2">
@@ -125,7 +125,7 @@
                 @click="openLinktoInsta(influencerDetailed)"
               >
                 {{ influencerDetailed.name }}
-                <img id="instaLogo" src="../icons/glyph-logo_May2016.png" />
+                <img id="instaLogo" src="@/assets/icons/camera.png" />
               </div>
             </v-col>
             <v-col cols="2">
@@ -1018,10 +1018,5 @@ h2 {
 
 .hoverLink:hover {
   cursor: pointer;
-}
-
-@font-face {
-  font-family: "ChicagoFLF";
-  src: local("ChicagoFLF"), url(../fonts/ChicagoFLF.ttf) format("truetype");
 }
 </style>

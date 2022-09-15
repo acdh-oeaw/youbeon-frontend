@@ -1291,9 +1291,4 @@ h2 {
   margin: 10px;
   margin-right: 10px;
 }
-
-@font-face {
-  font-family: "ChicagoFLF";
-  src: local("ChicagoFLF"), url(../fonts/ChicagoFLF.ttf) format("truetype");
-}
 </style>

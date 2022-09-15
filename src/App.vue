@@ -12,7 +12,7 @@
             <v-row id="navrow" style="height: 100px">
               <v-col md="1">
                 <router-link to="/"
-                  ><img class="logo mt-2" src="./static/logo.png"
+                  ><img class="logo mt-2" src="@/assets/images/logo.png"
                 /></router-link>
               </v-col>
               <v-col md="5"></v-col>
@@ -260,6 +260,7 @@ export default class App extends Vue {
 
 @font-face {
   font-family: "ChicagoFLF";
-  src: local("ChicagoFLF"), url(./fonts/ChicagoFLF.ttf) format("truetype");
+  src: local("ChicagoFLF"),
+    url("@/assets/fonts/chicago-flf.ttf") format("truetype");
 }
 </style>
