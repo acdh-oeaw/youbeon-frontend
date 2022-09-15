@@ -333,6 +333,7 @@ import { dataStore, info_popUp } from "../store/data";
 //@ts-ignore
 import * as L from "leaflet";
 import * as randomColor from "randomcolor";
+import "leaflet/dist/leaflet.css";
 
 const defaultCenter = [48.20849, 16.37208];
 const defaultZoom = 13;
@@ -940,8 +941,6 @@ export default class Place extends Vue {
 </script>
 
 <style scoped>
-@import "leaflet/dist/leaflet.css";
-
 .zoom {
   margin: 5px;
   margin-top: 5px;
@@ -986,7 +985,7 @@ export default class Place extends Vue {
 
 #detailedView {
   border: 5px solid #e4625e !important;
-  background-color: rgba($color: #fff, $alpha: 0.8);
+  background-color: hsl(0deg 0% 100% / 80%);
   max-height: 50%;
   overflow-y: auto;
   overflow-x: hidden;

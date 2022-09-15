@@ -1,20 +1,13 @@
 <template>
   <vContainer>
-    <div id="list_legy" v-if="religions.length > 0 || places.length > 0 || ideas.length > 0">
+    <div
+      id="list_legy"
+      v-if="religions.length > 0 || places.length > 0 || ideas.length > 0"
+    >
       <div style="text-align: center; width: fill">
         <b>Legende</b>
       </div>
       <v-list class="legend_items list" dense>
-        <!--<v-list-item class="legend_items" v-if="places.length > 0">
-          <v-list-item-content style="margin-right: 30px">
-            <v-list-item-title>
-              Individuell ausgewählte Orte
-            </v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-action>
-            <v-avatar color="#b0dcd9" size="20"></v-avatar>
-          </v-list-item-action>
-        </v-list-item>-->
         <v-list-item class="legend_items" v-if="religions.length > 1">
           <v-list-item-content style="margin-right: 30px">
             <v-list-item-title>
@@ -36,7 +29,11 @@
             </v-list-item-title>
           </v-list-item-content>
           <v-list-item-action>
-            <v-avatar v-if="places.length > 0" color="#b0dcd9" size="20"></v-avatar>
+            <v-avatar
+              v-if="places.length > 0"
+              color="#b0dcd9"
+              size="20"
+            ></v-avatar>
             <v-avatar v-else :color="item.color" size="20"></v-avatar>
           </v-list-item-action>
         </v-list-item>
@@ -49,11 +46,7 @@
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 
 @Component({
-  // if you use components add them here
   components: {},
-  /* name is necessary for recursive components
-   * (at least in older versions, might be auto generated through the vue-property-decorator)
-   */
   name: "MapLegende",
 })
 export default class MapLegende extends Vue {

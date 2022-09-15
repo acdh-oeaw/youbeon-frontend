@@ -750,6 +750,7 @@ export default class Influencer extends Vue {
         "link",
         d3
           .forceLink(links)
+          // @ts-expect-error
           .id((d) => d.index)
           .distance(0)
           .strength(0.01)
@@ -776,6 +777,7 @@ export default class Influencer extends Vue {
       )
       .force(
         "collision",
+        // @ts-expect-error
         d3.forceCollide().radius((d) => (d.children ? 200 : 30))
       );
 
@@ -806,6 +808,7 @@ export default class Influencer extends Vue {
 
     // append the svg object to the body of the page
     let svg;
+    // @ts-expect-error
     if (d3.select("svg")._groups[0][0] === null) {
       svg = d3
         .select("#network")
@@ -882,20 +885,20 @@ export default class Influencer extends Vue {
           if (d.data) {
             return (
               "<tspan x='0' dx='0' dy='-.2em' text-anchor='middle'>" +
-                d.data.name.split(" ")[0] +
-                "</tspan>" +
-                "<tspan x='0' dy='1em' text-anchor='middle'>" +
-                d.data.name.split(" ")[1] +
-                "</tspan>"
+              d.data.name.split(" ")[0] +
+              "</tspan>" +
+              "<tspan x='0' dy='1em' text-anchor='middle'>" +
+              d.data.name.split(" ")[1] +
+              "</tspan>"
             );
           } else {
             return (
               "<tspan x='0' dx='0' dy='-.2em' text-anchor='middle'>" +
-                d.name.split(" ")[0] +
-                "</tspan>" +
-                "<tspan x='0' dy='1em' text-anchor='middle'>" +
-                d.name.split(" ")[1] +
-                "</tspan>"
+              d.name.split(" ")[0] +
+              "</tspan>" +
+              "<tspan x='0' dy='1em' text-anchor='middle'>" +
+              d.name.split(" ")[1] +
+              "</tspan>"
             );
           }
         }
@@ -933,9 +936,11 @@ export default class Influencer extends Vue {
 
     d3.selectAll(".zoomies").on("click", (e) => {
       if (e.originalTarget.innerHTML === "add") {
+        // @ts-expect-error
         this.currentZoomLevel.k = this.currentZoomLevel.k * 1.3;
         svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
       } else {
+        // @ts-expect-error
         this.currentZoomLevel.k = this.currentZoomLevel.k * 0.7;
         svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
       }

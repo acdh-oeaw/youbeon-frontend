@@ -699,6 +699,7 @@ export default class Idea extends Vue {
         "link",
         d3
           .forceLink(links)
+          // @ts-expect-error
           .id((d) => d.index)
           .distance(0)
           .strength(0.005)
@@ -724,17 +725,17 @@ export default class Idea extends Vue {
       )
       .force(
         "collision",
-        d3
-          .forceCollide()
-          .radius((d) => {
-            console.log('node', d);
-            const name = (d.name || d.data.name);
-            const customRadius = [...(name.split(' '))].sort((a, b) => b.length - a.length)[0].length * 3;
-            const weight = customRadius < 20 ? 20 : customRadius;
-            return d.children && this.allReligions.includes(name)
-              ? 200 : weight
-            }
-          )
+        d3.forceCollide().radius((d) => {
+          console.log("node", d);
+          // @ts-expect-error
+          const name = d.name || d.data.name;
+          const customRadius =
+            [...name.split(" ")].sort((a, b) => b.length - a.length)[0].length *
+            3;
+          const weight = customRadius < 20 ? 20 : customRadius;
+          // @ts-expect-error
+          return d.children && this.allReligions.includes(name) ? 200 : weight;
+        })
       );
 
     let drag = (simulation) => {
@@ -764,6 +765,7 @@ export default class Idea extends Vue {
 
     // append the svg object to the body of the page
     let svg;
+    // @ts-expect-error
     if (d3.select("svg")._groups[0][0] === null) {
       svg = d3
         .select("#network")
@@ -849,33 +851,40 @@ export default class Idea extends Vue {
       .append("text")
       .html(function (d) {
         if (!d.children) {
-          const words = (d.name || d.data.name).split(' ');
+          const words = (d.name || d.data.name).split(" ");
           if (words.length <= 1) {
             return (
               "<tspan x='0' dx='0' dy='0.3rem' text-anchor='middle' class='nodelabel'>" +
               words[0] +
               "</tspan>"
-            )
+            );
           } else {
             // algorithm for best aesthetic
-            let longestWord = [...words].sort((a, b) => b.length - a.length)[0].length;
+            let longestWord = [...words].sort((a, b) => b.length - a.length)[0]
+              .length;
             if (longestWord < 8) longestWord = 8;
             let ret = [words[0]];
 
             for (let i = 1; i < words.length; i++) {
-              if (ret[ret.length - 1].length + words[i].length <= longestWord + 2) {
-                ret[ret.length - 1] += (' ' + words[i]);
+              if (
+                ret[ret.length - 1].length + words[i].length <=
+                longestWord + 2
+              ) {
+                ret[ret.length - 1] += " " + words[i];
               } else ret.push(words[i]);
             }
-            console.log('words', words, ret);
+            console.log("words", words, ret);
 
-            return ret.map((word, i) => (
-              "<tspan x='0' dx='0' dy='" +
-              (i === 0 ? (0.7 - 0.5 * ret.length) : 1) +
-              "rem' text-anchor='middle' class='nodelabel'>" +
-              word +
-              "</tspan>"
-            )).join('');
+            return ret
+              .map(
+                (word, i) =>
+                  "<tspan x='0' dx='0' dy='" +
+                  (i === 0 ? 0.7 - 0.5 * ret.length : 1) +
+                  "rem' text-anchor='middle' class='nodelabel'>" +
+                  word +
+                  "</tspan>"
+              )
+              .join("");
           }
         } else {
           if (d.data) {
@@ -978,9 +987,11 @@ export default class Idea extends Vue {
 
     d3.selectAll(".zoomies").on("click", (e) => {
       if (e.originalTarget.innerHTML === "add") {
+        // @ts-expect-error
         this.currentZoomLevel.k = this.currentZoomLevel.k * 1.3;
         svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
       } else {
+        // @ts-expect-error
         this.currentZoomLevel.k = this.currentZoomLevel.k * 0.7;
         svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
       }
@@ -1226,7 +1237,7 @@ export default class Idea extends Vue {
 }
 .nodelabel {
   paint-order: stroke;
-  stroke: #F4E2A3;
+  stroke: #f4e2a3;
   stroke-width: 1.5px;
   stroke-linecap: butt;
   stroke-linejoin: miter;
