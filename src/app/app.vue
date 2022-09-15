@@ -120,14 +120,7 @@
 
           <v-flex xs12 fill-height class="pa-0 ma-0">
             <keep-alive>
-              <router-view v-if="loading === false" />
-              <v-skeleton-loader
-                v-else
-                style="margin: 5% auto"
-                max-width="90%"
-                max-height="800"
-                type="sentences, image, imagefb"
-              ></v-skeleton-loader>
+              <router-view />
             </keep-alive>
           </v-flex>
         </v-layout>
@@ -150,12 +143,9 @@ export default class App extends Vue {
     menu: mdiMenu,
   }
 
-  loading = true
   drawer = false
   mounted() {
-    initData().then(() => {
-      this.loading = false
-    })
+    initData()
   }
 
   introPopUp = true
