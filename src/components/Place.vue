@@ -508,6 +508,7 @@ export default class Place extends Vue {
         color = "#a1aeb3";
       }
       return L.circleMarker(latlng, {
+        // @ts-expect-error Check later, invalid prop according to @types/leaflet.
         zIndexOffset: 1000,
         radius: 5,
         weight: 1,
