@@ -335,7 +335,7 @@ export default class Idea extends Vue {
   }
 
   formatIdeasIntoReligions(ideas: any) {
-    let returnIdeas = [
+    const returnIdeas = [
       {
         name: "multiple",
         children: [] as any,
@@ -422,7 +422,7 @@ export default class Idea extends Vue {
         }
       });
       if (searchedNode) {
-        let connectedInfo = this.getDataforFeature(searchedNode);
+        const connectedInfo = this.getDataforFeature(searchedNode);
         this.ideaDetailed = {
           zitate: [...new Set(searchedNode.data.zitate)],
           name: searchedNode.data.name,
@@ -689,7 +689,7 @@ export default class Idea extends Vue {
 
   generateNetwork(nodes, links) {
     d3.selectAll("g").remove();
-    let tempZoom = this.currentZoomLevel;
+    const tempZoom = this.currentZoomLevel;
     // set the dimensions and margins of the graph
 
     // Let's list the force we wanna apply on the network
@@ -738,7 +738,7 @@ export default class Idea extends Vue {
         })
       );
 
-    let drag = (simulation) => {
+    const drag = (simulation) => {
       function dragstarted(event) {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         event.subject.fx = event.subject.x;
@@ -780,16 +780,15 @@ export default class Idea extends Vue {
     const zoom = d3.zoom().on("zoom", handleZoom);
     svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
 
-    let link;
     // Initialize the links
-    link = g
+    const link = g
       .selectAll("line")
       .data(links)
       .join("line")
       .style("stroke", (d) => d._color)
       .style("stroke-width", (d) => d.thiccness);
 
-    var groups = g
+    const groups = g
       .selectAll(".group")
       .data(nodes)
       .enter()
@@ -798,13 +797,13 @@ export default class Idea extends Vue {
     groups.exit().remove();
     groups
       .attr("transform", function (d) {
-        var x = d.x * 20 + 50;
-        var y = d.y + 20;
+        const x = d.x * 20 + 50;
+        const y = d.y + 20;
         return "translate(" + x + "," + y + ")";
       })
       .call(drag(simulation));
 
-    var node = groups
+    const node = groups
       .selectAll("circle")
       .data(function (d) {
         return [d];
@@ -842,7 +841,7 @@ export default class Idea extends Vue {
         this.onNodeClick(i);
       });
 
-    var text = groups
+    const text = groups
       .selectAll("text")
       .data(function (d) {
         return [d];
@@ -863,7 +862,7 @@ export default class Idea extends Vue {
             let longestWord = [...words].sort((a, b) => b.length - a.length)[0]
               .length;
             if (longestWord < 8) longestWord = 8;
-            let ret = [words[0]];
+            const ret = [words[0]];
 
             for (let i = 1; i < words.length; i++) {
               if (
@@ -979,8 +978,8 @@ export default class Idea extends Vue {
         });
 
       groups.attr("transform", function (d) {
-        var x = d.x + 6;
-        var y = d.y - 6;
+        const x = d.x + 6;
+        const y = d.y - 6;
         return "translate(" + x + "," + y + ")";
       });
     });
@@ -1006,8 +1005,8 @@ export default class Idea extends Vue {
   }
 
   getDataforFeature(idee) {
-    let placesWithIdea: any[] = [];
-    let accountsWithIdea: any[] = [];
+    const placesWithIdea: any[] = [];
+    const accountsWithIdea: any[] = [];
     this.places.forEach((place) => {
       if (place.idee.includes(idee.data.id)) {
         placesWithIdea.push(place);
@@ -1024,7 +1023,7 @@ export default class Idea extends Vue {
   onNodeClick(feature) {
     this.keepDetail = true;
     if (feature.data) {
-      let connectedInfo = this.getDataforFeature(feature);
+      const connectedInfo = this.getDataforFeature(feature);
       this.ideaDetailed = {
         zitate: [...new Set(feature.data.zitate)],
         name: feature.data.name,
@@ -1036,10 +1035,10 @@ export default class Idea extends Vue {
       this.selectedIdea = [];
       this.nodes = [];
 
-      let tempNodes = [];
+      const tempNodes = [];
       this.ideaNetworkPot.forEach((religion) => {
         if (religion.name != "multiple") {
-          let tempHierarchy = d3.hierarchy(religion);
+          const tempHierarchy = d3.hierarchy(religion);
           //@ts-ignore
           tempNodes.push(...tempHierarchy.descendants());
         }
@@ -1050,7 +1049,7 @@ export default class Idea extends Vue {
           this.nodes.push(idea);
         }
       });
-      let centerNode = feature;
+      const centerNode = feature;
       centerNode.children = [];
       this.nodes.push(centerNode);
       this.generateNetwork(this.nodes, []);
@@ -1059,7 +1058,7 @@ export default class Idea extends Vue {
       this.selectedIdea = [];
       this.ideaNetworkPot.forEach((religion) => {
         if (religion.name === feature.name) {
-          let tempHierarchy = d3.hierarchy(religion);
+          const tempHierarchy = d3.hierarchy(religion);
           this.nodes = tempHierarchy.descendants();
           this.links = tempHierarchy.links();
         }
@@ -1102,7 +1101,7 @@ export default class Idea extends Vue {
         if (element.data != undefined) {
           if (element.data.name === this.$route.params.idea_name) {
             this.selectedIdea = [];
-            let connectedInfo = this.getDataforFeature(element);
+            const connectedInfo = this.getDataforFeature(element);
             this.ideaDetailed = {
               zitate: [...new Set(element.data.zitate)],
               name: element.data.name,
@@ -1121,7 +1120,7 @@ export default class Idea extends Vue {
   initialNetwork() {
     this.nodes = [];
     this.links = [];
-    let religions: any[] = [];
+    const religions: any[] = [];
 
     if (
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -1138,7 +1137,7 @@ export default class Idea extends Vue {
     }
 
     this.ideaNetworkPot.forEach((religion) => {
-      let tempHierarchy = d3.hierarchy(religion);
+      const tempHierarchy = d3.hierarchy(religion);
       if (religion.name != "multiple") {
         this.nodes.push(...tempHierarchy.descendants().slice(1));
         religions.push(religion);
@@ -1146,11 +1145,11 @@ export default class Idea extends Vue {
     });
     this.nodes.push(...religions);
 
-    let numberOfNodes = this.nodes.length;
+    const numberOfNodes = this.nodes.length;
     this.nodes.forEach((node) => {
       if (node.data != undefined) {
         //@ts-ignore
-        let linkArray: [number] = [];
+        const linkArray: [number] = [];
         node.data.interviews.forEach((links) => {
           switch (links) {
             case "alev":

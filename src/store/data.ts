@@ -1,4 +1,4 @@
-import { accounts, ideas, places, interviews, religions } from "@/db";
+import { accounts, ideas, places, religions } from "@/db";
 
 /**
  * Currently, we store imported data in different shapes than api responses

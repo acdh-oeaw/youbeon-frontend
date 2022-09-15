@@ -259,7 +259,7 @@ export default class Influencer extends Vue {
 
   async showNodeDetails(node) {
     const headers = { "Content-Type": "application/json" };
-    let tempInfluencerDetailed = node.data;
+    const tempInfluencerDetailed = node.data;
     if (!isNaN(Number(tempInfluencerDetailed.kategorie[0]))) {
       await fetch(
         "https://db.youbeon.eu/kategorie/filter/?ids=" +
@@ -268,7 +268,7 @@ export default class Influencer extends Vue {
       )
         .then((response) => response.json())
         .then((data) => {
-          let tempKategorie: any[] = [];
+          const tempKategorie: any[] = [];
           data.forEach((kategorie: any) => {
             if (kategorie.name) {
               tempKategorie.push(kategorie.name);
@@ -285,7 +285,7 @@ export default class Influencer extends Vue {
       )
         .then((response) => response.json())
         .then((data) => {
-          let tempIdee: any[] = [];
+          const tempIdee: any[] = [];
           data.forEach((idee: any) => {
             if (idee.name) {
               tempIdee.push(idee.name);
@@ -307,7 +307,7 @@ export default class Influencer extends Vue {
       this.bigNetwork = false;
       this.allInfluencer.forEach((religion) => {
         if (religion.name === node.name) {
-          let tempHierarchy = d3.hierarchy(religion);
+          const tempHierarchy = d3.hierarchy(religion);
           this.nodes = tempHierarchy.descendants();
           this.links = tempHierarchy.links();
         }
@@ -324,7 +324,7 @@ export default class Influencer extends Vue {
   }
 
   formatInfluencerIntoReligions(influencer: any) {
-    let returnInfluencer = [
+    const returnInfluencer = [
       {
         name: "multiple",
         children: [] as any,
@@ -411,7 +411,7 @@ export default class Influencer extends Vue {
   initialNetwork() {
     this.nodes = [];
     this.links = [];
-    let religions: any[] = [];
+    const religions: any[] = [];
 
     if (
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -428,7 +428,7 @@ export default class Influencer extends Vue {
     }
 
     this.allInfluencer.forEach((religion) => {
-      let tempHierarchy = d3.hierarchy(religion);
+      const tempHierarchy = d3.hierarchy(religion);
       if (religion.name != "multiple") {
         this.nodes.push(...tempHierarchy.descendants().slice(1));
         religions.push(religion);
@@ -438,11 +438,11 @@ export default class Influencer extends Vue {
     });
     this.nodes.push(...religions);
 
-    let numberOfNodes = this.nodes.length;
+    const numberOfNodes = this.nodes.length;
     this.nodes.forEach((node) => {
       if (node.data != undefined && node.data.interviews != undefined) {
         //@ts-ignore
-        let linkArray: [number] = [];
+        const linkArray: [number] = [];
         node.data.interviews.forEach((links) => {
           switch (links) {
             case "alev":
@@ -504,9 +504,9 @@ export default class Influencer extends Vue {
         if (element.data != undefined) {
           if (element.data.id === this.$route.params.account_id) {
             this.selectedInfluencer = [];
-            let tempInfluencerDetailed = element.data;
+            const tempInfluencerDetailed = element.data;
             if (!isNaN(Number(tempInfluencerDetailed.idee[0]))) {
-              let filteredIdeas: any[] = [];
+              const filteredIdeas: any[] = [];
               this.allIdeas.forEach((idea) => {
                 if (tempInfluencerDetailed.idee.includes(idea.id)) {
                   filteredIdeas.push(idea.name);
@@ -781,7 +781,7 @@ export default class Influencer extends Vue {
         d3.forceCollide().radius((d) => (d.children ? 200 : 30))
       );
 
-    let drag = (simulation) => {
+    const drag = (simulation) => {
       function dragstarted(event) {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         event.subject.fx = event.subject.x;
@@ -825,16 +825,15 @@ export default class Influencer extends Vue {
     const zoom = d3.zoom().on("zoom", handleZoom);
     svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
 
-    let link;
     // Initialize the links
-    link = g
+    const link = g
       .selectAll("line")
       .data(links)
       .join("line")
       .style("stroke", (d) => d._color)
       .style("stroke-width", (d) => d.thiccness);
 
-    var groups = g
+    const groups = g
       .selectAll(".group")
       .data(nodes)
       .enter()
@@ -843,13 +842,13 @@ export default class Influencer extends Vue {
     groups.exit().remove();
     groups
       .attr("transform", function (d) {
-        var x = d.x * 20 + 50;
-        var y = d.y + 20;
+        const x = d.x * 20 + 50;
+        const y = d.y + 20;
         return "translate(" + x + "," + y + ")";
       })
       .call(drag(simulation));
 
-    var node = groups
+    groups
       .selectAll("circle")
       .data(function (d) {
         return [d];
@@ -867,7 +866,7 @@ export default class Influencer extends Vue {
         this.onNodeClick(d, i);
       });
 
-    var text = groups
+    groups
       .selectAll("text")
       .data(function (d) {
         return [d];
@@ -928,8 +927,8 @@ export default class Influencer extends Vue {
         });
 
       groups.attr("transform", function (d) {
-        var x = d.x + 6;
-        var y = d.y - 6;
+        const x = d.x + 6;
+        const y = d.y - 6;
         return "translate(" + x + "," + y + ")";
       });
     });
@@ -957,17 +956,6 @@ export default class Influencer extends Vue {
   background-color: whitesmoke;
   height: 70vh;
 }
-
-/*@media only screen and (max-width: 700px) {
-  .network_mobile {
-    background-color: white !important;
-    position: absolute !important;
-    top: 76px !important;
-    left: 0px !important;
-    z-index:0;
-    border: none !important;
-  }
-}*/
 
 .vl {
   border-left: 2px solid #e5e5e5;

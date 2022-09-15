@@ -573,7 +573,7 @@ export default class Place extends Vue {
 
   bindPopUpPlace() {
     return async (feature: any, layer: L.Layer): Promise<void> => {
-      layer.on("click", (e) => {
+      layer.on("click", () => {
         this.placeDetailed = {
           idee: feature.properties.idee,
           religion: this.turnInterviewIDintoReligion(
@@ -620,13 +620,13 @@ export default class Place extends Vue {
       ) {
         if (typeof place.color === "string") {
           this.ideaJSON.push(place);
-          let placesInIdea = this.allPlaces.filter((f: any) => {
+          const placesInIdea = this.allPlaces.filter((f: any) => {
             return f.properties.idee.includes(place.properties.bezeichnung);
           });
-          let placesNotInVienna = placesInIdea.filter((place) => {
+          const placesNotInVienna = placesInIdea.filter((place) => {
             //Vienna Coordinates
-            let latitudeRangeVienna = [48.165, 48.258];
-            let longitudeRangeVienna = [16.221, 16.524];
+            const latitudeRangeVienna = [48.165, 48.258];
+            const longitudeRangeVienna = [16.221, 16.524];
             return (
               place.geometry.coordinates[0] > longitudeRangeVienna[1] ||
               place.geometry.coordinates[0] < longitudeRangeVienna[0] ||
@@ -645,7 +645,7 @@ export default class Place extends Vue {
         })
       ) {
         this.geoPlaces.push(place);
-        let lastPlace = this.geoPlaces.filter((f: any) => {
+        const lastPlace = this.geoPlaces.filter((f: any) => {
           return (
             tempSelectedPlaces[tempSelectedPlaces.length - 1] === f.properties
           );
@@ -669,9 +669,9 @@ export default class Place extends Vue {
   }
 
   async created() {
-    let fetchedData = await this.getDataFromServerAtCreated();
+    const fetchedData = await this.getDataFromServerAtCreated();
 
-    let religionData = dataStore.religionen;
+    const religionData = dataStore.religionen;
 
     let tempReligion;
     religionData.forEach((religion) => {
@@ -682,7 +682,7 @@ export default class Place extends Vue {
             tempBezeichnung = displayReligion[1];
           }
         });
-        var selColor = this.allColors[religion.name];
+        const selColor = this.allColors[religion.name];
         tempReligion = {
           id: religion.id,
           color: selColor[0],
@@ -728,12 +728,12 @@ export default class Place extends Vue {
 
   //Ugly Method; if there is time => update it
   displayLocationsMultipleReligions(selectedReligions) {
-    let selectedReligionPlaces = this.allPlaces.filter((f: any) => {
+    const selectedReligionPlaces = this.allPlaces.filter((f: any) => {
       return f.properties.religion.length > 1;
     });
 
-    let returnedPlaces = selectedReligionPlaces.filter((place: any) => {
-      let filteredPlaces = place.properties.religion.filter((f: any) => {
+    const returnedPlaces = selectedReligionPlaces.filter((place: any) => {
+      const filteredPlaces = place.properties.religion.filter((f: any) => {
         return selectedReligions.some((religion) => {
           return (
             this.namesAreWeird(
@@ -742,11 +742,11 @@ export default class Place extends Vue {
           );
         });
       });
-      let trimmedFilteredPlace: any[] = [];
+      const trimmedFilteredPlace: any[] = [];
       filteredPlaces.forEach((place) => {
         trimmedFilteredPlace.push(place.split("-")[1].substring(0, 4));
       });
-      let uniqueFilteredPlaces = [...new Set(trimmedFilteredPlace)];
+      const uniqueFilteredPlaces = [...new Set(trimmedFilteredPlace)];
       return uniqueFilteredPlaces.length > 1;
     });
 
@@ -764,7 +764,7 @@ export default class Place extends Vue {
         } else {
           neueReligionsFormatierung = neueReligionsFormatierung[0];
         }
-        let value = f.properties.religion.findIndex(
+        const value = f.properties.religion.findIndex(
           (item) =>
             this.namesAreWeird(
               neueReligionsFormatierung.toLowerCase().substring(0, 4)
@@ -774,9 +774,8 @@ export default class Place extends Vue {
       }
     });
     if (this.religionJSON.length > 1) {
-      let placesWithMultipleReligions = this.displayLocationsMultipleReligions(
-        this.religionJSON
-      );
+      const placesWithMultipleReligions =
+        this.displayLocationsMultipleReligions(this.religionJSON);
       placesWithReligion = placesWithReligion.filter(
         (n) => !placesWithMultipleReligions.features.includes(n)
       );
@@ -797,16 +796,16 @@ export default class Place extends Vue {
   }
 
   getDataFromServerAtCreated() {
-    let placesFetched = dataStore.orte;
+    const placesFetched = dataStore.orte;
 
-    let categoriesFetched = dataStore.kategorien;
+    const categoriesFetched = dataStore.kategorien;
 
-    let ideasFetched = dataStore.ideen;
+    const ideasFetched = dataStore.ideen;
 
     let tempIdea;
-    let colors = randomColor({ count: ideasFetched.length });
+    const colors = randomColor({ count: ideasFetched.length });
     ideasFetched.forEach((idea, index) => {
-      let placesFiltered = placesFetched.filter((p: any) => {
+      const placesFiltered = placesFetched.filter((p: any) => {
         return p.idee.includes(idea.id);
       });
       if (placesFiltered.length > 0) {
@@ -827,14 +826,14 @@ export default class Place extends Vue {
 
   //receives the content of the json, with the places
   async handlePlaceData(allPlaces, allCategories, allIdeas) {
-    let tempGeo: any[] = [];
+    const tempGeo: any[] = [];
     allPlaces.forEach((item: any) => {
-      let categories = this.getCorrespondingCategories(
+      const categories = this.getCorrespondingCategories(
         item.kategorie,
         allCategories
       );
-      let ideas = this.getCorrespondingIdeas(item.idee, allIdeas);
-      let tempPlace = {
+      const ideas = this.getCorrespondingIdeas(item.idee, allIdeas);
+      const tempPlace = {
         type: "Feature",
         properties: {
           id: item.id,
@@ -863,7 +862,7 @@ export default class Place extends Vue {
   }
 
   turnInterviewIDintoReligion(shortForm: string[]) {
-    let longForm: any[] = [];
+    const longForm: any[] = [];
     shortForm.forEach((oneReligion) => {
       switch (oneReligion.split("-")[1]) {
         case "musl":
@@ -919,7 +918,7 @@ export default class Place extends Vue {
   }
 
   getCorrespondingCategories(categoryIDs: string[], allCategories: string[]) {
-    let returnedCategories: any[] = [];
+    const returnedCategories: any[] = [];
     allCategories.forEach((cat: any) => {
       if (categoryIDs.includes(cat.id)) {
         returnedCategories.push(cat.name);
@@ -929,7 +928,7 @@ export default class Place extends Vue {
   }
 
   getCorrespondingIdeas(ideaIDs: string[], allIdeas: string[]) {
-    let returnedIdeas: any[] = [];
+    const returnedIdeas: any[] = [];
     allIdeas.forEach((idea: any) => {
       if (ideaIDs.includes(idea.id)) {
         returnedIdeas.push(idea.name);

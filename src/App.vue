@@ -132,29 +132,23 @@
             content-class="intro_popUp"
             v-model="introPopUp"
           >
-              <!--<img
-                id="image"
-                src="./static/sprechblase kontur_schwarz.svg"
-                height="50"
-                width="50"
-              />-->
-              <v-card-title id="popUp_title">Willkommen</v-card-title>
-              <v-card-text style="height: 375px">
-                {{ popUpcontent.para1 }}
-                <br />
-                <br />
-                {{ popUpcontent.para2 }}
-                <br />
-                <v-btn
-                  id="popUp_btn"
-                  color="#b0dcd9"
-                  elevation="0"
-                  width="150px"
-                  @click="introPopUp = false"
-                >
-                  Los Geht's >>>
-                </v-btn>
-              </v-card-text>
+            <v-card-title id="popUp_title">Willkommen</v-card-title>
+            <v-card-text style="height: 375px">
+              {{ popUpcontent.para1 }}
+              <br />
+              <br />
+              {{ popUpcontent.para2 }}
+              <br />
+              <v-btn
+                id="popUp_btn"
+                color="#b0dcd9"
+                elevation="0"
+                width="150px"
+                @click="introPopUp = false"
+              >
+                Los Geht's >>>
+              </v-btn>
+            </v-card-text>
           </v-dialog>
 
           <v-flex xs12 fill-height class="pa-0 ma-0">
@@ -176,10 +170,10 @@
 </template>
 
 <script lang="ts">
-import Vuetify from "vuetify";
-import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import { Vue, Component } from "vue-property-decorator";
 import { info_popUp } from "./store/data";
 import { initialize as initData } from "./store/data";
+
 @Component({
   components: {},
 })
