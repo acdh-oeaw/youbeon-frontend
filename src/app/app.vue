@@ -3,12 +3,7 @@
     <v-main>
       <v-container fluid class="pa-0 ma-0" app>
         <v-layout column>
-          <div
-            :class="[
-              'header_navigation',
-              $route.name === 'place' && 'see_through',
-            ]"
-          >
+          <div :class="['header_navigation', $route.name === 'place' && 'see_through']">
             <v-row id="navrow" style="height: 100px">
               <v-col md="1">
                 <router-link to="/"
@@ -22,7 +17,7 @@
                   x-large
                   class="d-flex d-sm-none"
                   id="phone_nav"
-                  style="margin: 20px; float: right"
+                  style="float: right; margin: 20px"
                   >menu</v-icon
                 >
                 <v-tabs
@@ -36,32 +31,17 @@
                   hide-slider
                 >
                   <v-tab to="/"
-                    ><div
-                      :class="[
-                        'tabs_top',
-                        $route.name === 'place' && 'underline',
-                      ]"
-                    >
+                    ><div :class="['tabs_top', $route.name === 'place' && 'underline']">
                       Orte
                     </div></v-tab
                   >
                   <v-tab to="/account"
-                    ><div
-                      :class="[
-                        'tabs_top',
-                        $route.name === 'account' && 'underline',
-                      ]"
-                    >
+                    ><div :class="['tabs_top', $route.name === 'account' && 'underline']">
                       Accounts
                     </div></v-tab
                   >
                   <v-tab to="/idea"
-                    ><div
-                      :class="[
-                        'tabs_top',
-                        $route.name === 'idea' && 'underline',
-                      ]"
-                    >
+                    ><div :class="['tabs_top', $route.name === 'idea' && 'underline']">
                       Ideen
                     </div></v-tab
                   >
@@ -87,10 +67,7 @@
               <v-list-item-group>
                 <v-list-item to="/"
                   ><div
-                    :class="[
-                      'tabs_top',
-                      $route.name === 'place' && 'underline',
-                    ]"
+                    :class="['tabs_top', $route.name === 'place' && 'underline']"
                     @click="drawer = false"
                   >
                     Orte
@@ -98,10 +75,7 @@
                 </v-list-item>
                 <v-list-item to="/account">
                   <div
-                    :class="[
-                      'tabs_top',
-                      $route.name === 'account' && 'underline',
-                    ]"
+                    :class="['tabs_top', $route.name === 'account' && 'underline']"
                     @click="drawer = false"
                   >
                     Accounts
@@ -118,14 +92,7 @@
               </v-list-item-group>
             </v-list>
           </v-menu>
-          <div
-            style="
-              width: 100%;
-              background-color: #b0dcd9;
-              height: 5px;
-              z-index: 8;
-            "
-          ></div>
+          <div style="z-index: 8; width: 100%; height: 5px; background-color: #b0dcd9"></div>
           <v-dialog
             overlay-opacity="0"
             width="20vw"
@@ -170,83 +137,85 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import { info_popUp } from "@/app/data";
-import { initialize as initData } from "@/app/data";
+import { Vue, Component } from 'vue-property-decorator'
+import { info_popUp } from '@/app/data'
+import { initialize as initData } from '@/app/data'
 
 @Component({
   components: {},
 })
 export default class App extends Vue {
-  loading = true;
-  drawer = false;
+  loading = true
+  drawer = false
   mounted() {
     initData().then(() => {
-      this.loading = false;
-    });
+      this.loading = false
+    })
   }
 
-  introPopUp = true;
-  popUpcontent = info_popUp;
+  introPopUp = true
+  popUpcontent = info_popUp
 }
 </script>
 
 <style>
 #app {
+  color: #000;
   font-family: Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #000;
 }
 
-#popUp_title {
+#pop-up-title {
   font-weight: 600;
   text-decoration: underline;
-  text-decoration-color: rgb(176, 220, 217);
+  text-decoration-color: rgb(176 220 217);
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .v-card__title {
-  background-color: white;
-  border: 5px solid rgb(176, 220, 217);
-  border-radius: 0px !important;
+  border: 5px solid rgb(176 220 217);
   border-bottom: none;
+  border-radius: 0 !important;
+  background-color: #fff;
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .v-card__text {
-  background-color: white;
-  border: 5px solid rgb(176, 220, 217);
+  border: 5px solid rgb(176 220 217);
   border-top: none;
-  border-radius: 0px !important;
+  border-radius: 0 !important;
+  background-color: #fff;
 }
 
-#popUp_btn {
-  border-radius: 10px;
-  text-transform: none !important;
+#pop-up-button {
   margin-top: 10px;
   margin-bottom: 10px;
+  border-radius: 10px;
   font-weight: 600;
+  text-transform: none !important;
 }
 
-.header_navigation {
-  font-family: "ChicagoFLF", Helvetica, Arial, sans-serif;
+.header-navigation {
   z-index: 8;
-  transition: 0.5s;
   background-color: #e9e9e9;
+  font-family: ChicagoFLF, Helvetica, Arial, sans-serif;
+  transition: 0.5s;
 }
 
-#phone_nav:hover {
+#phone-nav:hover {
   cursor: pointer;
 }
 
-.tabs_top {
-  font-size: 1.6em;
+.tabs-top {
   align-content: bottom;
+  font-size: 1.6em;
   text-transform: none !important;
 }
 
 .logo {
-  margin-left: 10px;
   height: 76px;
+  margin-left: 10px;
 }
 
 .underline {
@@ -254,13 +223,12 @@ export default class App extends Vue {
   text-decoration-thickness: 2px;
 }
 
-.see_through {
-  background-color: rgba(233, 233, 233, 0.7);
+.see-through {
+  background-color: rgb(233 233 233 / 70%);
 }
 
 @font-face {
-  font-family: "ChicagoFLF";
-  src: local("ChicagoFLF"),
-    url("@/assets/fonts/chicago-flf.ttf") format("truetype");
+  font-family: ChicagoFLF;
+  src: local('ChicagoFLF'), url('@/assets/fonts/chicago-flf.ttf') format('truetype');
 }
 </style>
