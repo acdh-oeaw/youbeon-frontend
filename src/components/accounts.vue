@@ -12,7 +12,7 @@
       <v-row no-gutters>
         <v-col class="pa-0 flex-grow-1">
           <v-autocomplete
-            v-model="selectedInfluencer"
+            v-model="selectedAccounts"
             :items="nodes"
             @input="buildInfluencerNetworkObject()"
             item-text="data.name"
@@ -50,27 +50,23 @@
         <v-icon>{{ icons.home }}</v-icon>
       </v-btn>
     </div>
-    <v-card v-if="influencerDetailed !== null" class="detailed-view d-none d-sm-block">
+    <v-card v-if="accountDetails !== null" class="detailed-view d-none d-sm-block">
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
-            <div
-              class="hover-link"
-              id="detailedHeader"
-              @click="openLinktoInsta(influencerDetailed)"
-            >
-              {{ influencerDetailed.name }}
+            <div class="hover-link" id="detailedHeader" @click="openLinktoInsta(accountDetails)">
+              {{ accountDetails.name }}
               <img id="instaLogo" src="@/assets/icons/camera.png" />
             </div>
           </v-col>
           <v-col cols="2">
             <div style="position: fixed; right: 60px">
-              <v-icon @click="influencerDetailed = null">{{ icons.close }}</v-icon>
+              <v-icon @click="accountDetails = null">{{ icons.close }}</v-icon>
             </div>
           </v-col>
         </v-row>
       </v-card-title>
-      <v-card-subtitle> {{ influencerDetailed.bemerkung }} </v-card-subtitle>
+      <v-card-subtitle> {{ accountDetails.bemerkung }} </v-card-subtitle>
       <v-card-text>
         <v-expansion-panels accordion flat hover style="margin-bottom: 15px">
           <v-expansion-panel>
@@ -78,7 +74,7 @@
               Verknüpfte Ideen
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <div v-for="idea in influencerDetailed.idee" v-bind:key="idea.id">
+              <div v-for="idea in accountDetails.idee" v-bind:key="idea.id">
                 <router-link
                   class="hover-link"
                   tag="span"
@@ -94,7 +90,7 @@
 
     <v-bottom-sheet
       class="detailedViewMobile"
-      v-if="influencerDetailed !== null"
+      v-if="accountDetails !== null"
       v-model="influencerDetailedBoolean"
       hide-overlay
       persistent
@@ -109,18 +105,14 @@
         <v-card-title>
           <v-row no-gutters>
             <v-col class="pa-0 ma-0 flex-grow-1">
-              <div
-                class="hover-link"
-                id="detailedHeader"
-                @click="openLinktoInsta(influencerDetailed)"
-              >
-                {{ influencerDetailed.name }}
+              <div class="hover-link" id="detailedHeader" @click="openLinktoInsta(accountDetails)">
+                {{ accountDetails.name }}
                 <img id="instaLogo" src="@/assets/icons/camera.png" />
               </div>
             </v-col>
             <v-col cols="2">
               <div style="position: fixed; right: 30px">
-                <v-icon @click="influencerDetailed = null">{{ icons.close }}</v-icon>
+                <v-icon @click="accountDetails = null">{{ icons.close }}</v-icon>
               </div>
             </v-col>
           </v-row>
@@ -132,7 +124,7 @@
                 Verknüpfte Ideen
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-                <div v-for="idea in influencerDetailed.idee" v-bind:key="idea.id">
+                <div v-for="idea in accountDetails.idee" v-bind:key="idea.id">
                   <router-link
                     class="hover-link"
                     tag="span"
@@ -154,12 +146,13 @@ import * as d3 from 'd3'
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { dataStore } from '@/app/data'
 import { mdiPlus, mdiMinus, mdiHome, mdiClose } from '@mdi/js'
+import { ideas } from '@/db'
 
 @Component({
   components: {},
-  name: 'Influencer',
+  name: 'AccountsView',
 })
-export default class Influencer extends Vue {
+export default class AccountsView extends Vue {
   icons = {
     plus: mdiPlus,
     minus: mdiMinus,
@@ -167,7 +160,6 @@ export default class Influencer extends Vue {
     close: mdiClose,
   }
 
-  //Religion Variables
   selectedReligion: any = { id: 0, name: 'Alle Accounts' }
 
   height: any = 800
@@ -175,22 +167,18 @@ export default class Influencer extends Vue {
 
   currentZoomLevel = d3.zoomIdentity
 
-  //network variables
   nodes: any = []
   links: any = []
   force = 400
 
   bigNetwork = true
 
-  //Influencer Variables
-  allInfluencer: any = []
-  allIdeas: any = []
-  // Array of currently visible Influencers
-  listInfluencer: any = []
-  // Array of selected Influencer in autocomplete field
-  selectedInfluencer: any = []
-  selectedInfluencerLength = 0
-  influencerDetailed: any = null
+  allAccounts: Array<any> = []
+  allIdeas: Array<any> = []
+  visibleAccounts: Array<any> = []
+  selectedAccounts: Array<any> = []
+  selectedAccountsLength = 0
+  accountDetails: any = null
 
   coordinatesForcePoints: any = [
     {
@@ -227,7 +215,7 @@ export default class Influencer extends Vue {
     },
   ]
 
-  shuffle(a) {
+  shuffle(a: any) {
     for (let i = a.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1))
       ;[a[i], a[j]] = [a[j], a[i]]
@@ -235,12 +223,12 @@ export default class Influencer extends Vue {
     return a
   }
 
-  openLinktoInsta(influencer) {
+  openLinktoInsta(influencer: any) {
     window.open(influencer.link, '_blank')
   }
 
   get influencerDetailedBoolean() {
-    if (this.influencerDetailed != null) {
+    if (this.accountDetails != null) {
       return true
     }
     return false
@@ -248,65 +236,39 @@ export default class Influencer extends Vue {
 
   set influencerDetailedBoolean(value) {
     if (value === false) {
-      this.influencerDetailed = null
+      this.accountDetails = null
     }
   }
 
-  async showNodeDetails(node) {
-    const headers = { 'Content-Type': 'application/json' }
+  async showNodeDetails(node: any) {
     const tempInfluencerDetailed = node.data
-    if (!isNaN(Number(tempInfluencerDetailed.kategorie[0]))) {
-      await fetch(
-        'https://db.youbeon.eu/kategorie/filter/?ids=' +
-          tempInfluencerDetailed.kategorie.toString(),
-        { headers },
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          const tempKategorie: any[] = []
-          data.forEach((kategorie: any) => {
-            if (kategorie.name) {
-              tempKategorie.push(kategorie.name)
-            }
-          })
-          tempInfluencerDetailed.kategorie = tempKategorie
+    if (Array.isArray(tempInfluencerDetailed.idee) && tempInfluencerDetailed.idee.length > 0) {
+      tempInfluencerDetailed.idee = tempInfluencerDetailed.idee
+        .map((key: string) => {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          return dataStore.ideen.find((idea) => idea.id === key)!
         })
+        .map((idea: any) => idea.name)
     }
-    if (!isNaN(Number(tempInfluencerDetailed.idee[0]))) {
-      await fetch(
-        'https://db.youbeon.eu/idee/filter/?ids=' + tempInfluencerDetailed.idee.toString(),
-        { headers },
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          const tempIdee: any[] = []
-          data.forEach((idee: any) => {
-            if (idee.name) {
-              tempIdee.push(idee.name)
-            }
-          })
-          tempInfluencerDetailed.idee = tempIdee
-        })
-    }
-    this.influencerDetailed = tempInfluencerDetailed
+    this.accountDetails = tempInfluencerDetailed
   }
 
-  onNodeClick(event, node) {
+  onNodeClick(event: any, node: any) {
     if (!node.children) {
-      this.selectedInfluencer = [node.data]
+      this.selectedAccounts = [node.data]
       this.buildInfluencerNetworkObject()
       this.showNodeDetails(node)
     } else {
-      this.selectedInfluencer = []
+      this.selectedAccounts = []
       this.bigNetwork = false
-      this.allInfluencer.forEach((religion) => {
+      this.allAccounts.forEach((religion: any) => {
         if (religion.name === node.name) {
           const tempHierarchy = d3.hierarchy(religion)
           this.nodes = tempHierarchy.descendants()
           this.links = tempHierarchy.links()
         }
       })
-      this.allInfluencer[0].children.forEach((multipleIdea) => {
+      this.allAccounts[0].children.forEach((multipleIdea: any) => {
         if (multipleIdea.interviews.includes(node.name.split(' ')[0].slice(0, 4))) {
           this.nodes.push(multipleIdea)
         }
@@ -350,35 +312,35 @@ export default class Influencer extends Vue {
         children: [] as any,
       },
     ]
-    influencer.forEach((tempInfluencer) => {
+    influencer.forEach((tempInfluencer: any) => {
       if (tempInfluencer.interviews.length > 1) {
-        returnInfluencer[0].children.push(tempInfluencer)
+        returnInfluencer[0]?.children.push(tempInfluencer)
       } else {
-        tempInfluencer.interviews.forEach((interview) => {
+        tempInfluencer.interviews.forEach((interview: any) => {
           switch (interview) {
             case 'alev':
-              returnInfluencer[1].children.push(tempInfluencer)
+              returnInfluencer[1]?.children.push(tempInfluencer)
               break
             case 'kath':
-              returnInfluencer[2].children.push(tempInfluencer)
+              returnInfluencer[2]?.children.push(tempInfluencer)
               break
             case 'evan':
-              returnInfluencer[3].children.push(tempInfluencer)
+              returnInfluencer[3]?.children.push(tempInfluencer)
               break
             case 'evang':
-              returnInfluencer[3].children.push(tempInfluencer)
+              returnInfluencer[3]?.children.push(tempInfluencer)
               break
             case 'orth':
-              returnInfluencer[4].children.push(tempInfluencer)
+              returnInfluencer[4]?.children.push(tempInfluencer)
               break
             case 'musl':
-              returnInfluencer[5].children.push(tempInfluencer)
+              returnInfluencer[5]?.children.push(tempInfluencer)
               break
             case 'jued':
-              returnInfluencer[6].children.push(tempInfluencer)
+              returnInfluencer[6]?.children.push(tempInfluencer)
               break
             case 'sikh':
-              returnInfluencer[7].children.push(tempInfluencer)
+              returnInfluencer[7]?.children.push(tempInfluencer)
               break
             default:
               console.error('Encountered unknown account. This should not happen.')
@@ -391,8 +353,8 @@ export default class Influencer extends Vue {
   }
 
   resetNetwork() {
-    this.influencerDetailed = null
-    this.selectedInfluencer = []
+    this.accountDetails = null
+    this.selectedAccounts = []
     this.bigNetwork = true
     this.initialNetwork()
   }
@@ -414,7 +376,7 @@ export default class Influencer extends Vue {
         .scale(0.17)
     }
 
-    this.allInfluencer.forEach((religion) => {
+    this.allAccounts.forEach((religion: any) => {
       const tempHierarchy = d3.hierarchy(religion)
       if (religion.name != 'multiple') {
         this.nodes.push(...tempHierarchy.descendants().slice(1))
@@ -426,11 +388,11 @@ export default class Influencer extends Vue {
     this.nodes.push(...religions)
 
     const numberOfNodes = this.nodes.length
-    this.nodes.forEach((node) => {
+    this.nodes.forEach((node: any) => {
       if (node.data != undefined && node.data.interviews != undefined) {
         // @ts-expect-error Ignore for now
         const linkArray: [number] = []
-        node.data.interviews.forEach((links) => {
+        node.data.interviews.forEach((links: any) => {
           switch (links) {
             case 'alev':
               linkArray.push(numberOfNodes - 7)
@@ -473,31 +435,31 @@ export default class Influencer extends Vue {
 
   @Watch('$route')
   startLoaded() {
-    if (this.$route.params.account_id != undefined && this.$route.params.account_id != '') {
+    if (this.$route.params['account_id'] != undefined && this.$route.params['account_id'] != '') {
       this.resetNetwork()
     }
     this.$nextTick(this.routeLoaded)
   }
 
   routeLoaded() {
-    if (this.$route.params.account_id != undefined && this.$route.params.account_id != '') {
-      this.nodes.forEach(async (element) => {
+    if (this.$route.params['account_id'] != undefined && this.$route.params['account_id'] != '') {
+      this.nodes.forEach(async (element: any) => {
         if (element.data != undefined) {
-          if (element.data.id === this.$route.params.account_id) {
-            this.selectedInfluencer = []
+          if (element.data.id === this.$route.params['account_id']) {
+            this.selectedAccounts = []
             const tempInfluencerDetailed = element.data
             if (!isNaN(Number(tempInfluencerDetailed.idee[0]))) {
               const filteredIdeas: any[] = []
-              this.allIdeas.forEach((idea) => {
+              this.allIdeas.forEach((idea: any) => {
                 if (tempInfluencerDetailed.idee.includes(idea.id)) {
                   filteredIdeas.push(idea.name)
                 }
               })
               tempInfluencerDetailed.idee = filteredIdeas
             }
-            this.influencerDetailed = tempInfluencerDetailed
-            this.selectedInfluencer.push(element.data.id)
-            this.$route.params.account_id = ''
+            this.accountDetails = tempInfluencerDetailed
+            this.selectedAccounts.push(element.data.id)
+            this.$route.params['account_id'] = ''
           }
         }
       })
@@ -505,7 +467,7 @@ export default class Influencer extends Vue {
   }
 
   async mounted() {
-    this.allInfluencer = this.formatInfluencerIntoReligions(dataStore.influencer)
+    this.allAccounts = this.formatInfluencerIntoReligions(dataStore.influencer)
     this.height = document.querySelector('#network')?.clientHeight
     this.width = document.querySelector('#network')?.clientWidth
     this.allIdeas = dataStore.ideen
@@ -513,7 +475,7 @@ export default class Influencer extends Vue {
     this.$router.onReady(() => this.routeLoaded())
   }
 
-  determinePosition(node, width, height) {
+  determinePosition(node: any, width: number, height: number) {
     let returnValue = 0
     if (width > height) {
       if (this.bigNetwork === false) {
@@ -658,13 +620,13 @@ export default class Influencer extends Vue {
   //@Watch("selectedInfluencer")
   buildInfluencerNetworkObject() {
     if (
-      this.selectedInfluencer.length > this.selectedInfluencerLength &&
-      this.selectedInfluencer != null
+      this.selectedAccounts.length > this.selectedAccountsLength &&
+      this.selectedAccounts != null
     ) {
       let searchedNode
-      this.nodes.forEach((node) => {
+      this.nodes.forEach((node: any) => {
         if (node.data) {
-          if (node.data.id === this.selectedInfluencer[this.selectedInfluencer.length - 1].id) {
+          if (node.data.id === this.selectedAccounts[this.selectedAccounts.length - 1].id) {
             searchedNode = node
           }
         }
@@ -674,14 +636,14 @@ export default class Influencer extends Vue {
       } else {
         console.error('No node found for the selected idea.')
       }
-    } else if (this.selectedInfluencer.length < this.selectedInfluencerLength) {
-      this.influencerDetailed = null
+    } else if (this.selectedAccounts.length < this.selectedAccountsLength) {
+      this.accountDetails = null
       //this.selectedInfluencer = null;
     }
-    this.nodes.forEach((node) => {
+    this.nodes.forEach((node: any) => {
       if (node.data) {
-        if (this.selectedInfluencer.length > 0) {
-          if (this.selectedInfluencer.includes(node.data)) {
+        if (this.selectedAccounts.length > 0) {
+          if (this.selectedAccounts.includes(node.data)) {
             node.data._color = '#E4625E'
           } else {
             node.data._color = '#daeee8'
@@ -692,9 +654,9 @@ export default class Influencer extends Vue {
       }
     })
     if (this.bigNetwork === true) {
-      this.links.forEach((link) => {
-        if (this.selectedInfluencer.length > 0) {
-          if (this.selectedInfluencer.includes(link.source.data.id)) {
+      this.links.forEach((link: any) => {
+        if (this.selectedAccounts.length > 0) {
+          if (this.selectedAccounts.includes(link.source.data.id)) {
             link._color = '#000'
             link.thiccness = '3'
           } else {
@@ -709,11 +671,11 @@ export default class Influencer extends Vue {
     } else {
       this.links = []
     }
-    this.selectedInfluencerLength = this.selectedInfluencer.length
+    this.selectedAccountsLength = this.selectedAccounts.length
     this.generateNetwork(this.nodes, this.links)
   }
 
-  generateNetwork(nodes, links) {
+  generateNetwork(nodes: any, links: any) {
     d3.selectAll('g').remove()
 
     this.height = document.querySelector('#network')?.clientHeight
@@ -757,19 +719,19 @@ export default class Influencer extends Vue {
         d3.forceCollide().radius((d) => (d.children ? 200 : 30)),
       )
 
-    const drag = (simulation) => {
-      function dragstarted(event) {
+    const drag = (simulation: any) => {
+      function dragstarted(event: any) {
         if (!event.active) simulation.alphaTarget(0.3).restart()
         event.subject.fx = event.subject.x
         event.subject.fy = event.subject.y
       }
 
-      function dragged(event) {
+      function dragged(event: any) {
         event.subject.fx = event.x
         event.subject.fy = event.y
       }
 
-      function dragended(event) {
+      function dragended(event: any) {
         if (!event.active) simulation.alphaTarget(0)
         event.subject.fx = null
         event.subject.fy = null
@@ -779,7 +741,7 @@ export default class Influencer extends Vue {
     }
 
     // append the svg object to the body of the page
-    let svg
+    let svg: any
     // @ts-expect-error Ignore for now
     if (d3.select('svg')._groups[0][0] === null) {
       svg = d3.select('#network').append('svg').attr('viewBox', `0 0 ${this.width} ${this.height}`)
@@ -789,8 +751,10 @@ export default class Influencer extends Vue {
     }
 
     const g = svg.append('g')
-    const handleZoom = (e) =>
-      g.attr('transform', e.transform, (this.currentZoomLevel = e.transform))
+    const handleZoom = (e: any) => {
+      this.currentZoomLevel = e.transform
+      g.attr('transform', String(e.transform))
+    }
     const zoom = d3.zoom().on('zoom', handleZoom)
     svg.call(zoom).call(zoom.transform, this.currentZoomLevel)
 
@@ -799,13 +763,13 @@ export default class Influencer extends Vue {
       .selectAll('line')
       .data(links)
       .join('line')
-      .style('stroke', (d) => d._color)
-      .style('stroke-width', (d) => d.thiccness)
+      .style('stroke', (d: any) => d._color)
+      .style('stroke-width', (d: any) => d.thiccness)
 
     const groups = g.selectAll('.group').data(nodes).enter().append('g').attr('class', 'group')
     groups.exit().remove()
     groups
-      .attr('transform', function (d) {
+      .attr('transform', function (d: any) {
         const x = d.x * 20 + 50
         const y = d.y + 20
         return 'translate(' + x + ',' + y + ')'
@@ -814,28 +778,28 @@ export default class Influencer extends Vue {
 
     groups
       .selectAll('circle')
-      .data(function (d) {
+      .data(function (d: any) {
         return [d]
       })
       .enter()
       .append('circle')
       .attr('cx', 0)
       .attr('cy', 0)
-      .attr('fill', (d) => (d.children ? '#B4DCD2' : d._color ? d._color : d.data._color))
+      .attr('fill', (d: any) => (d.children ? '#B4DCD2' : d._color ? d._color : d.data._color))
       .attr('stroke', '#fff')
-      .attr('r', (d) => (d.children ? 150 : 20))
-      .on('click', (d, i) => {
+      .attr('r', (d: any) => (d.children ? 150 : 20))
+      .on('click', (d: any, i: number) => {
         this.onNodeClick(d, i)
       })
 
     groups
       .selectAll('text')
-      .data(function (d) {
+      .data(function (d: any) {
         return [d]
       })
       .enter()
       .append('text')
-      .html(function (d) {
+      .html(function (d: any) {
         if (!d.children) {
           if (d.data) {
             return d.data.name
@@ -864,31 +828,31 @@ export default class Influencer extends Vue {
           }
         }
       })
-      .attr('font-weight', (d) => (d.children ? 600 : 400))
-      .attr('dx', function (d) {
+      .attr('font-weight', (d: any) => (d.children ? 600 : 400))
+      .attr('dx', function (d: any) {
         return d.children ? -120 : 25
       })
-      .style('font-size', function (d) {
+      .style('font-size', function (d: any) {
         return d.children ? '2.3em' : 14
       })
 
     // This function is run at each iteration of the force algorithm, updating the nodes position.
     simulation.on('tick', () => {
       link
-        .attr('x1', function (d) {
+        .attr('x1', function (d: any) {
           return d.source.x
         })
-        .attr('y1', function (d) {
+        .attr('y1', function (d: any) {
           return d.source.y
         })
-        .attr('x2', function (d) {
+        .attr('x2', function (d: any) {
           return d.target.x
         })
-        .attr('y2', function (d) {
+        .attr('y2', function (d: any) {
           return d.target.y
         })
 
-      groups.attr('transform', function (d) {
+      groups.attr('transform', function (d: any) {
         const x = d.x + 6
         const y = d.y - 6
         return 'translate(' + x + ',' + y + ')'

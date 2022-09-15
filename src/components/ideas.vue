@@ -347,34 +347,34 @@ export default class Idea extends Vue {
       },
     ]
 
-    ideas.forEach((idea) => {
+    ideas.forEach((idea: any) => {
       if (idea.interviews.length > 1) {
-        returnIdeas[0].children.push(idea)
+        returnIdeas[0]?.children.push(idea)
       }
       switch (idea.interviews[0]) {
         case 'alev':
-          returnIdeas[1].children.push(idea)
+          returnIdeas[1]?.children.push(idea)
           break
         case 'kath':
-          returnIdeas[2].children.push(idea)
+          returnIdeas[2]?.children.push(idea)
           break
         case 'evan':
-          returnIdeas[3].children.push(idea)
+          returnIdeas[3]?.children.push(idea)
           break
         case 'evang':
-          returnIdeas[3].children.push(idea)
+          returnIdeas[3]?.children.push(idea)
           break
         case 'orth':
-          returnIdeas[4].children.push(idea)
+          returnIdeas[4]?.children.push(idea)
           break
         case 'musl':
-          returnIdeas[5].children.push(idea)
+          returnIdeas[5]?.children.push(idea)
           break
         case 'jued':
-          returnIdeas[6].children.push(idea)
+          returnIdeas[6]?.children.push(idea)
           break
         case 'sikh':
-          returnIdeas[7].children.push(idea)
+          returnIdeas[7]?.children.push(idea)
           break
         default:
           console.error('Encountered unknown religion. This should not happen.')
@@ -388,8 +388,8 @@ export default class Idea extends Vue {
   @Watch('selectedIdea')
   buildInfluencerNetworkObject() {
     if (this.selectedIdea.length > this.selectedIdeaLength) {
-      let searchedNode
-      this.nodes.forEach((node) => {
+      let searchedNode: any
+      this.nodes.forEach((node: any) => {
         if (node.data) {
           if (node.data.name === this.selectedIdea[this.selectedIdea.length - 1]) {
             searchedNode = node
@@ -411,7 +411,7 @@ export default class Idea extends Vue {
     } else if (this.selectedIdea.length < this.selectedIdeaLength && !this.keepDetail) {
       this.ideaDetailed = null
     }
-    this.nodes.forEach((node) => {
+    this.nodes.forEach((node: any) => {
       if (node.data) {
         if (this.selectedIdea.length > 0) {
           if (this.selectedIdea.includes(node.data.name)) {
@@ -425,7 +425,7 @@ export default class Idea extends Vue {
       }
     })
     if (this.bigNetwork === true) {
-      this.links.forEach((link) => {
+      this.links.forEach((link: any) => {
         if (this.selectedIdea.length > 0) {
           if (this.selectedIdea.includes(link.source.data.name)) {
             link._color = '#000'
@@ -446,7 +446,7 @@ export default class Idea extends Vue {
     this.selectedIdeaLength = this.selectedIdea.length
     this.generateNetwork(this.nodes, this.links)
   }
-  determinePosition(node, width, height) {
+  determinePosition(node: any, width: number, height: number) {
     let returnValue = 0
     if (width > height) {
       if (this.bigNetwork === false) {
@@ -588,7 +588,7 @@ export default class Idea extends Vue {
     return returnValue
   }
 
-  generateNetwork(nodes, links) {
+  generateNetwork(nodes: any, links: any) {
     d3.selectAll('g').remove()
 
     const simulation = d3
@@ -634,19 +634,19 @@ export default class Idea extends Vue {
         }),
       )
 
-    const drag = (simulation) => {
-      function dragstarted(event) {
+    const drag = (simulation: any) => {
+      function dragstarted(event: any) {
         if (!event.active) simulation.alphaTarget(0.3).restart()
         event.subject.fx = event.subject.x
         event.subject.fy = event.subject.y
       }
 
-      function dragged(event) {
+      function dragged(event: any) {
         event.subject.fx = event.x
         event.subject.fy = event.y
       }
 
-      function dragended(event) {
+      function dragended(event: any) {
         if (!event.active) simulation.alphaTarget(0)
         event.subject.fx = null
         event.subject.fy = null
@@ -656,7 +656,7 @@ export default class Idea extends Vue {
     }
 
     // append the svg object to the body of the page
-    let svg
+    let svg: any
     // @ts-expect-error Ignore for now
     if (d3.select('svg')._groups[0][0] === null) {
       svg = d3.select('#network').append('svg').attr('viewBox', `0 0 ${this.width} ${this.height}`)
@@ -664,8 +664,10 @@ export default class Idea extends Vue {
       svg = d3.select('svg')
     }
     const g = svg.append('g')
-    const handleZoom = (e) =>
-      g.attr('transform', e.transform, (this.currentZoomLevel = e.transform))
+    const handleZoom = (e: any) => {
+      this.currentZoomLevel = e.transform
+      g.attr('transform', e.transform)
+    }
     const zoom = d3.zoom().on('zoom', handleZoom)
     svg.call(zoom).call(zoom.transform, this.currentZoomLevel)
 
@@ -674,13 +676,13 @@ export default class Idea extends Vue {
       .selectAll('line')
       .data(links)
       .join('line')
-      .style('stroke', (d) => d._color)
-      .style('stroke-width', (d) => d.thiccness)
+      .style('stroke', (d: any) => d._color)
+      .style('stroke-width', (d: any) => d.thiccness)
 
     const groups = g.selectAll('.group').data(nodes).enter().append('g').attr('class', 'group')
     groups.exit().remove()
     groups
-      .attr('transform', function (d) {
+      .attr('transform', function (d: any) {
         const x = d.x * 20 + 50
         const y = d.y + 20
         return 'translate(' + x + ',' + y + ')'
@@ -689,14 +691,14 @@ export default class Idea extends Vue {
 
     groups
       .selectAll('circle')
-      .data(function (d) {
+      .data(function (d: any) {
         return [d]
       })
       .enter()
       .append('circle')
       .attr('cx', 0)
       .attr('cy', 0)
-      .attr('fill', (d) =>
+      .attr('fill', (d: any) =>
         d.children
           ? d.data
             ? this.allReligions.includes(d.data.name)
@@ -710,7 +712,7 @@ export default class Idea extends Vue {
           : d._color,
       )
       .attr('stroke', '#fff')
-      .attr('r', (d) =>
+      .attr('r', (d: any) =>
         d.children
           ? d.data
             ? this.allReligions.includes(d.data.name)
@@ -721,18 +723,18 @@ export default class Idea extends Vue {
             : 20
           : 20,
       )
-      .on('click', (d, i) => {
+      .on('click', (d: any, i: number) => {
         this.onNodeClick(i)
       })
 
     groups
       .selectAll('text')
-      .data(function (d) {
+      .data(function (d: any) {
         return [d]
       })
       .enter()
       .append('text')
-      .html(function (d) {
+      .html(function (d: any) {
         if (!d.children) {
           const words = (d.name || d.data.name).split(' ')
           if (words.length <= 1) {
@@ -814,7 +816,7 @@ export default class Idea extends Vue {
           }
         }
       })
-      .attr('dx', (d) =>
+      .attr('dx', (d: any) =>
         d.children
           ? d.data
             ? this.allReligions.includes(d.data.name)
@@ -825,11 +827,11 @@ export default class Idea extends Vue {
             : 25
           : 25,
       )
-      .attr('font-weight', (d) => (d.children ? 600 : 400))
-      .on('click', (d, i) => {
+      .attr('font-weight', (d: any) => (d.children ? 600 : 400))
+      .on('click', (d: any, i: number) => {
         this.onNodeClick(i)
       })
-      .style('font-size', (d) =>
+      .style('font-size', (d: any) =>
         d.children
           ? d.data
             ? this.allReligions.includes(d.data.name)
@@ -843,27 +845,27 @@ export default class Idea extends Vue {
     // This function is run at each iteration of the force algorithm, updating the nodes position.
     simulation.on('tick', () => {
       link
-        .attr('x1', function (d) {
+        .attr('x1', function (d: any) {
           return d.source.x
         })
-        .attr('y1', function (d) {
+        .attr('y1', function (d: any) {
           return d.source.y
         })
-        .attr('x2', function (d) {
+        .attr('x2', function (d: any) {
           return d.target.x
         })
-        .attr('y2', function (d) {
+        .attr('y2', function (d: any) {
           return d.target.y
         })
 
-      groups.attr('transform', function (d) {
+      groups.attr('transform', function (d: any) {
         const x = d.x + 6
         const y = d.y - 6
         return 'translate(' + x + ',' + y + ')'
       })
     })
 
-    d3.selectAll('.zoomies').on('click', (e) => {
+    d3.selectAll('.zoomies').on('click', (e: any) => {
       if (e.originalTarget.innerHTML === 'add') {
         // @ts-expect-error Ignore for now
         this.currentZoomLevel.k = this.currentZoomLevel.k * 1.3
@@ -883,7 +885,7 @@ export default class Idea extends Vue {
     this.initialNetwork()
   }
 
-  getDataforFeature(idee) {
+  getDataforFeature(idee: any) {
     const placesWithIdea: any[] = []
     const accountsWithIdea: any[] = []
     this.places.forEach((place) => {
@@ -899,7 +901,7 @@ export default class Idea extends Vue {
     return { places: placesWithIdea, accounts: accountsWithIdea }
   }
 
-  onNodeClick(feature) {
+  onNodeClick(feature: any) {
     this.keepDetail = true
     if (feature.data) {
       const connectedInfo = this.getDataforFeature(feature)
@@ -914,16 +916,14 @@ export default class Idea extends Vue {
       this.selectedIdea = []
       this.nodes = []
 
-      const tempNodes = []
+      const tempNodes: Array<any> = []
       this.ideaNetworkPot.forEach((religion) => {
         if (religion.name != 'multiple') {
           const tempHierarchy = d3.hierarchy(religion)
-          // @ts-expect-error Ignore for now
           tempNodes.push(...tempHierarchy.descendants())
         }
       })
       tempNodes.forEach((idea) => {
-        // @ts-expect-error Ignore for now
         if (feature.data.cooccurence.includes(idea.data.name)) {
           this.nodes.push(idea)
         }
@@ -942,12 +942,12 @@ export default class Idea extends Vue {
           this.links = tempHierarchy.links()
         }
       })
-      this.ideaNetworkPot[0].children.forEach((multipleIdea) => {
+      this.ideaNetworkPot[0].children.forEach((multipleIdea: any) => {
         if (multipleIdea.interviews.includes(feature.name.split(' ')[0].slice(0, 4))) {
           this.nodes.push(multipleIdea)
         }
       })
-      this.links.forEach((link) => {
+      this.links.forEach((link: any) => {
         link._color = '#aaa'
         link.thiccness = '2'
       })
@@ -957,18 +957,18 @@ export default class Idea extends Vue {
 
   @Watch('$route')
   startLoaded() {
-    if (this.$route.params.idea_name != undefined && this.$route.params.idea_name != '') {
+    if (this.$route.params['idea_name'] != undefined && this.$route.params['idea_name'] != '') {
       this.resetNetwork()
     }
     this.$nextTick(this.routeLoaded)
   }
 
   routeLoaded() {
-    if (this.$route.params.idea_name != undefined && this.$route.params.idea_name != '') {
+    if (this.$route.params['idea_name'] != undefined && this.$route.params['idea_name'] != '') {
       this.displayReligionsOrIdeas = false
-      this.nodes.forEach((element) => {
+      this.nodes.forEach((element: any) => {
         if (element.data != undefined) {
-          if (element.data.name === this.$route.params.idea_name) {
+          if (element.data.name === this.$route.params['idea_name']) {
             this.selectedIdea = []
             const connectedInfo = this.getDataforFeature(element)
             this.ideaDetailed = {
@@ -979,7 +979,7 @@ export default class Idea extends Vue {
               idee: element.data.cooccurence,
             }
             this.selectedIdea.push(element.data.name)
-            this.$route.params.idea_name = ''
+            this.$route.params['idea_name'] = ''
           }
         }
       })
@@ -1013,11 +1013,11 @@ export default class Idea extends Vue {
     this.nodes.push(...religions)
 
     const numberOfNodes = this.nodes.length
-    this.nodes.forEach((node) => {
+    this.nodes.forEach((node: any) => {
       if (node.data != undefined) {
         // @ts-expect-error Ignore for now
         const linkArray: [number] = []
-        node.data.interviews.forEach((links) => {
+        node.data.interviews.forEach((links: any) => {
           switch (links) {
             case 'alev':
               linkArray.push(numberOfNodes - 7)

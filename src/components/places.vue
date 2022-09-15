@@ -100,15 +100,7 @@
       :zoom.sync="zoom"
       :center.sync="center"
     >
-      <l-tile-layer
-        v-if="tileSetUrl != ''"
-        :url="tileSetUrl"
-        :attribution="
-          tileSets[selectedTileSet] && tileSets[selectedTileSet].attribution
-            ? tileSets[selectedTileSet].attribution
-            : ''
-        "
-      />
+      <l-tile-layer :url="tileSet.url" :attribution="tileSet.attribution" />
 
       <l-geo-json :geojson="allPlaces" :options="options" :optionsStyle="distanceVariableColor" />
 
@@ -308,22 +300,11 @@ export default class Place extends Vue {
   map: any = null
   pointerSize = 5
 
-  tileSets = [
-    {
-      name: 'Humanitarian Open Tiles',
-      url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png ',
-    },
-    {
-      name: 'Minimal Ländergrenzen (hell)',
-      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-      attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-    },
-    {
-      name: 'Leer',
-      url: '',
-    },
-  ]
-  selectedTileSet = 0
+  tileSet = {
+    url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png ',
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>',
+  }
   geoPlaces: any[] = []
   placesJSON: any[] = []
   selectedPlaces: any[] = []
@@ -535,8 +516,8 @@ export default class Place extends Vue {
     this.religionJSON = []
     this.geoPlaces = []
     this.ideaJSON = []
-    let tempSelectedPlaces
-    if (Object.prototype.toString.call(this.selectedPlaces) === '[object Array]') {
+    let tempSelectedPlaces: any
+    if (Array.isArray(this.selectedPlaces)) {
       tempSelectedPlaces = this.selectedPlaces
     } else {
       tempSelectedPlaces = [this.selectedPlaces]
@@ -544,13 +525,13 @@ export default class Place extends Vue {
 
     this.placesJSON.forEach((place) => {
       if (
-        tempSelectedPlaces.some((sel) => {
+        tempSelectedPlaces.some((sel: any) => {
           return sel.bezeichnung === place.properties.bezeichnung && sel.religion === true
         })
       ) {
         this.religionJSON.push(place)
       } else if (
-        tempSelectedPlaces.some((sel) => {
+        tempSelectedPlaces.some((sel: any) => {
           return sel.bezeichnung === place.properties.bezeichnung && sel.idea === true
         })
       ) {
@@ -564,10 +545,10 @@ export default class Place extends Vue {
             const latitudeRangeVienna = [48.165, 48.258]
             const longitudeRangeVienna = [16.221, 16.524]
             return (
-              place.geometry.coordinates[0] > longitudeRangeVienna[1] ||
-              place.geometry.coordinates[0] < longitudeRangeVienna[0] ||
-              place.geometry.coordinates[1] > latitudeRangeVienna[1] ||
-              place.geometry.coordinates[1] < latitudeRangeVienna[0]
+              place.geometry.coordinates[0] > longitudeRangeVienna[1]! ||
+              place.geometry.coordinates[0] < longitudeRangeVienna[0]! ||
+              place.geometry.coordinates[1] > latitudeRangeVienna[1]! ||
+              place.geometry.coordinates[1] < latitudeRangeVienna[0]!
             )
           })
           if (placesNotInVienna.length === placesInIdea.length) {
@@ -576,7 +557,7 @@ export default class Place extends Vue {
           }
         }
       } else if (
-        tempSelectedPlaces.some((sel) => {
+        tempSelectedPlaces.some((sel: any) => {
           return sel.bezeichnung === place.properties.bezeichnung
         })
       ) {
@@ -595,10 +576,6 @@ export default class Place extends Vue {
     })
   }
 
-  get tileSetUrl(): string {
-    return this.tileSets[this.selectedTileSet].url
-  }
-
   async created() {
     const fetchedData = await this.getDataFromServerAtCreated()
 
@@ -613,6 +590,7 @@ export default class Place extends Vue {
             tempBezeichnung = displayReligion[1]
           }
         })
+        // @ts-expect-error Ignore for now
         const selColor = this.allColors[religion.name]
         tempReligion = {
           id: religion.id,
@@ -634,7 +612,7 @@ export default class Place extends Vue {
 
   mounted() {
     this.$nextTick(() => {
-      this.map = this.$refs.map
+      this.map = this.$refs['map']
     })
   }
 
@@ -646,7 +624,7 @@ export default class Place extends Vue {
     }
   }
 
-  filterReligiousPlaces(places) {
+  filterReligiousPlaces(places: any) {
     if (this.filterNonReligionPlaces === true) {
       return places.features.filter((f: any) => {
         if (f.properties.religiousPlace === true) {
@@ -658,14 +636,14 @@ export default class Place extends Vue {
   }
 
   //Ugly Method; if there is time => update it
-  displayLocationsMultipleReligions(selectedReligions) {
+  displayLocationsMultipleReligions(selectedReligions: any) {
     const selectedReligionPlaces = this.allPlaces.filter((f: any) => {
       return f.properties.religion.length > 1
     })
 
     const returnedPlaces = selectedReligionPlaces.filter((place: any) => {
       const filteredPlaces = place.properties.religion.filter((f: any) => {
-        return selectedReligions.some((religion) => {
+        return selectedReligions.some((religion: any) => {
           return (
             this.namesAreWeird(religion.properties.name.toLowerCase().substring(0, 4)) ===
             f.toLowerCase().split('-')[1].substring(0, 4)
@@ -673,7 +651,7 @@ export default class Place extends Vue {
         })
       })
       const trimmedFilteredPlace: any[] = []
-      filteredPlaces.forEach((place) => {
+      filteredPlaces.forEach((place: any) => {
         trimmedFilteredPlace.push(place.split('-')[1].substring(0, 4))
       })
       const uniqueFilteredPlaces = [...new Set(trimmedFilteredPlace)]
@@ -695,12 +673,13 @@ export default class Place extends Vue {
           neueReligionsFormatierung = neueReligionsFormatierung[0]
         }
         const value = f.properties.religion.findIndex(
-          (item) =>
+          (item: any) =>
             this.namesAreWeird(neueReligionsFormatierung.toLowerCase().substring(0, 4)) ===
             item.toLowerCase().split('-')[1].substring(0, 4),
         )
         return value > -1
       }
+      return false
     })
     if (this.religionJSON.length > 1) {
       const placesWithMultipleReligions = this.displayLocationsMultipleReligions(this.religionJSON)
@@ -753,7 +732,7 @@ export default class Place extends Vue {
   }
 
   //receives the content of the json, with the places
-  async handlePlaceData(allPlaces, allCategories, allIdeas) {
+  async handlePlaceData(allPlaces: any, allCategories: any, allIdeas: any) {
     const tempGeo: any[] = []
     allPlaces.forEach((item: any) => {
       const categories = this.getCorrespondingCategories(item.kategorie, allCategories)
@@ -815,16 +794,16 @@ export default class Place extends Vue {
 
   @Watch('$route')
   startLoaded() {
-    if (this.$route.params.ort_id != undefined) {
+    if (this.$route.params['ort_id'] != undefined) {
       this.selectedFilter = { id: 2, name: 'Alle Orte' }
     }
     this.$nextTick(this.routeLoaded)
   }
 
   routeLoaded() {
-    if (this.$route.params.ort_id != undefined) {
+    if (this.$route.params['ort_id'] != undefined) {
       this.autocompleteItems.forEach((item) => {
-        if (this.$route.params.ort_id === item.properties.id) {
+        if (this.$route.params['ort_id'] === item.properties.id) {
           this.selectedPlaces.push(item.properties)
           this.placeDetailed = {
             idee: item.properties.idee,
