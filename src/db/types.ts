@@ -5,7 +5,7 @@ interface ResourceBase {
 
 export interface Account extends ResourceBase {
   kind: 'account'
-  /** Can be constructed by prepending "https://instragram.com/" to `label`. */
+  /** Can be constructed by prepending "https://instagram.com/" to `label`. */
   // url: string
   mentions: number
   interviews: Set<Interview['key']>

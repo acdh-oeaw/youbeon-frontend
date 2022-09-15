@@ -6,7 +6,7 @@ import { accounts, ideas, places, interviews, religions } from "@/db";
  *
  * `id` fields were changed from number to string, but this should be fine.
  *
- * Also, some unused fields were dropped
+ * Also, some unused fields were dropped.
  *
  * Note that "kategorien" are always empty api responses.
  */
@@ -89,7 +89,7 @@ export async function initialize(): Promise<void> {
       koordinate_b: String(place.coordinates.lat),
       idee: Array.from(place.ideas),
       religion: Array.from(place.religions),
-      /** Note that there are the full interview identifiers. */
+      /** Note that these are the full interview identifiers. */
       interview: Array.from(place.interviews),
     };
   });

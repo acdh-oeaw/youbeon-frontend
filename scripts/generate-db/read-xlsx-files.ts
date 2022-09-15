@@ -22,7 +22,7 @@ interface IdeaInputRow extends InputRow {
 }
 
 interface PlaceInputRow extends InputRow {
-  // FIXME: although apperently there are more than one identifier sometimes? (most are not places though)
+  // FIXME: although apparently there is more than one identifier sometimes? (most are not places though)
   /** Single identifier string like "OS: Paris, Frankreich". */
   Kodes?: string
   /** Coordinates (duplicated for whatever reason) like "48,8567, 2,351462 - 48,8567, 2,351462". */

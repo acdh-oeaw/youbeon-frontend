@@ -2,7 +2,7 @@ node_modules/
 /dist
 *.log
 .eslintcache
-*.tabuildinfo
+*.tsbuildinfo
 
 # local env files
 .env.local
