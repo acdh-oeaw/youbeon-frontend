@@ -1,7 +1,5 @@
 <template>
   <vContainer>
-    <!--<div class="balls"></div>
-    <div class="balls"></div>-->
     <div style="margin: 20px 0px 20px 0px" class="d-none d-sm-block">
       Auf dieser Ebene der YouBeOn Map sehen Sie die Instagram-Accounts, von
       denen die Interviewteilnehmer*innen im Gespräch erzählt haben. Sie sind

@@ -1,7 +1,5 @@
 <template>
   <vContainer>
-    <!--<div style="margin-top: 0.5em" class="balls"></div>
-    <div class="balls"></div>-->
     <div style="margin: 20px 0px 20px 0px" class="d-none d-sm-block">
       Auf dieser Ebene der YouBeOn Map sehen Sie die Ideen, die in den
       Interviews aufgekommen sind. Das YouBeOn Forscher*innen-Team hat diese
@@ -729,7 +727,7 @@ export default class Idea extends Vue {
         d3
           .forceCollide()
           .radius((d) => {
-            console.log('node', d);            
+            console.log('node', d);
             const name = (d.name || d.data.name);
             const customRadius = [...(name.split(' '))].sort((a, b) => b.length - a.length)[0].length * 3;
             const weight = customRadius < 20 ? 20 : customRadius;
@@ -867,10 +865,10 @@ export default class Idea extends Vue {
             for (let i = 1; i < words.length; i++) {
               if (ret[ret.length - 1].length + words[i].length <= longestWord + 2) {
                 ret[ret.length - 1] += (' ' + words[i]);
-              } else ret.push(words[i]);             
+              } else ret.push(words[i]);
             }
             console.log('words', words, ret);
-            
+
             return ret.map((word, i) => (
               "<tspan x='0' dx='0' dy='" +
               (i === 0 ? (0.7 - 0.5 * ret.length) : 1) +

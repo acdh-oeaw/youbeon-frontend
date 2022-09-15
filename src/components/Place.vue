@@ -940,7 +940,7 @@ export default class Place extends Vue {
 </script>
 
 <style scoped>
-@import "../../node_modules/leaflet/dist/leaflet.css";
+@import "leaflet/dist/leaflet.css";
 
 .zoom {
   margin: 5px;
