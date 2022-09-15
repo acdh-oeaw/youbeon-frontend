@@ -389,9 +389,8 @@ export default class Influencer extends Vue {
               returnInfluencer[7].children.push(tempInfluencer);
               break;
             default:
-              console.log(tempInfluencer);
-              console.log(
-                "There are influencers with unknown religions over here dawg"
+              console.error(
+                "Encountered unknown account. This should not happen."
               );
               break;
           }
@@ -441,7 +440,7 @@ export default class Influencer extends Vue {
     const numberOfNodes = this.nodes.length;
     this.nodes.forEach((node) => {
       if (node.data != undefined && node.data.interviews != undefined) {
-        //@ts-ignore
+        // @ts-expect-error Ignore for now
         const linkArray: [number] = [];
         node.data.interviews.forEach((links) => {
           switch (links) {
@@ -696,7 +695,7 @@ export default class Influencer extends Vue {
       if (searchedNode) {
         this.showNodeDetails(searchedNode);
       } else {
-        console.log("No Node was found for the selected Idea");
+        console.error("No node found for the selected idea.");
       }
     } else if (this.selectedInfluencer.length < this.selectedInfluencerLength) {
       this.influencerDetailed = null;
@@ -750,7 +749,7 @@ export default class Influencer extends Vue {
         "link",
         d3
           .forceLink(links)
-          // @ts-expect-error
+          // @ts-expect-error Ignore for now
           .id((d) => d.index)
           .distance(0)
           .strength(0.01)
@@ -777,7 +776,7 @@ export default class Influencer extends Vue {
       )
       .force(
         "collision",
-        // @ts-expect-error
+        // @ts-expect-error Ignore for now
         d3.forceCollide().radius((d) => (d.children ? 200 : 30))
       );
 
@@ -808,7 +807,7 @@ export default class Influencer extends Vue {
 
     // append the svg object to the body of the page
     let svg;
-    // @ts-expect-error
+    // @ts-expect-error Ignore for now
     if (d3.select("svg")._groups[0][0] === null) {
       svg = d3
         .select("#network")
@@ -935,11 +934,11 @@ export default class Influencer extends Vue {
 
     d3.selectAll(".zoomies").on("click", (e) => {
       if (e.originalTarget.innerHTML === "add") {
-        // @ts-expect-error
+        // @ts-expect-error Ignore for now
         this.currentZoomLevel.k = this.currentZoomLevel.k * 1.3;
         svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
       } else {
-        // @ts-expect-error
+        // @ts-expect-error Ignore for now
         this.currentZoomLevel.k = this.currentZoomLevel.k * 0.7;
         svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
       }

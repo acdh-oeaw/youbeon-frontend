@@ -236,10 +236,6 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { dataStore } from "@/app/data";
 import * as d3 from "d3";
@@ -306,7 +302,7 @@ export default class Idea extends Vue {
   displayReligionsOrIdeas = false;
 
   allIdeas: any = [];
-  //saves the COOCCURENCE of the selected Idea in an Array
+  // saves the COOCCURENCE of the selected Idea in an Array
   selectedIdea: any = [];
   bigNetwork = true;
 
@@ -399,7 +395,9 @@ export default class Idea extends Vue {
           returnIdeas[7].children.push(idea);
           break;
         default:
-          console.log("There are ideas with unknown religions over here dawg");
+          console.error(
+            "Encountered unknown religion. This should not happen."
+          );
           break;
       }
     });
@@ -430,7 +428,7 @@ export default class Idea extends Vue {
           idee: searchedNode.data.cooccurence,
         };
       } else {
-        console.log("No Node was found for the selected Idea");
+        console.error("No node found for the selected idea.");
       }
     } else if (
       this.selectedIdea.length < this.selectedIdeaLength &&
@@ -627,7 +625,7 @@ export default class Idea extends Vue {
         "link",
         d3
           .forceLink(links)
-          // @ts-expect-error
+          // @ts-expect-error Ignore for now
           .id((d) => d.index)
           .distance(0)
           .strength(0.005)
@@ -654,14 +652,13 @@ export default class Idea extends Vue {
       .force(
         "collision",
         d3.forceCollide().radius((d) => {
-          console.log("node", d);
-          // @ts-expect-error
+          // @ts-expect-error Ignore for now
           const name = d.name || d.data.name;
           const customRadius =
             [...name.split(" ")].sort((a, b) => b.length - a.length)[0].length *
             3;
           const weight = customRadius < 20 ? 20 : customRadius;
-          // @ts-expect-error
+          // @ts-expect-error Ignore for now
           return d.children && this.allReligions.includes(name) ? 200 : weight;
         })
       );
@@ -693,7 +690,7 @@ export default class Idea extends Vue {
 
     // append the svg object to the body of the page
     let svg;
-    // @ts-expect-error
+    // @ts-expect-error Ignore for now
     if (d3.select("svg")._groups[0][0] === null) {
       svg = d3
         .select("#network")
@@ -800,7 +797,6 @@ export default class Idea extends Vue {
                 ret[ret.length - 1] += " " + words[i];
               } else ret.push(words[i]);
             }
-            console.log("words", words, ret);
 
             return ret
               .map(
@@ -914,11 +910,11 @@ export default class Idea extends Vue {
 
     d3.selectAll(".zoomies").on("click", (e) => {
       if (e.originalTarget.innerHTML === "add") {
-        // @ts-expect-error
+        // @ts-expect-error Ignore for now
         this.currentZoomLevel.k = this.currentZoomLevel.k * 1.3;
         svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
       } else {
-        // @ts-expect-error
+        // @ts-expect-error Ignore for now
         this.currentZoomLevel.k = this.currentZoomLevel.k * 0.7;
         svg.call(zoom).call(zoom.transform, this.currentZoomLevel);
       }
@@ -967,12 +963,12 @@ export default class Idea extends Vue {
       this.ideaNetworkPot.forEach((religion) => {
         if (religion.name != "multiple") {
           const tempHierarchy = d3.hierarchy(religion);
-          //@ts-ignore
+          // @ts-expect-error Ignore for now
           tempNodes.push(...tempHierarchy.descendants());
         }
       });
       tempNodes.forEach((idea) => {
-        //@ts-ignore
+        // @ts-expect-error Ignore for now
         if (feature.data.cooccurence.includes(idea.data.name)) {
           this.nodes.push(idea);
         }
@@ -1076,7 +1072,7 @@ export default class Idea extends Vue {
     const numberOfNodes = this.nodes.length;
     this.nodes.forEach((node) => {
       if (node.data != undefined) {
-        //@ts-ignore
+        // @ts-expect-error Ignore for now
         const linkArray: [number] = [];
         node.data.interviews.forEach((links) => {
           switch (links) {
