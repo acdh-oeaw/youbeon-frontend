@@ -582,12 +582,9 @@ export default class Idea extends Vue {
 
   generateNetwork(nodes, links) {
     d3.selectAll('g').remove()
-    const tempZoom = this.currentZoomLevel
-    // set the dimensions and margins of the graph
 
-    // Let's list the force we wanna apply on the network
     const simulation = d3
-      .forceSimulation(nodes) // Force algorithm is applied to nodes
+      .forceSimulation(nodes)
       .force(
         'link',
         d3
@@ -682,7 +679,7 @@ export default class Idea extends Vue {
       })
       .call(drag(simulation))
 
-    const node = groups
+    groups
       .selectAll('circle')
       .data(function (d) {
         return [d]
@@ -720,7 +717,7 @@ export default class Idea extends Vue {
         this.onNodeClick(i)
       })
 
-    const text = groups
+    groups
       .selectAll('text')
       .data(function (d) {
         return [d]
