@@ -270,7 +270,7 @@ import { LMap, LTileLayer, LMarker, LGeoJson, LWMSTileLayer as LWmsTileLayer } f
 import MapLegende from '@/components/MapLegende.vue'
 import { dataStore, info_popUp } from '@/app/data'
 import * as L from 'leaflet'
-import * as randomColor from 'randomcolor'
+import randomColor from 'randomcolor'
 import 'leaflet/dist/leaflet.css'
 
 const defaultCenter = [48.20849, 16.37208]
