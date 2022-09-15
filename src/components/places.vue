@@ -181,7 +181,7 @@
                 <router-link
                   class="link"
                   tag="span"
-                  :to="{ name: 'idea', params: { idea_name: idea } }"
+                  :to="{ name: 'ideas', params: { idea_name: idea } }"
                   >{{ idea }}</router-link
                 >
               </div>
@@ -243,7 +243,7 @@
                   <router-link
                     class="link"
                     tag="span"
-                    :to="{ name: 'idea', params: { idea_name: idea } }"
+                    :to="{ name: 'ideas', params: { idea_name: idea } }"
                     >{{ idea }}</router-link
                   >
                 </div>
@@ -278,9 +278,9 @@ const defaultZoom = 13
     LWmsTileLayer,
     MapLegend,
   },
-  name: 'Place',
+  name: 'PlacesView',
 })
-export default class Place extends Vue {
+export default class PlacesView extends Vue {
   icons = {
     plus: mdiPlus,
     minus: mdiMinus,

@@ -78,7 +78,7 @@
                 <router-link
                   class="hoverLink"
                   tag="span"
-                  :to="{ name: 'account', params: { account_id: account.id } }"
+                  :to="{ name: 'accounts', params: { account_id: account.id } }"
                   >{{ account.name }}</router-link
                 >
               </div>
@@ -93,7 +93,7 @@
                 <router-link
                   class="hoverLink"
                   tag="span"
-                  :to="{ name: 'place', params: { ort_id: ort.id } }"
+                  :to="{ name: 'places', params: { ort_id: ort.id } }"
                   >{{ ort.bezeichnung }}</router-link
                 >
               </div>
@@ -165,7 +165,7 @@
                     class="hoverLink"
                     tag="span"
                     :to="{
-                      name: 'account',
+                      name: 'accounts',
                       params: { account_id: account.id },
                     }"
                     >{{ account.name }}</router-link
@@ -182,7 +182,7 @@
                   <router-link
                     class="hoverLink"
                     tag="span"
-                    :to="{ name: 'place', params: { ort_id: ort.id } }"
+                    :to="{ name: 'places', params: { ort_id: ort.id } }"
                     >{{ ort.bezeichnung }}</router-link
                   >
                 </div>
@@ -217,9 +217,9 @@ import { mdiPlus, mdiMinus, mdiHome, mdiClose } from '@mdi/js'
 
 @Component({
   components: {},
-  name: 'Idea',
+  name: 'IdeasView',
 })
-export default class Idea extends Vue {
+export default class IdeasView extends Vue {
   icons = {
     plus: mdiPlus,
     minus: mdiMinus,

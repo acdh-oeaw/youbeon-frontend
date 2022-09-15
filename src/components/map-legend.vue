@@ -38,9 +38,9 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 
 @Component({
   components: {},
-  name: 'MapLegende',
+  name: 'MapLegend',
 })
-export default class MapLegende extends Vue {
+export default class MapLegend extends Vue {
   @Prop() public religions: any
   @Prop() public places: any
   @Prop() public ideas: any

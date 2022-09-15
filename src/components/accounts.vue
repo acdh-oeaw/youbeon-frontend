@@ -78,7 +78,7 @@
                 <router-link
                   class="hover-link"
                   tag="span"
-                  :to="{ name: 'idea', params: { idea_name: idea } }"
+                  :to="{ name: 'ideas', params: { idea_name: idea } }"
                   >{{ idea }}</router-link
                 >
               </div>
@@ -128,7 +128,7 @@
                   <router-link
                     class="hover-link"
                     tag="span"
-                    :to="{ name: 'idea', params: { idea_name: idea } }"
+                    :to="{ name: 'ideas', params: { idea_name: idea } }"
                     >{{ idea }}</router-link
                   >
                 </div>
@@ -146,7 +146,6 @@ import * as d3 from 'd3'
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { dataStore } from '@/app/data'
 import { mdiPlus, mdiMinus, mdiHome, mdiClose } from '@mdi/js'
-import { ideas } from '@/db'
 
 @Component({
   components: {},
