@@ -10,6 +10,6 @@
     },
     "lib": ["dom", "dom.iterable", "es2021", "scripthost"]
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.vue"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.vue", "**/*.config.mjs"],
   "exclude": ["node_modules"]
 }

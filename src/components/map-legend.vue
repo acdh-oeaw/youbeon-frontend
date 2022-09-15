@@ -69,11 +69,4 @@ a {
 .legend-items {
   background-color: rgba($color: #def, $alpha: 0%) !important;
 }
-
-#list-legy {
-  padding: 5px;
-  border: 2px solid #b0dcd9;
-  border-radius: 2.5px;
-  background-color: rgba($color: #fff, $alpha: 80%);
-}
 </style>

@@ -3,7 +3,7 @@
     <v-main>
       <v-container fluid class="pa-0 ma-0" app>
         <v-layout column>
-          <div :class="['header_navigation', $route.name === 'place' && 'see_through']">
+          <div :class="['header-navigation', $route.name === 'place' && 'see_through']">
             <v-row id="navrow" style="height: 100px">
               <v-col md="1">
                 <router-link to="/"
@@ -16,7 +16,7 @@
                   @click="drawer = true"
                   x-large
                   class="d-flex d-sm-none"
-                  id="phone_nav"
+                  id="phone-nav"
                   style="float: right; margin: 20px"
                   >{{ icons.menu }}</v-icon
                 >
@@ -31,17 +31,17 @@
                   hide-slider
                 >
                   <v-tab to="/"
-                    ><div :class="['tabs_top', $route.name === 'place' && 'underline']">
+                    ><div :class="['tabs-top', $route.name === 'place' && 'underline']">
                       Orte
                     </div></v-tab
                   >
-                  <v-tab to="/account"
-                    ><div :class="['tabs_top', $route.name === 'account' && 'underline']">
+                  <v-tab to="/accounts"
+                    ><div :class="['tabs-top', $route.name === 'account' && 'underline']">
                       Accounts
                     </div></v-tab
                   >
-                  <v-tab to="/idea"
-                    ><div :class="['tabs_top', $route.name === 'idea' && 'underline']">
+                  <v-tab to="/ideas"
+                    ><div :class="['tabs-top', $route.name === 'idea' && 'underline']">
                       Ideen
                     </div></v-tab
                   >
@@ -67,7 +67,7 @@
               <v-list-item-group>
                 <v-list-item to="/"
                   ><div
-                    :class="['tabs_top', $route.name === 'place' && 'underline']"
+                    :class="['tabs-top', $route.name === 'place' && 'underline']"
                     @click="drawer = false"
                   >
                     Orte
@@ -75,7 +75,7 @@
                 </v-list-item>
                 <v-list-item to="/account">
                   <div
-                    :class="['tabs_top', $route.name === 'account' && 'underline']"
+                    :class="['tabs-top', $route.name === 'account' && 'underline']"
                     @click="drawer = false"
                   >
                     Accounts
@@ -83,7 +83,7 @@
                 </v-list-item>
                 <v-list-item to="/idea">
                   <div
-                    :class="['tabs_top', $route.name === 'idea' && 'underline']"
+                    :class="['tabs-top', $route.name === 'idea' && 'underline']"
                     @click="drawer = false"
                   >
                     Ideen
@@ -93,13 +93,8 @@
             </v-list>
           </v-menu>
           <div style="z-index: 8; width: 100%; height: 5px; background-color: #b0dcd9"></div>
-          <v-dialog
-            overlay-opacity="0"
-            width="20vw"
-            content-class="intro_popUp"
-            v-model="introPopUp"
-          >
-            <v-card-title id="popUp_title">Willkommen</v-card-title>
+          <v-dialog overlay-opacity="0" width="20vw" v-model="introPopUp">
+            <v-card-title id="pop-up-title">Willkommen</v-card-title>
             <v-card-text style="height: 375px">
               <p>
                 Die YouBeOn Map nimmt Sie mit in die Lebenswelten religiöser, junger Menschen aus
@@ -114,7 +109,7 @@
                 den Funktionen finden Sie außerdem hier.
               </p>
               <v-btn
-                id="popUp_btn"
+                id="pop-up-button"
                 color="#b0dcd9"
                 elevation="0"
                 width="150px"
@@ -221,10 +216,6 @@ export default class App extends Vue {
 .underline {
   text-decoration: underline;
   text-decoration-thickness: 2px;
-}
-
-.see-through {
-  background-color: rgb(233 233 233 / 70%);
 }
 
 @font-face {

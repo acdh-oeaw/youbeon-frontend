@@ -1,6 +1,6 @@
 <template>
   <vContainer>
-    <v-card class="sticky-card mt-10 searchbar" id="mobileSearchDistance" outlined color="white">
+    <v-card class="sticky-card mt-10 searchbar" id="mobile-search-distance" outlined color="white">
       <v-row no-gutters>
         <v-col class="pa-0 flex-grow-1">
           <v-autocomplete
@@ -18,7 +18,7 @@
             hide-details
             elevation="0"
             label="Suche..."
-            prepend-inner-icon="search"
+            :prepend-inner-icon="icons.search"
           >
           </v-autocomplete>
           <v-autocomplete
@@ -139,11 +139,11 @@
       </map-legend>
     </v-col>
 
-    <v-card v-if="placeDetailed !== null" id="detailedView" class="d-none d-sm-block">
+    <v-card v-if="placeDetailed !== null" id="detailed-view" class="d-none d-sm-block">
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
-            <div style="float: left" id="detailedHeader">
+            <div style="float: left" id="detailed-header">
               {{ placeDetailed.name }}
             </div>
           </v-col>
@@ -160,7 +160,7 @@
       <v-card-text>
         <v-expansion-panels accordion flat hover>
           <v-expansion-panel style="background-color: rgb(0 0 0 / 0%)">
-            <v-expansion-panel-header id="detailedHeader" color="rgba(0, 0, 0, 0.0)">
+            <v-expansion-panel-header id="detailed-header" color="rgba(0, 0, 0, 0.0)">
               Verknüpfte Religionen
             </v-expansion-panel-header>
             <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
@@ -173,7 +173,7 @@
             style="background-color: rgb(0 0 0 / 0%)"
             v-if="placeDetailed.idee.length > 0"
           >
-            <v-expansion-panel-header id="detailedHeader" color="rgba(0, 0, 0, 0.0)">
+            <v-expansion-panel-header id="detailed-header" color="rgba(0, 0, 0, 0.0)">
               Verknüpfte Ideen
             </v-expansion-panel-header>
             <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
@@ -192,7 +192,6 @@
     </v-card>
 
     <v-bottom-sheet
-      class="detailedViewMobile"
       v-if="placeDetailed !== null"
       v-model="placeDetetailedBoolean"
       hide-overlay
@@ -208,7 +207,7 @@
         <v-card-title>
           <v-row no-gutters>
             <v-col class="pa-0 ma-0 flex-grow-1">
-              <div style="float: left" id="detailedHeader">
+              <div style="float: left" id="detailed-header">
                 {{ placeDetailed.name }}
               </div>
             </v-col>
@@ -222,7 +221,7 @@
         <v-card-text>
           <v-expansion-panels accordion flat hover>
             <v-expansion-panel style="background-color: rgb(0 0 0 / 0%)">
-              <v-expansion-panel-header id="detailedHeader" color="rgba(0, 0, 0, 0.0)">
+              <v-expansion-panel-header id="detailed-header" color="rgba(0, 0, 0, 0.0)">
                 Verknüpfte Religionen
               </v-expansion-panel-header>
               <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
@@ -235,7 +234,7 @@
               style="background-color: rgb(0 0 0 / 0%)"
               v-if="placeDetailed.idee.length > 0"
             >
-              <v-expansion-panel-header id="detailedHeader" color="rgba(0, 0, 0, 0.0)">
+              <v-expansion-panel-header id="detailed-header" color="rgba(0, 0, 0, 0.0)">
                 Verknüpfte Ideen
               </v-expansion-panel-header>
               <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
@@ -264,7 +263,7 @@ import { dataStore } from '@/app/data'
 import * as L from 'leaflet'
 import randomColor from 'randomcolor'
 import 'leaflet/dist/leaflet.css'
-import { mdiPlus, mdiMinus, mdiHome, mdiClose, mdiMap, mdiExpandAll } from '@mdi/js'
+import { mdiPlus, mdiMinus, mdiHome, mdiClose, mdiMap, mdiMagnify, mdiChevronDown } from '@mdi/js'
 
 const defaultCenter = [48.20849, 16.37208]
 const defaultZoom = 13
@@ -287,7 +286,8 @@ export default class PlacesView extends Vue {
     home: mdiHome,
     map: mdiMap,
     close: mdiClose,
-    expand: mdiExpandAll,
+    expand: mdiChevronDown,
+    search: mdiMagnify,
   }
 
   mapOptions = {

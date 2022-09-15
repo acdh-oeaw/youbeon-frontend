@@ -24,7 +24,7 @@
               deletable-chips
               hide-details
               label="Ideen durchsuchen nach..."
-              prepend-inner-icon="search"
+              :prepend-inner-icon="icons.search"
             >
             </v-autocomplete>
           </v-row>
@@ -32,10 +32,10 @@
       </v-col>
     </v-row>
     <div id="network">
-      <v-btn fab small id="zoom_in" class="zoomies control">
+      <v-btn fab small class="zoomies control">
         <v-icon>{{ icons.plus }}</v-icon>
       </v-btn>
-      <v-btn fab small class="control zoomies" id="zoom_out" style="margin-top: 70px">
+      <v-btn fab small class="control zoomies" style="margin-top: 70px">
         <v-icon>{{ icons.minus }}</v-icon>
       </v-btn>
       <v-btn
@@ -49,11 +49,11 @@
         <v-icon>{{ icons.home }}</v-icon>
       </v-btn>
     </div>
-    <v-card v-if="ideaDetailed !== null" id="detailedView" class="d-none d-sm-block">
+    <v-card v-if="ideaDetailed !== null" id="detailed-view" class="d-none d-sm-block">
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
-            <div id="detailedHeader">
+            <div id="detailed-header">
               {{ ideaDetailed.name }}
             </div>
           </v-col>
@@ -70,13 +70,13 @@
       <v-card-text>
         <v-expansion-panels accordion flat hover>
           <v-expansion-panel v-if="ideaDetailed.accounts.length > 0">
-            <v-expansion-panel-header id="detailedHeader">
+            <v-expansion-panel-header id="detailed-header">
               Verknüpfte Accounts
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <div v-for="account in ideaDetailed.accounts" v-bind:key="account.id">
                 <router-link
-                  class="hoverLink"
+                  class="hover-link"
                   tag="span"
                   :to="{ name: 'accounts', params: { account_id: account.id } }"
                   >{{ account.name }}</router-link
@@ -85,13 +85,13 @@
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel v-if="ideaDetailed.places.length > 0">
-            <v-expansion-panel-header id="detailedHeader">
+            <v-expansion-panel-header id="detailed-header">
               Verknüpfte Orte
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <div v-for="ort in ideaDetailed.places" v-bind:key="ort.id">
                 <router-link
-                  class="hoverLink"
+                  class="hover-link"
                   tag="span"
                   :to="{ name: 'places', params: { ort_id: ort.id } }"
                   >{{ ort.bezeichnung }}</router-link
@@ -100,7 +100,7 @@
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel v-if="ideaDetailed.idee.length > 0">
-            <v-expansion-panel-header id="detailedHeader">
+            <v-expansion-panel-header id="detailed-header">
               Verknüpfte Ideen
             </v-expansion-panel-header>
             <v-expansion-panel-content>
@@ -118,7 +118,6 @@
     </v-card>
 
     <v-bottom-sheet
-      class="detailedViewMobile"
       v-if="ideaDetailed !== null"
       v-model="ideaDetailedBoolean"
       hide-overlay
@@ -134,7 +133,7 @@
         <v-card-title>
           <v-row no-gutters>
             <v-col class="pa-0 ma-0 flex-grow-1">
-              <div id="detailedHeader">
+              <div id="detailed-header">
                 {{ ideaDetailed.name }}
               </div>
             </v-col>
@@ -156,13 +155,13 @@
           </div>
           <v-expansion-panels accordion flat hover>
             <v-expansion-panel v-if="ideaDetailed.accounts.length > 0">
-              <v-expansion-panel-header id="detailedHeader">
+              <v-expansion-panel-header id="detailed-header">
                 Verknüpfte Accounts
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <div v-for="account in ideaDetailed.accounts" v-bind:key="account.id">
                   <router-link
-                    class="hoverLink"
+                    class="hover-link"
                     tag="span"
                     :to="{
                       name: 'accounts',
@@ -174,13 +173,13 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
             <v-expansion-panel v-if="ideaDetailed.places.length > 0">
-              <v-expansion-panel-header id="detailedHeader">
+              <v-expansion-panel-header id="detailed-header">
                 Verknüpfte Orte
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <div v-for="ort in ideaDetailed.places" v-bind:key="ort.id">
                   <router-link
-                    class="hoverLink"
+                    class="hover-link"
                     tag="span"
                     :to="{ name: 'places', params: { ort_id: ort.id } }"
                     >{{ ort.bezeichnung }}</router-link
@@ -189,7 +188,7 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
             <v-expansion-panel v-if="ideaDetailed.idee.length > 0">
-              <v-expansion-panel-header id="detailedHeader">
+              <v-expansion-panel-header id="detailed-header">
                 Verknüpfte Ideen
               </v-expansion-panel-header>
               <v-expansion-panel-content>
@@ -213,7 +212,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { dataStore } from '@/app/data'
 import * as d3 from 'd3'
-import { mdiPlus, mdiMinus, mdiHome, mdiClose } from '@mdi/js'
+import { mdiPlus, mdiMinus, mdiHome, mdiClose, mdiMagnify } from '@mdi/js'
 
 @Component({
   components: {},
@@ -225,6 +224,7 @@ export default class IdeasView extends Vue {
     minus: mdiMinus,
     home: mdiHome,
     close: mdiClose,
+    search: mdiMagnify,
   }
 
   dropDownItems: string[] = []
@@ -1140,22 +1140,5 @@ export default class IdeasView extends Vue {
 h1,
 h2 {
   font-family: ChicagoFLF, Helvetica, Arial, sans-serif;
-}
-
-.balls {
-  float: left;
-  width: 2em;
-  height: 2em;
-  margin: 0.3em;
-  border-radius: 50%;
-  background-color: #e8c547;
-}
-
-.color-display {
-  float: right;
-  width: 3px;
-  height: 30px;
-  margin: 10px;
-  margin-right: 10px;
 }
 </style>

@@ -26,17 +26,17 @@
             flat
             hide-details
             label="Accounts durchsuchen nach..."
-            prepend-inner-icon="search"
+            :prepend-inner-icon="icons.search"
           >
           </v-autocomplete>
         </v-col>
       </v-row>
     </v-card>
-    <div id="network" class="network_mobile">
-      <v-btn fab small id="zoom_in" class="zoomies control">
+    <div id="network">
+      <v-btn fab small class="zoomies control">
         <v-icon>{{ icons.plus }}</v-icon>
       </v-btn>
-      <v-btn fab small class="control zoomies" id="zoom_out" style="margin-top: 70px">
+      <v-btn fab small class="control zoomies" style="margin-top: 70px">
         <v-icon>{{ icons.minus }}</v-icon>
       </v-btn>
       <v-btn
@@ -54,9 +54,9 @@
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
-            <div class="hover-link" id="detailedHeader" @click="openLinktoInsta(accountDetails)">
+            <div class="hover-link" id="detailed-header" @click="openLinktoInsta(accountDetails)">
               {{ accountDetails.name }}
-              <img id="instaLogo" src="@/assets/icons/camera.png" />
+              <img id="insta-logo" src="@/assets/icons/camera.png" />
             </div>
           </v-col>
           <v-col cols="2">
@@ -70,7 +70,7 @@
       <v-card-text>
         <v-expansion-panels accordion flat hover style="margin-bottom: 15px">
           <v-expansion-panel>
-            <v-expansion-panel-header id="detailedHeader">
+            <v-expansion-panel-header id="detailed-header">
               Verknüpfte Ideen
             </v-expansion-panel-header>
             <v-expansion-panel-content>
@@ -89,7 +89,6 @@
     </v-card>
 
     <v-bottom-sheet
-      class="detailedViewMobile"
       v-if="accountDetails !== null"
       v-model="influencerDetailedBoolean"
       hide-overlay
@@ -105,9 +104,9 @@
         <v-card-title>
           <v-row no-gutters>
             <v-col class="pa-0 ma-0 flex-grow-1">
-              <div class="hover-link" id="detailedHeader" @click="openLinktoInsta(accountDetails)">
+              <div class="hover-link" id="detailed-header" @click="openLinktoInsta(accountDetails)">
                 {{ accountDetails.name }}
-                <img id="instaLogo" src="@/assets/icons/camera.png" />
+                <img id="insta-logo" src="@/assets/icons/camera.png" />
               </div>
             </v-col>
             <v-col cols="2">
@@ -120,7 +119,7 @@
         <v-card-text>
           <v-expansion-panels accordion flat hover style="margin-bottom: 15px">
             <v-expansion-panel>
-              <v-expansion-panel-header id="detailedHeader">
+              <v-expansion-panel-header id="detailed-header">
                 Verknüpfte Ideen
               </v-expansion-panel-header>
               <v-expansion-panel-content>
@@ -145,7 +144,7 @@
 import * as d3 from 'd3'
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { dataStore } from '@/app/data'
-import { mdiPlus, mdiMinus, mdiHome, mdiClose } from '@mdi/js'
+import { mdiPlus, mdiMinus, mdiHome, mdiClose, mdiMagnify } from '@mdi/js'
 
 @Component({
   components: {},
@@ -157,6 +156,7 @@ export default class AccountsView extends Vue {
     minus: mdiMinus,
     home: mdiHome,
     close: mdiClose,
+    search: mdiMagnify,
   }
 
   selectedReligion: any = { id: 0, name: 'Alle Accounts' }
@@ -447,7 +447,10 @@ export default class AccountsView extends Vue {
           if (element.data.id === this.$route.params['account_id']) {
             this.selectedAccounts = []
             const tempInfluencerDetailed = element.data
-            if (!isNaN(Number(tempInfluencerDetailed.idee[0]))) {
+            if (
+              Array.isArray(tempInfluencerDetailed.idee) &&
+              tempInfluencerDetailed.idee.length > 0
+            ) {
               const filteredIdeas: any[] = []
               this.allIdeas.forEach((idea: any) => {
                 if (tempInfluencerDetailed.idee.includes(idea.id)) {
@@ -915,26 +918,10 @@ h2 {
   font-family: ChicagoFLF, Helvetica, Arial, sans-serif;
 }
 
-.balls {
-  float: left;
-  width: 2em;
-  height: 2em;
-  margin: 0.3em;
-  margin-top: 0.5em;
-  border-radius: 50%;
-  background-color: #b4dcd2;
-}
-
 #insta-logo {
   width: 20px;
   height: 20px;
   margin-left: 10px;
-}
-
-#innit-view-button {
-  position: absolute;
-  top: 250px;
-  right: 100px;
 }
 
 .v-expansion-panel-header {
