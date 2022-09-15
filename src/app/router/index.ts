@@ -29,7 +29,7 @@ const routes: Array<RouteConfig> = [
 
 const router = new VueRouter({
   base: process.env.BASE_URL,
-  mode: 'hash',
+  mode: 'history',
   routes,
 })
 
