@@ -328,9 +328,8 @@ import {
   LGeoJson,
   LWMSTileLayer as LWmsTileLayer,
 } from "vue2-leaflet";
-import MapLegende from "./MapLegende.vue";
-import { dataStore, info_popUp } from "../store/data";
-//@ts-ignore
+import MapLegende from "@/components/MapLegende.vue";
+import { dataStore, info_popUp } from "@/store/data";
 import * as L from "leaflet";
 import * as randomColor from "randomcolor";
 import "leaflet/dist/leaflet.css";

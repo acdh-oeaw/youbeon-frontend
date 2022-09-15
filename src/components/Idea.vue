@@ -241,8 +241,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { Component, Vue, Watch } from "vue-property-decorator";
-import { dataStore } from "../store/data";
-// eslint-disable-next-line
+import { dataStore } from "@/store/data";
 import * as d3 from "d3";
 
 @Component({
@@ -615,77 +614,6 @@ export default class Idea extends Vue {
     }
     return returnValue;
   }
-
-  /*determinePosition(node, width, height) {
-    let returnValue = 0;
-    if (width > height) {
-      if (this.bigNetwork === false) {
-        //@ts-ignore
-        return this.width / 2;
-      }
-
-      if (node.data != undefined) {
-        returnValue = 700;
-      } else {
-        switch (node.name) {
-          case "alevitische Jugendliche":
-            returnValue = this.coordinatesForcePoints[0].x;
-            break;
-          case "katholische Jugendliche":
-            returnValue = this.coordinatesForcePoints[1].x;
-            break;
-          case "evangelische Jugendliche":
-            returnValue = this.coordinatesForcePoints[2].x;
-            break;
-          case "orthodoxe Jugendliche":
-            returnValue = this.coordinatesForcePoints[3].x;
-            break;
-          case "muslimische Jugendliche":
-            returnValue = this.coordinatesForcePoints[4].x;
-            break;
-          case "jüdische Jugendliche":
-            returnValue = this.coordinatesForcePoints[6].x;
-            break;
-          case "sikh Jugendliche":
-            returnValue = this.coordinatesForcePoints[5].x;
-            break;
-        }
-      }
-    } else {
-      if (this.bigNetwork === false) {
-        //@ts-ignore
-        return this.height / 2;
-      }
-      if (node.data != undefined) {
-        returnValue = 0;
-      } else {
-        switch (node.name) {
-          case "alevitische Jugendliche":
-            returnValue = this.coordinatesForcePoints[0].y;
-            break;
-          case "katholische Jugendliche":
-            returnValue = this.coordinatesForcePoints[1].y;
-            break;
-          case "evangelische Jugendliche":
-            returnValue = this.coordinatesForcePoints[2].y;
-            break;
-          case "orthodoxe Jugendliche":
-            returnValue = this.coordinatesForcePoints[3].y;
-            break;
-          case "muslimische Jugendliche":
-            returnValue = this.coordinatesForcePoints[4].y;
-            break;
-          case "jüdische Jugendliche":
-            returnValue = this.coordinatesForcePoints[6].y;
-            break;
-          case "sikh Jugendliche":
-            returnValue = this.coordinatesForcePoints[5].y;
-            break;
-        }
-      }
-    }
-    return returnValue;
-  }*/
 
   generateNetwork(nodes, links) {
     d3.selectAll("g").remove();
