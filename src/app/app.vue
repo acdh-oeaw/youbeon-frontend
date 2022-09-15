@@ -101,11 +101,18 @@
           >
             <v-card-title id="popUp_title">Willkommen</v-card-title>
             <v-card-text style="height: 375px">
-              {{ popUpcontent.para1 }}
-              <br />
-              <br />
-              {{ popUpcontent.para2 }}
-              <br />
+              <p>
+                Die YouBeOn Map nimmt Sie mit in die Lebenswelten religiöser, junger Menschen aus
+                Wien. Auf drei Ebenen können Sie Orte und Instagram-Accounts, die den Jugendlichen
+                wichtig sind, und die damit verbundenen Ideen erkunden.
+              </p>
+              <p>
+                Die Daten stammen aus 41 Interviews mit Menschen aus sieben religiösen Traditionen.
+                Die YouBeOn Map zeigt, was den Teilnehmenden zum Zeitpunkt der Interviews on- und
+                offline wichtig war, welche Ideen sie teilen und was spezifisch für ihre
+                Religionstraditionen ist. Probieren Sie die YouBeOn Map einfach aus! Nähere Infos zu
+                den Funktionen finden Sie außerdem hier.
+              </p>
               <v-btn
                 id="popUp_btn"
                 color="#b0dcd9"
@@ -131,7 +138,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { info_popUp } from '@/app/data'
 import { initialize as initData } from '@/app/data'
 import { mdiMenu } from '@mdi/js'
 
@@ -149,7 +155,6 @@ export default class App extends Vue {
   }
 
   introPopUp = true
-  popUpcontent = info_popUp
 }
 </script>
 

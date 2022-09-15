@@ -268,7 +268,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { LMap, LTileLayer, LMarker, LGeoJson, LWMSTileLayer as LWmsTileLayer } from 'vue2-leaflet'
 import MapLegend from '@/components/map-legend.vue'
-import { dataStore, info_popUp } from '@/app/data'
+import { dataStore } from '@/app/data'
 import * as L from 'leaflet'
 import randomColor from 'randomcolor'
 import 'leaflet/dist/leaflet.css'
@@ -307,8 +307,6 @@ export default class Place extends Vue {
   center: number[] = defaultCenter
   map: any = null
   pointerSize = 5
-
-  popUpcontent = info_popUp
 
   tileSets = [
     {

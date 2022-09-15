@@ -56,13 +56,6 @@ export const dataStore = {
   kategorien: [],
 }
 
-export const info_popUp = {
-  para1:
-    'Die YouBeOn Map nimmt Sie mit in die Lebenswelten religiöser, junger Menschen aus Wien. Auf drei Ebenen können Sie Orte und Instagram-Accounts, die den Jugendlichen wichtig sind, und die damit verbundenen Ideen erkunden.',
-  para2:
-    ' Die Daten stammen aus 41 Interviews mit Menschen aus sieben religiösen Traditionen. Die YouBeOn Map zeigt, was den Teilnehmenden zum Zeitpunkt der Interviews on- und offline wichtig war, welche Ideen sie teilen und was spezifisch für ihre Religionstraditionen ist. Probieren Sie die YouBeOn Map einfach aus! Nähere Infos zu den Funktionen finden Sie außerdem hier.',
-}
-
 export async function initialize(): Promise<void> {
   dataStore.influencer = Array.from(accounts.values()).map((account) => {
     return {
