@@ -2,28 +2,24 @@
   "name": "youbeon_frontend",
   "version": "0.1.0",
   "private": true,
-  "license": "MIT",
   "scripts": {
+    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "lint": "run-p lint:*:check",
     "dev": "npm run serve",
     "format": "prettier . --cache --check --ignore-path .gitignore",
     "format:fix": "npm run format -- --write",
     "generate:db": "ts-node --project tsconfig.node.json ./scripts/generate-db",
-    "lint": "run-p lint:*:check",
-    "lint:fix": "run-p lint:*:fix",
     "lint:code:check": "eslint . --cache --ext cjs,js,mjs,ts,tsx,vue --ignore-path .gitignore",
     "lint:code:fix": "npm run lint:code:check -- --fix",
+    "lint:fix": "run-p lint:*:fix",
     "lint:styles:check": "stylelint \"**/*.@(css|vue)\" --cache --ignore-path .gitignore",
     "lint:styles:fix": "npm run lint:styles:check -- --fix",
     "prepare": "run-p generate:db setup",
     "setup": "simple-git-hooks || exit 0",
-    "serve": "vue-cli-service serve",
     "test": "exit 0",
     "typecheck": "tsc --noEmit",
     "validate": "run-s format lint typecheck test"
-  },
-  "engines": {
-    "node": "16.x"
   },
   "dependencies": {
     "core-js": "^3.25.1",
@@ -78,7 +74,9 @@
     "stylelint-config-html": "^1.1.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.8.3",
+    "vue-cli-plugin-vuetify": "~2.5.8",
     "vue-template-compiler": "^2.7.10",
+    "vuetify-loader": "^1.7.0",
     "xlsx": "^0.18.5"
   },
   "babel": {
@@ -86,11 +84,6 @@
       "@vue/cli-plugin-babel/preset"
     ]
   },
-  "browserslist": [
-    "> 1%",
-    "not dead",
-    "not op_mini all"
-  ],
   "eslintConfig": {
     "root": true,
     "env": {
@@ -128,6 +121,23 @@
       }
     ]
   },
+  "prettier": "@stefanprobst/prettier-config",
+  "postcss": {
+    "plugins": {
+      "postcss-html": {},
+      "postcss-nesting": {},
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "not dead",
+    "not op_mini all"
+  ],
+  "engines": {
+    "node": "16.x"
+  },
+  "license": "MIT",
   "lint-staged": {
     "*.@(cjs|js|mjs|ts|tsx)": [
       "eslint --cache --fix",
@@ -144,14 +154,6 @@
       "prettier --write"
     ]
   },
-  "postcss": {
-    "plugins": {
-      "postcss-html": {},
-      "postcss-nesting": {},
-      "autoprefixer": {}
-    }
-  },
-  "prettier": "@stefanprobst/prettier-config",
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged",
     "pre-push": "npm run validate"

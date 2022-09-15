@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Vuetify from 'vuetify'
+import Vuetify from 'vuetify/lib'
 import de from 'vuetify/src/locale/de'
 import en from 'vuetify/src/locale/en'
 
