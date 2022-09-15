@@ -8,21 +8,28 @@ const routes: Array<RouteConfig> = [
     path: '/',
     name: 'places',
     component() {
-      return import('@/components/places.vue')
+      return import('@/components/places.view.vue')
     },
   },
   {
     path: '/ideas',
     name: 'ideas',
     component() {
-      return import('@/components/ideas.vue')
+      return import('@/components/ideas.view.vue')
     },
   },
   {
     path: '/accounts',
     name: 'accounts',
     component() {
-      return import('@/components/accounts.vue')
+      return import('@/components/accounts.view.vue')
+    },
+  },
+  {
+    path: '/imprint',
+    name: 'imprint',
+    component() {
+      return import('@/components/imprint.view.vue')
     },
   },
 ]

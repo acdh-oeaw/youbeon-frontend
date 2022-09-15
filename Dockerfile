@@ -14,6 +14,7 @@ COPY --chown=node:node scripts ./scripts
 COPY --chown=node:node data ./data
 COPY --chown=node:node src ./src
 
+ARG REDMINE_ID
 
 RUN npm install --ci --no-audit --no-fund
 

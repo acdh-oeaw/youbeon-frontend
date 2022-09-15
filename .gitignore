@@ -17,5 +17,17 @@ src/db/interviewReligions.ts
 src/db/places.ts
 src/db/religions.ts
 
+# generated imprint
+src/components/imprint.view.vue
+
+# Generated assets
+/public/favicon.ico
+/public/icon.svg
+/public/android-chrome-192x192.png
+/public/android-chrome-512x512.png
+/public/apple-touch-icon.png
+/public/app.webmanifest
+/public/image.webp
+
 # misc
 .DS_Store
