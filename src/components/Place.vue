@@ -332,7 +332,6 @@ import MapLegende from "./MapLegende.vue";
 import { dataStore, info_popUp } from "../store/data";
 //@ts-ignore
 import * as L from "leaflet";
-import * as _ from "lodash";
 import * as randomColor from "randomcolor";
 
 const defaultCenter = [48.20849, 16.37208];

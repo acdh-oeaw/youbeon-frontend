@@ -167,7 +167,6 @@
 <script lang="ts">
 import * as d3 from "d3";
 import { Component, Vue, Watch } from "vue-property-decorator";
-import * as _ from "lodash";
 import { dataStore } from "../store/data";
 
 @Component({
