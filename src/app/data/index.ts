@@ -1,4 +1,4 @@
-import { accounts, ideas, places, religions } from '@/db'
+import { accounts, ideas, places, religions, interviews } from '@/db'
 
 /**
  * Currently, we store imported data in different shapes than api responses
@@ -66,8 +66,9 @@ export async function initialize(): Promise<void> {
       mentions: account.mentions,
       religion: Array.from(account.religions),
       /** The current api stored only the "religion" part of an interview identifier here. */
-      interviews: Array.from(account.interviews).map((interview) => {
-        return interview.split('-')[1]
+      interviews: Array.from(account.interviews).map((key) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return interviews.get(key)!.religion
       }),
       kategorie: [],
       _color: '#daeee8',
@@ -96,8 +97,9 @@ export async function initialize(): Promise<void> {
         return ideas.get(key)!.label
       }),
       /** The current api stored only the "religion" part of an interview identifier here. */
-      interviews: Array.from(idea.interviews).map((interview) => {
-        return interview.split('-')[1]
+      interviews: Array.from(idea.interviews).map((key) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return interviews.get(key)!.religion
       }),
       zitate: idea.quotes,
       _color: '#f4e2a3',
