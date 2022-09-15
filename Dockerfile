@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:14-slim
+FROM node:16-slim
 
 RUN mkdir /app && chown -R node:node /app
 WORKDIR /app
