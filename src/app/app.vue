@@ -18,7 +18,7 @@
                   class="d-flex d-sm-none"
                   id="phone_nav"
                   style="float: right; margin: 20px"
-                  >menu</v-icon
+                  >{{ icons.menu }}</v-icon
                 >
                 <v-tabs
                   class="d-none d-sm-block"
@@ -140,11 +140,16 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { info_popUp } from '@/app/data'
 import { initialize as initData } from '@/app/data'
+import { mdiMenu } from '@mdi/js'
 
 @Component({
   components: {},
 })
 export default class App extends Vue {
+  icons = {
+    menu: mdiMenu,
+  }
+
   loading = true
   drawer = false
   mounted() {

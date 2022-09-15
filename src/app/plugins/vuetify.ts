@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
 import de from 'vuetify/src/locale/de'
 import en from 'vuetify/src/locale/en'
 
@@ -15,16 +14,14 @@ export default new Vuetify({
     current: 'de',
   },
   icons: {
-    iconfont: 'md',
+    iconfont: 'mdiSvg',
   },
   theme: {
     dark: false,
     themes: {
       light: {
-        ci: '#3B89A0',
-        primary: '#B0DCD9',
-        secondary: '#FF8D06',
-        background: '#E9E9E9',
+        primary: '#b0dcd9',
+        secondary: '#ff8d06',
       },
     },
   },

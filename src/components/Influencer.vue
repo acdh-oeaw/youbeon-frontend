@@ -34,10 +34,10 @@
     </v-card>
     <div id="network" class="network_mobile">
       <v-btn fab small id="zoom_in" class="zoomies control">
-        <v-icon>add</v-icon>
+        <v-icon>{{ icons.plus }}</v-icon>
       </v-btn>
       <v-btn fab small class="control zoomies" id="zoom_out" style="margin-top: 70px">
-        <v-icon>remove</v-icon>
+        <v-icon>{{ icons.minus }}</v-icon>
       </v-btn>
       <v-btn
         :disabled="bigNetwork"
@@ -47,7 +47,7 @@
         small
         @click="resetNetwork()"
       >
-        <v-icon>home</v-icon>
+        <v-icon>{{ icons.home }}</v-icon>
       </v-btn>
     </div>
     <v-card v-if="influencerDetailed !== null" class="detailed-view d-none d-sm-block">
@@ -65,7 +65,7 @@
           </v-col>
           <v-col cols="2">
             <div style="position: fixed; right: 60px">
-              <v-icon @click="influencerDetailed = null"> close </v-icon>
+              <v-icon @click="influencerDetailed = null">{{ icons.close }}</v-icon>
             </div>
           </v-col>
         </v-row>
@@ -120,7 +120,7 @@
             </v-col>
             <v-col cols="2">
               <div style="position: fixed; right: 30px">
-                <v-icon @click="influencerDetailed = null"> close </v-icon>
+                <v-icon @click="influencerDetailed = null">{{ icons.close }}</v-icon>
               </div>
             </v-col>
           </v-row>
@@ -153,12 +153,20 @@
 import * as d3 from 'd3'
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { dataStore } from '@/app/data'
+import { mdiPlus, mdiMinus, mdiHome, mdiClose } from '@mdi/js'
 
 @Component({
   components: {},
   name: 'Influencer',
 })
 export default class Influencer extends Vue {
+  icons = {
+    plus: mdiPlus,
+    minus: mdiMinus,
+    home: mdiHome,
+    close: mdiClose,
+  }
+
   //Religion Variables
   selectedReligion: any = { id: 0, name: 'Alle Accounts' }
 

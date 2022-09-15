@@ -33,10 +33,10 @@
     </v-row>
     <div id="network">
       <v-btn fab small id="zoom_in" class="zoomies control">
-        <v-icon>add</v-icon>
+        <v-icon>{{ icons.plus }}</v-icon>
       </v-btn>
       <v-btn fab small class="control zoomies" id="zoom_out" style="margin-top: 70px">
-        <v-icon>remove</v-icon>
+        <v-icon>{{ icons.minus }}</v-icon>
       </v-btn>
       <v-btn
         :disabled="bigNetwork"
@@ -46,7 +46,7 @@
         small
         @click="resetNetwork()"
       >
-        <v-icon>home</v-icon>
+        <v-icon>{{ icons.home }}</v-icon>
       </v-btn>
     </div>
     <v-card v-if="ideaDetailed !== null" id="detailedView" class="d-none d-sm-block">
@@ -59,7 +59,7 @@
           </v-col>
           <v-col cols="2">
             <div style="position: absolute; right: 20px">
-              <v-icon @click="ideaDetailed = null"> close </v-icon>
+              <v-icon @click="ideaDetailed = null">{{ icons.close }}</v-icon>
             </div>
           </v-col>
         </v-row>
@@ -140,7 +140,7 @@
             </v-col>
             <v-col cols="2">
               <div style="position: absolute; right: 20px">
-                <v-icon @click="ideaDetailed = null"> close </v-icon>
+                <v-icon @click="ideaDetailed = null">{{ icons.close }}</v-icon>
               </div>
             </v-col>
           </v-row>
@@ -213,12 +213,20 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { dataStore } from '@/app/data'
 import * as d3 from 'd3'
+import { mdiPlus, mdiMinus, mdiHome, mdiClose } from '@mdi/js'
 
 @Component({
   components: {},
   name: 'Idea',
 })
 export default class Idea extends Vue {
+  icons = {
+    plus: mdiPlus,
+    minus: mdiMinus,
+    home: mdiHome,
+    close: mdiClose,
+  }
+
   dropDownItems: string[] = []
   nodes: any = []
   links: any = []

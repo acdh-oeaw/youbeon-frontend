@@ -63,7 +63,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-btn class="mx-1" style="margin-top: 5px" text v-on="on" v-bind="attrs">
                 {{ selectedFilter.name }}
-                <v-icon style="margin-left: 10px">expand_more</v-icon>
+                <v-icon style="margin-left: 10px">{{ icons.expand }}</v-icon>
               </v-btn>
             </template>
             <v-list dense>
@@ -81,16 +81,16 @@
       </v-row>
     </v-card>
     <v-btn fab small class="zoom" @click="zoom = zoom + 1" style="margin-top: 30px">
-      <v-icon>add</v-icon>
+      <v-icon>{{ icons.plus }}</v-icon>
     </v-btn>
     <v-btn fab small class="zoom" @click="zoom = zoom - 1">
-      <v-icon>remove</v-icon>
+      <v-icon>{{ icons.minus }}</v-icon>
     </v-btn>
     <v-btn class="zoom" fab small @click="resetView()">
-      <v-icon>home</v-icon>
+      <v-icon>{{ icons.home }}</v-icon>
     </v-btn>
     <v-btn class="zoom" fab small @click="zoomToMap()">
-      <v-icon>map</v-icon>
+      <v-icon>{{ icons.map }}</v-icon>
     </v-btn>
 
     <l-map
@@ -157,7 +157,7 @@
           </v-col>
           <v-col cols="2">
             <div style="position: fixed; right: 60px">
-              <v-icon @click="placeDetailed = null"> close </v-icon>
+              <v-icon @click="placeDetailed = null">{{ icons.close }}</v-icon>
             </div>
           </v-col>
         </v-row>
@@ -222,7 +222,7 @@
             </v-col>
             <v-col cols="2">
               <div style="position: fixed; right: 30px">
-                <v-icon @click="placeDetailed = null"> close </v-icon>
+                <v-icon @click="placeDetailed = null">{{ icons.close }}</v-icon>
               </div>
             </v-col>
           </v-row>
@@ -272,6 +272,7 @@ import { dataStore, info_popUp } from '@/app/data'
 import * as L from 'leaflet'
 import randomColor from 'randomcolor'
 import 'leaflet/dist/leaflet.css'
+import { mdiPlus, mdiMinus, mdiHome, mdiClose, mdiMap, mdiExpandAll } from '@mdi/js'
 
 const defaultCenter = [48.20849, 16.37208]
 const defaultZoom = 13
@@ -288,6 +289,15 @@ const defaultZoom = 13
   name: 'Place',
 })
 export default class Place extends Vue {
+  icons = {
+    plus: mdiPlus,
+    minus: mdiMinus,
+    home: mdiHome,
+    map: mdiMap,
+    close: mdiClose,
+    expand: mdiExpandAll,
+  }
+
   mapOptions = {
     scrollWheelZoom: true,
     zoomControl: false,
