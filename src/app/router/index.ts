@@ -1,32 +1,35 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import Idea from '@/components/idea.vue'
-import Influencer from '@/components/influencer.vue'
-import Place from '@/components/place.vue'
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
     path: '/',
-    name: 'place',
-    component: Place,
+    name: 'places',
+    component() {
+      return import('@/components/places.vue')
+    },
   },
   {
-    path: '/Idea',
-    name: 'idea',
-    component: Idea,
+    path: '/ideas',
+    name: 'ideas',
+    component() {
+      return import('@/components/ideas.vue')
+    },
   },
   {
-    path: '/account',
-    name: 'account',
-    component: Influencer,
+    path: '/accounts',
+    name: 'accounts',
+    component() {
+      return import('@/components/accounts.vue')
+    },
   },
 ]
 
 const router = new VueRouter({
-  mode: 'hash',
   base: process.env.BASE_URL,
+  mode: 'hash',
   routes,
 })
 
