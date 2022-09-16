@@ -483,10 +483,11 @@ export default class AccountsView extends Vue {
     // resize canvas on div resize
     const sizeOberserver = new ResizeObserver((entries) => {
       const rect = entries[0]?.contentRect
-      this.width = rect?.width
-      this.height = rect?.height
-
-      d3.select('.network').select('svg').attr('viewBox', `0 0 ${this.width} ${this.height}`)
+      if (rect?.width * rect?.height != 0) {
+        this.width = rect?.width
+        this.height = rect?.height
+        d3.select('.network').select('svg').attr('viewBox', `0 0 ${this.width} ${this.height}`)
+      }
     })
 
     sizeOberserver.observe(this.$refs.netRef)
@@ -813,11 +814,12 @@ export default class AccountsView extends Vue {
       .append('text')
       .html(function (d: any) {
         if (!d.children) {
-          if (d.data) {
-            return `<tspan dy=".3em">${d.data.name}</tspan>`
-          } else {
-            return `<tspan dy=".3em">${d.name}</tspan>`
-          }
+          const word = d.name || d.data.name
+          return (
+            "<tspan x='0' dx='0' dy='0.3em' text-anchor='middle' class='nodelabel-acc'>" +
+            word +
+            '</tspan>'
+          )
         } else {
           if (d.data) {
             return (
@@ -841,6 +843,9 @@ export default class AccountsView extends Vue {
         }
       })
       .attr('font-weight', (d: any) => (d.children ? 600 : 400))
+      .on('click', (d: any, i: number) => {
+        this.onNodeClick(d, i)
+      })
       .attr('dx', function (d: any) {
         return d.children ? -120 : 25
       })
@@ -911,6 +916,14 @@ export default class AccountsView extends Vue {
   z-index: 5;
   margin: 20px;
   margin-left: 20px;
+}
+
+.nodelabel-acc {
+  stroke: #daeee8;
+  paint-order: stroke;
+  stroke-width: 1.5px;
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
 }
 
 .detailed-view {

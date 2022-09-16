@@ -741,7 +741,7 @@ export default class IdeasView extends Vue {
           const words = (d.name || d.data.name).split(' ')
           if (words.length <= 1) {
             return (
-              "<tspan x='0' dx='0' dy='0.3em' text-anchor='middle' class='nodelabel'>" +
+              "<tspan x='0' dx='0' dy='0.3em' text-anchor='middle' class='nodelabel-idea'>" +
               words[0] +
               '</tspan>'
             )
@@ -762,7 +762,7 @@ export default class IdeasView extends Vue {
                 (word, i) =>
                   "<tspan x='0' dx='0' dy='" +
                   (i === 0 ? 0.7 - 0.5 * ret.length : 1) +
-                  "em' text-anchor='middle' class='nodelabel'>" +
+                  "em' text-anchor='middle' class='nodelabel-idea'>" +
                   word +
                   '</tspan>',
               )
@@ -1072,10 +1072,11 @@ export default class IdeasView extends Vue {
     // resize canvas on div resize
     const sizeOberserver = new ResizeObserver((entries) => {
       const rect = entries[0]?.contentRect
-      this.width = rect?.width
-      this.height = rect?.height
-
-      d3.select('.network').select('svg').attr('viewBox', `0 0 ${this.width} ${this.height}`)
+      if (rect?.width * rect?.height != 0) {
+        this.width = rect?.width
+        this.height = rect?.height
+        d3.select('.network').select('svg').attr('viewBox', `0 0 ${this.width} ${this.height}`)
+      }
     })
 
     sizeOberserver.observe(this.$refs.netRef)
@@ -1121,7 +1122,7 @@ export default class IdeasView extends Vue {
   color: #000;
 }
 
-.nodelabel {
+.nodelabel-idea {
   stroke: #f4e2a3;
   paint-order: stroke;
   stroke-width: 1.5px;
