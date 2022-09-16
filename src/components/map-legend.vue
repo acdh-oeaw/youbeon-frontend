@@ -1,6 +1,6 @@
 <template>
   <vContainer>
-    <div id="list_legy" v-if="religions.length > 0 || places.length > 0 || ideas.length > 0">
+    <div class="list-legend" v-if="religions.length > 0 || places.length > 0 || ideas.length > 0">
       <div style="width: fill; text-align: center">
         <b>Legende</b>
       </div>
@@ -66,7 +66,14 @@ a {
   color: #42b983;
 }
 
+.list-legend {
+  padding: 5px;
+  border: 2px solid #b0dcd9;
+  border-radius: 2.5px;
+  background-color: hsl(0deg 0% 100% / 80%);
+}
+
 .legend-items {
-  background-color: rgba($color: #def, $alpha: 0%) !important;
+  background-color: hsl(210deg 100% 93% / 0%) !important;
 }
 </style>
