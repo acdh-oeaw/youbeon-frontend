@@ -1,6 +1,6 @@
 <template>
   <vContainer>
-    <v-card class="sticky-card mt-10 searchbar" id="mobile-search-distance" outlined color="white">
+    <v-card class="sticky-card mt-10 searchbar mobile-search-distance" outlined color="white">
       <v-row no-gutters>
         <v-col class="pa-0 flex-grow-1">
           <v-autocomplete
@@ -57,7 +57,6 @@
         >
           <v-switch dense class="switch" v-model="filterNonReligionPlaces"></v-switch>
         </v-col>
-        <div class="vl"></div>
         <v-col class="pa-0 ma-0" cols="auto">
           <v-menu max-height="80vh" offset-y>
             <template v-slot:activator="{ on, attrs }">
@@ -130,20 +129,19 @@
     </l-map>
     <v-col class="pa-0 flex-grow-1 mr-7 list-height">
       <map-legend
-        id="legend"
         :religions="religionJSON"
         :places="geoPlaces"
         :ideas="ideaJSON"
-        class="d-none d-sm-block"
+        class="d-none d-sm-block legend"
       >
       </map-legend>
     </v-col>
 
-    <v-card v-if="placeDetailed !== null" id="detailed-view" class="d-none d-sm-block">
+    <v-card v-if="placeDetailed !== null" class="d-none d-sm-block detailed-view">
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
-            <div style="float: left" id="detailed-header">
+            <div style="float: left" class="detailed-header">
               {{ placeDetailed.name }}
             </div>
           </v-col>
@@ -160,7 +158,7 @@
       <v-card-text>
         <v-expansion-panels accordion flat hover>
           <v-expansion-panel style="background-color: rgb(0 0 0 / 0%)">
-            <v-expansion-panel-header id="detailed-header" color="rgba(0, 0, 0, 0.0)">
+            <v-expansion-panel-header class="detailed-header" color="rgba(0, 0, 0, 0.0)">
               Verknüpfte Religionen
             </v-expansion-panel-header>
             <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
@@ -173,7 +171,7 @@
             style="background-color: rgb(0 0 0 / 0%)"
             v-if="placeDetailed.idee.length > 0"
           >
-            <v-expansion-panel-header id="detailed-header" color="rgba(0, 0, 0, 0.0)">
+            <v-expansion-panel-header class="detailed-header" color="rgba(0, 0, 0, 0.0)">
               Verknüpfte Ideen
             </v-expansion-panel-header>
             <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
@@ -207,7 +205,7 @@
         <v-card-title>
           <v-row no-gutters>
             <v-col class="pa-0 ma-0 flex-grow-1">
-              <div style="float: left" id="detailed-header">
+              <div style="float: left" class="detailed-header">
                 {{ placeDetailed.name }}
               </div>
             </v-col>
@@ -221,7 +219,7 @@
         <v-card-text>
           <v-expansion-panels accordion flat hover>
             <v-expansion-panel style="background-color: rgb(0 0 0 / 0%)">
-              <v-expansion-panel-header id="detailed-header" color="rgba(0, 0, 0, 0.0)">
+              <v-expansion-panel-header class="detailed-header" color="rgba(0, 0, 0, 0.0)">
                 Verknüpfte Religionen
               </v-expansion-panel-header>
               <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
@@ -234,7 +232,7 @@
               style="background-color: rgb(0 0 0 / 0%)"
               v-if="placeDetailed.idee.length > 0"
             >
-              <v-expansion-panel-header id="detailed-header" color="rgba(0, 0, 0, 0.0)">
+              <v-expansion-panel-header class="detailed-header" color="rgba(0, 0, 0, 0.0)">
                 Verknüpfte Ideen
               </v-expansion-panel-header>
               <v-expansion-panel-content color="rgba(0, 0, 0, 0.0)">
@@ -665,7 +663,7 @@ export default class PlacesView extends Vue {
 
   displayLocationsReligion(religion: any) {
     let placesWithReligion = this.allPlaces.filter((f: any) => {
-      if (f.properties != undefined && f.properties.religion != undefined) {
+      if (f.properties != null && f.properties.religion != null) {
         let neueReligionsFormatierung = religion.properties.name.split('(')
         if (neueReligionsFormatierung.length > 1) {
           neueReligionsFormatierung = neueReligionsFormatierung[1]
@@ -746,7 +744,7 @@ export default class PlacesView extends Vue {
           idee: ideas,
           kategorie: categories,
           religion: item.interview,
-          religiousPlace: item.religion[0] != undefined ? true : false,
+          religiousPlace: item.religion[0] != null ? true : false,
         },
         geometry: {
           type: 'Point',
@@ -794,14 +792,14 @@ export default class PlacesView extends Vue {
 
   @Watch('$route')
   startLoaded() {
-    if (this.$route.params['ort_id'] != undefined) {
+    if (this.$route.params['ort_id'] != null) {
       this.selectedFilter = { id: 2, name: 'Alle Orte' }
     }
     this.$nextTick(this.routeLoaded)
   }
 
   routeLoaded() {
-    if (this.$route.params['ort_id'] != undefined) {
+    if (this.$route.params['ort_id'] != null) {
       this.autocompleteItems.forEach((item) => {
         if (this.$route.params['ort_id'] === item.properties.id) {
           this.selectedPlaces.push(item.properties)
@@ -856,7 +854,7 @@ export default class PlacesView extends Vue {
   padding: 0;
 }
 
-#legend {
+.legend {
   position: fixed;
   bottom: 30px;
   left: 60px;
@@ -875,13 +873,7 @@ export default class PlacesView extends Vue {
   margin-top: 62vh;
 }
 
-.vl {
-  height: 30px;
-  margin-top: 10px;
-  border-left: 2px solid #e5e5e5;
-}
-
-#detailed-view {
+.detailed-view {
   position: absolute;
   right: 30px;
   bottom: 30px;
@@ -894,12 +886,12 @@ export default class PlacesView extends Vue {
 }
 
 @media only screen and (max-width: 700px) {
-  #mobile-search-distance {
+  .mobile-search-distance {
     margin-top: 10px !important;
   }
 }
 
-#detailed-header {
+.detailed-header {
   font-family: ChicagoFLF, Helvetica, Arial, sans-serif;
 }
 

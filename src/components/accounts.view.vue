@@ -1,5 +1,5 @@
 <template>
-  <vContainer>
+  <v-container>
     <div style="margin: 20px 0" class="d-none d-sm-block">
       Auf dieser Ebene der YouBeOn Map sehen Sie die Instagram-Accounts, von denen die
       Interviewteilnehmer*innen im Gespräch erzählt haben. Sie sind nach Religionstraditionen
@@ -32,31 +32,34 @@
         </v-col>
       </v-row>
     </v-card>
-    <div id="network">
-      <v-btn fab small class="zoomies control">
-        <v-icon>{{ icons.plus }}</v-icon>
-      </v-btn>
-      <v-btn fab small class="control zoomies" style="margin-top: 70px">
-        <v-icon>{{ icons.minus }}</v-icon>
-      </v-btn>
-      <v-btn
-        :disabled="bigNetwork"
-        style="margin-top: 120px"
-        class="control heightButton"
-        fab
-        small
-        @click="resetNetwork()"
-      >
-        <v-icon>{{ icons.home }}</v-icon>
-      </v-btn>
+    <div class="network-container">
+      <div class="network"></div>
+      <div class="controls-container">
+        <v-btn fab small class="zoomies control">
+          <v-icon>{{ icons.plus }}</v-icon>
+        </v-btn>
+        <v-btn fab small class="control zoomies" style="margin-top: 70px">
+          <v-icon>{{ icons.minus }}</v-icon>
+        </v-btn>
+        <v-btn
+          :disabled="bigNetwork"
+          style="margin-top: 120px"
+          class="control heightButton"
+          fab
+          small
+          @click="resetNetwork()"
+        >
+          <v-icon>{{ icons.home }}</v-icon>
+        </v-btn>
+      </div>
     </div>
     <v-card v-if="accountDetails !== null" class="detailed-view d-none d-sm-block">
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
-            <div class="hover-link" id="detailed-header" @click="openLinktoInsta(accountDetails)">
+            <div class="hover-link detailed-header" @click="openLinktoInsta(accountDetails)">
               {{ accountDetails.name }}
-              <img id="insta-logo" src="@/assets/icons/camera.png" />
+              <img class="insta-logo" src="@/assets/icons/camera.png" />
             </div>
           </v-col>
           <v-col cols="2">
@@ -70,7 +73,7 @@
       <v-card-text>
         <v-expansion-panels accordion flat hover style="margin-bottom: 15px">
           <v-expansion-panel>
-            <v-expansion-panel-header id="detailed-header">
+            <v-expansion-panel-header class="detailed-header">
               Verknüpfte Ideen
             </v-expansion-panel-header>
             <v-expansion-panel-content>
@@ -104,9 +107,9 @@
         <v-card-title>
           <v-row no-gutters>
             <v-col class="pa-0 ma-0 flex-grow-1">
-              <div class="hover-link" id="detailed-header" @click="openLinktoInsta(accountDetails)">
+              <div class="hover-link detailed-header" @click="openLinktoInsta(accountDetails)">
                 {{ accountDetails.name }}
-                <img id="insta-logo" src="@/assets/icons/camera.png" />
+                <img class="insta-logo" src="@/assets/icons/camera.png" />
               </div>
             </v-col>
             <v-col cols="2">
@@ -119,7 +122,7 @@
         <v-card-text>
           <v-expansion-panels accordion flat hover style="margin-bottom: 15px">
             <v-expansion-panel>
-              <v-expansion-panel-header id="detailed-header">
+              <v-expansion-panel-header class="detailed-header">
                 Verknüpfte Ideen
               </v-expansion-panel-header>
               <v-expansion-panel-content>
@@ -137,7 +140,7 @@
         </v-card-text>
       </v-card>
     </v-bottom-sheet>
-  </vContainer>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -388,7 +391,7 @@ export default class AccountsView extends Vue {
 
     const numberOfNodes = this.nodes.length
     this.nodes.forEach((node: any) => {
-      if (node.data != undefined && node.data.interviews != undefined) {
+      if (node.data != null && node.data.interviews != null) {
         // @ts-expect-error Ignore for now
         const linkArray: [number] = []
         node.data.interviews.forEach((links: any) => {
@@ -422,7 +425,7 @@ export default class AccountsView extends Vue {
         linkArray.forEach((target) => {
           this.links.push({
             source: this.nodes.indexOf(node),
-            _color: '#AAA',
+            _color: '#aaa',
             thiccness: '2',
             target: target,
           })
@@ -434,16 +437,16 @@ export default class AccountsView extends Vue {
 
   @Watch('$route')
   startLoaded() {
-    if (this.$route.params['account_id'] != undefined && this.$route.params['account_id'] != '') {
+    if (this.$route.params['account_id'] != null && this.$route.params['account_id'] != '') {
       this.resetNetwork()
     }
     this.$nextTick(this.routeLoaded)
   }
 
   routeLoaded() {
-    if (this.$route.params['account_id'] != undefined && this.$route.params['account_id'] != '') {
+    if (this.$route.params['account_id'] != null && this.$route.params['account_id'] != '') {
       this.nodes.forEach(async (element: any) => {
-        if (element.data != undefined) {
+        if (element.data != null) {
           if (element.data.id === this.$route.params['account_id']) {
             this.selectedAccounts = []
             const tempInfluencerDetailed = element.data
@@ -470,8 +473,8 @@ export default class AccountsView extends Vue {
 
   async mounted() {
     this.allAccounts = this.formatInfluencerIntoReligions(dataStore.influencer)
-    this.height = document.querySelector('#network')?.clientHeight
-    this.width = document.querySelector('#network')?.clientWidth
+    this.height = document.querySelector('.network')?.clientHeight
+    this.width = document.querySelector('.network')?.clientWidth
     this.allIdeas = dataStore.ideen
     this.initialNetwork()
     this.$router.onReady(() => this.routeLoaded())
@@ -483,7 +486,7 @@ export default class AccountsView extends Vue {
       if (this.bigNetwork === false) {
         return width / 2
       }
-      if (node.data != undefined && node.data.interviews != undefined) {
+      if (node.data != null && node.data.interviews != null) {
         if (node.data.interviews.length > 1) {
           if (
             node.data.interviews.length === 2 &&
@@ -551,7 +554,7 @@ export default class AccountsView extends Vue {
       if (this.bigNetwork === false) {
         return height / 2
       }
-      if (node.data != undefined && node.data.interviews != undefined) {
+      if (node.data != null && node.data.interviews != null) {
         if (node.data.interviews.length > 1) {
           if (
             node.data.interviews.length === 2 &&
@@ -619,7 +622,6 @@ export default class AccountsView extends Vue {
     return returnValue
   }
 
-  //@Watch("selectedInfluencer")
   buildInfluencerNetworkObject() {
     if (
       this.selectedAccounts.length > this.selectedAccountsLength &&
@@ -680,12 +682,11 @@ export default class AccountsView extends Vue {
   generateNetwork(nodes: any, links: any) {
     d3.selectAll('g').remove()
 
-    this.height = document.querySelector('#network')?.clientHeight
-    this.width = document.querySelector('#network')?.clientWidth
+    this.height = document.querySelector('.network')?.clientHeight
+    this.width = document.querySelector('.network')?.clientWidth
 
-    // Let's list the force we wanna apply on the network
     const simulation = d3
-      .forceSimulation(nodes) // Force algorithm is applied to nodes
+      .forceSimulation(nodes)
       .force(
         'link',
         d3
@@ -742,14 +743,12 @@ export default class AccountsView extends Vue {
       return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
     }
 
-    // append the svg object to the body of the page
     let svg: any
     // @ts-expect-error Ignore for now
-    if (d3.select('svg')._groups[0][0] === null) {
-      svg = d3.select('#network').append('svg').attr('viewBox', `0 0 ${this.width} ${this.height}`)
-      //.attr("preserveAspectRatio", "xMinYMin meet")
+    if (d3.select('.network').select('svg')._groups[0][0] == null) {
+      svg = d3.select('.network').append('svg').attr('viewBox', `0 0 ${this.width} ${this.height}`)
     } else {
-      svg = d3.select('svg')
+      svg = d3.select('.network').select('svg')
     }
 
     const g = svg.append('g')
@@ -760,7 +759,6 @@ export default class AccountsView extends Vue {
     const zoom = d3.zoom().on('zoom', handleZoom)
     svg.call(zoom).call(zoom.transform, this.currentZoomLevel)
 
-    // Initialize the links
     const link = g
       .selectAll('line')
       .data(links)
@@ -838,7 +836,6 @@ export default class AccountsView extends Vue {
         return d.children ? '2.3em' : 14
       })
 
-    // This function is run at each iteration of the force algorithm, updating the nodes position.
     simulation.on('tick', () => {
       link
         .attr('x1', function (d: any) {
@@ -877,7 +874,8 @@ export default class AccountsView extends Vue {
 </script>
 
 <style scoped>
-#network {
+.network-container {
+  position: relative;
   max-width: 100%;
   height: 70vh;
   margin-top: 3vh;
@@ -885,10 +883,15 @@ export default class AccountsView extends Vue {
   background-color: #f5f5f5;
 }
 
-.vl {
-  height: 30px;
-  margin-top: 7px;
-  border-left: 2px solid #e5e5e5;
+.controls-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.network {
+  width: 100%;
+  height: 100%;
 }
 
 .control {
@@ -914,11 +917,11 @@ h2 {
   font-family: ChicagoFLF, Helvetica, Arial, sans-serif;
 }
 
-#detailed-header {
+.detailed-header {
   font-family: ChicagoFLF, Helvetica, Arial, sans-serif;
 }
 
-#insta-logo {
+.insta-logo {
   width: 20px;
   height: 20px;
   margin-left: 10px;

@@ -1,5 +1,5 @@
 <template>
-  <vContainer>
+  <v-container>
     <div style="margin: 20px 0" class="d-none d-sm-block">
       Auf dieser Ebene der YouBeOn Map sehen Sie die Ideen, die in den Interviews aufgekommen sind.
       Das YouBeOn Forscher*innen-Team hat diese Ideen gesammelt und benannt. Mit Zitaten aus den
@@ -31,29 +31,32 @@
         </v-card>
       </v-col>
     </v-row>
-    <div id="network">
-      <v-btn fab small class="zoomies control">
-        <v-icon>{{ icons.plus }}</v-icon>
-      </v-btn>
-      <v-btn fab small class="control zoomies" style="margin-top: 70px">
-        <v-icon>{{ icons.minus }}</v-icon>
-      </v-btn>
-      <v-btn
-        :disabled="bigNetwork"
-        style="margin-top: 120px"
-        class="control"
-        fab
-        small
-        @click="resetNetwork()"
-      >
-        <v-icon>{{ icons.home }}</v-icon>
-      </v-btn>
+    <div class="network-container">
+      <div class="network"></div>
+      <div class="controls-container">
+        <v-btn fab small class="zoomies control">
+          <v-icon>{{ icons.plus }}</v-icon>
+        </v-btn>
+        <v-btn fab small class="control zoomies" style="margin-top: 70px">
+          <v-icon>{{ icons.minus }}</v-icon>
+        </v-btn>
+        <v-btn
+          :disabled="bigNetwork"
+          style="margin-top: 120px"
+          class="control"
+          fab
+          small
+          @click="resetNetwork()"
+        >
+          <v-icon>{{ icons.home }}</v-icon>
+        </v-btn>
+      </div>
     </div>
-    <v-card v-if="ideaDetailed !== null" id="detailed-view" class="d-none d-sm-block">
+    <v-card v-if="ideaDetailed !== null" class="d-none d-sm-block detailed-view">
       <v-card-title>
         <v-row no-gutters>
           <v-col class="pa-0 ma-0 flex-grow-1">
-            <div id="detailed-header">
+            <div class="detailed-header">
               {{ ideaDetailed.name }}
             </div>
           </v-col>
@@ -70,7 +73,7 @@
       <v-card-text>
         <v-expansion-panels accordion flat hover>
           <v-expansion-panel v-if="ideaDetailed.accounts.length > 0">
-            <v-expansion-panel-header id="detailed-header">
+            <v-expansion-panel-header class="detailed-header">
               Verknüpfte Accounts
             </v-expansion-panel-header>
             <v-expansion-panel-content>
@@ -85,7 +88,7 @@
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel v-if="ideaDetailed.places.length > 0">
-            <v-expansion-panel-header id="detailed-header">
+            <v-expansion-panel-header class="detailed-header">
               Verknüpfte Orte
             </v-expansion-panel-header>
             <v-expansion-panel-content>
@@ -100,7 +103,7 @@
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel v-if="ideaDetailed.idee.length > 0">
-            <v-expansion-panel-header id="detailed-header">
+            <v-expansion-panel-header class="detailed-header">
               Verknüpfte Ideen
             </v-expansion-panel-header>
             <v-expansion-panel-content>
@@ -133,7 +136,7 @@
         <v-card-title>
           <v-row no-gutters>
             <v-col class="pa-0 ma-0 flex-grow-1">
-              <div id="detailed-header">
+              <div class="detailed-header">
                 {{ ideaDetailed.name }}
               </div>
             </v-col>
@@ -155,7 +158,7 @@
           </div>
           <v-expansion-panels accordion flat hover>
             <v-expansion-panel v-if="ideaDetailed.accounts.length > 0">
-              <v-expansion-panel-header id="detailed-header">
+              <v-expansion-panel-header class="detailed-header">
                 Verknüpfte Accounts
               </v-expansion-panel-header>
               <v-expansion-panel-content>
@@ -173,7 +176,7 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
             <v-expansion-panel v-if="ideaDetailed.places.length > 0">
-              <v-expansion-panel-header id="detailed-header">
+              <v-expansion-panel-header class="detailed-header">
                 Verknüpfte Orte
               </v-expansion-panel-header>
               <v-expansion-panel-content>
@@ -188,7 +191,7 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
             <v-expansion-panel v-if="ideaDetailed.idee.length > 0">
-              <v-expansion-panel-header id="detailed-header">
+              <v-expansion-panel-header class="detailed-header">
                 Verknüpfte Ideen
               </v-expansion-panel-header>
               <v-expansion-panel-content>
@@ -205,7 +208,7 @@
         </v-card-text>
       </v-card>
     </v-bottom-sheet>
-  </vContainer>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -452,7 +455,7 @@ export default class IdeasView extends Vue {
       if (this.bigNetwork === false) {
         return width / 2
       }
-      if (node.data != undefined && node.data.interviews != undefined) {
+      if (node.data != null && node.data.interviews != null) {
         if (node.data.interviews.length > 1) {
           if (
             node.data.interviews.length === 2 &&
@@ -520,7 +523,7 @@ export default class IdeasView extends Vue {
       if (this.bigNetwork === false) {
         return height / 2
       }
-      if (node.data != undefined && node.data.interviews != undefined) {
+      if (node.data != null && node.data.interviews != null) {
         if (node.data.interviews.length > 1) {
           if (
             node.data.interviews.length === 2 &&
@@ -655,14 +658,14 @@ export default class IdeasView extends Vue {
       return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
     }
 
-    // append the svg object to the body of the page
     let svg: any
     // @ts-expect-error Ignore for now
-    if (d3.select('svg')._groups[0][0] === null) {
-      svg = d3.select('#network').append('svg').attr('viewBox', `0 0 ${this.width} ${this.height}`)
+    if (d3.select('.network').select('svg')._groups[0][0] == null) {
+      svg = d3.select('.network').append('svg').attr('viewBox', `0 0 ${this.width} ${this.height}`)
     } else {
-      svg = d3.select('svg')
+      svg = d3.select('.network').select('svg')
     }
+
     const g = svg.append('g')
     const handleZoom = (e: any) => {
       this.currentZoomLevel = e.transform
@@ -671,7 +674,6 @@ export default class IdeasView extends Vue {
     const zoom = d3.zoom().on('zoom', handleZoom)
     svg.call(zoom).call(zoom.transform, this.currentZoomLevel)
 
-    // Initialize the links
     const link = g
       .selectAll('line')
       .data(links)
@@ -842,7 +844,7 @@ export default class IdeasView extends Vue {
             : 14
           : 14,
       )
-    // This function is run at each iteration of the force algorithm, updating the nodes position.
+
     simulation.on('tick', () => {
       link
         .attr('x1', function (d: any) {
@@ -957,17 +959,17 @@ export default class IdeasView extends Vue {
 
   @Watch('$route')
   startLoaded() {
-    if (this.$route.params['idea_name'] != undefined && this.$route.params['idea_name'] != '') {
+    if (this.$route.params['idea_name'] != null && this.$route.params['idea_name'] != '') {
       this.resetNetwork()
     }
     this.$nextTick(this.routeLoaded)
   }
 
   routeLoaded() {
-    if (this.$route.params['idea_name'] != undefined && this.$route.params['idea_name'] != '') {
+    if (this.$route.params['idea_name'] != null && this.$route.params['idea_name'] != '') {
       this.displayReligionsOrIdeas = false
       this.nodes.forEach((element: any) => {
-        if (element.data != undefined) {
+        if (element.data != null) {
           if (element.data.name === this.$route.params['idea_name']) {
             this.selectedIdea = []
             const connectedInfo = this.getDataforFeature(element)
@@ -1014,7 +1016,7 @@ export default class IdeasView extends Vue {
 
     const numberOfNodes = this.nodes.length
     this.nodes.forEach((node: any) => {
-      if (node.data != undefined) {
+      if (node.data != null) {
         // @ts-expect-error Ignore for now
         const linkArray: [number] = []
         node.data.interviews.forEach((links: any) => {
@@ -1061,8 +1063,8 @@ export default class IdeasView extends Vue {
   }
   mounted() {
     this.places = dataStore.orte
-    this.height = document.querySelector('#network')?.clientHeight
-    this.width = document.querySelector('#network')?.clientWidth
+    this.height = document.querySelector('.network')?.clientHeight
+    this.width = document.querySelector('.network')?.clientWidth
     this.accounts = dataStore.influencer
     this.ideaNetworkPot = this.formatIdeasIntoReligions(dataStore.ideen)
     this.initialNetwork()
@@ -1071,26 +1073,32 @@ export default class IdeasView extends Vue {
 </script>
 
 <style>
-#network {
+.network-container {
+  position: relative;
   height: 70vh;
   margin-top: 3vh;
   border: 5px solid #e8c547;
   background-color: #f5f5f5;
 }
 
-#detailed-header {
+.controls-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.network {
+  width: 100%;
+  height: 100%;
+}
+
+.detailed-header {
   font-family: ChicagoFLF, Helvetica, Arial, sans-serif;
 }
 
 .quotes {
   font-style: italic;
   font-size: 13px;
-}
-
-.vl {
-  height: 30px;
-  margin-top: 7px;
-  border-left: 2px solid #e5e5e5;
 }
 
 .hover-link:hover {
@@ -1109,13 +1117,7 @@ export default class IdeasView extends Vue {
   stroke-linejoin: miter;
 }
 
-#innit-view-button {
-  position: absolute;
-  top: 250px;
-  right: 100px;
-}
-
-#detailed-view {
+.detailed-view {
   position: absolute;
   right: 30px;
   bottom: 30px;

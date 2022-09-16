@@ -111,8 +111,7 @@
             "error"
           ]
         }
-      ],
-      "no-debugger": "warn"
+      ]
     },
     "overrides": [
       {
