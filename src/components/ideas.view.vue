@@ -1105,6 +1105,7 @@ export default class IdeasView extends Vue {
 
 .detailed-header {
   font-family: ChicagoFLF, Helvetica, Arial, sans-serif;
+  word-break: break-word;
 }
 
 .quotes {

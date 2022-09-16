@@ -931,6 +931,7 @@ h2 {
 
 .detailed-header {
   font-family: ChicagoFLF, Helvetica, Arial, sans-serif;
+  word-break: break-word;
 }
 
 .insta-logo {
