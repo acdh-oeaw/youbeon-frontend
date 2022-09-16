@@ -1,13 +1,5 @@
 {
-  "compilerOptions": {
-    "esModuleInterop": true,
-    "importsNotUsedAsValues": "error",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "esnext"
-  },
+  "extends": "./tsconfig.json",
   "include": ["**/*.ts"],
   "ts-node": {
     "esm": true,

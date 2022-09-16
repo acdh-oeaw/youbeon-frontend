@@ -16,7 +16,7 @@ node_modules/
 .stylelintcache
 *.tsbuildinfo
 
-# generated database
+# Generated database
 /src/db/accounts.ts
 /src/db/ideas.ts
 /src/db/interviews.ts
@@ -38,3 +38,12 @@ src/components/imprint.view.vue
 
 # Misc
 .DS_Store
+
+# Git
+.git
+
+# GitHub
+.github
+
+# VS code
+.vscode

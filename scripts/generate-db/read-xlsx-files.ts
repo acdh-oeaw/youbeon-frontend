@@ -53,13 +53,11 @@ export function readXlsxFiles(): InputData {
 
 function getRows<T>(fileName: string): Array<T> {
   const filePath = join(process.cwd(), 'data', fileName + '.xlsx')
-  // eslint-disable-next-line import/no-named-as-default-member
   const workbook = xlsx.readFile(filePath, { type: 'binary' })
   const [first] = workbook.SheetNames
   assert(first != null, `No sheets in ${fileName}.`)
   const sheet = workbook.Sheets[first]
   assert(sheet != null, `No sheets in ${fileName}.`)
-  // eslint-disable-next-line import/no-named-as-default-member
   const rows = xlsx.utils.sheet_to_json(sheet)
 
   return rows as Array<T>

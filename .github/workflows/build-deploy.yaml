@@ -42,6 +42,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            REDMINE_ID=19337
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
