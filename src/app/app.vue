@@ -3,7 +3,7 @@
     <v-main>
       <v-container fluid class="pa-0 ma-0" app>
         <v-layout column>
-          <div :class="['header-navigation', $route.name === 'place' && 'see_through']">
+          <div :class="['header-navigation', $route.name === 'places' && 'see-through']">
             <v-row id="navrow" style="height: 100px">
               <v-col md="1">
                 <router-link to="/"
@@ -15,8 +15,7 @@
                 <v-icon
                   @click="drawer = true"
                   x-large
-                  class="d-flex d-sm-none"
-                  id="phone-nav"
+                  class="d-flex d-sm-none phone-nav"
                   style="float: right; margin: 20px"
                   >{{ icons.menu }}</v-icon
                 >
@@ -31,17 +30,17 @@
                   hide-slider
                 >
                   <v-tab to="/"
-                    ><div :class="['tabs-top', $route.name === 'place' && 'underline']">
+                    ><div :class="['tabs-top', $route.name === 'places' && 'underline']">
                       Orte
                     </div></v-tab
                   >
                   <v-tab to="/accounts"
-                    ><div :class="['tabs-top', $route.name === 'account' && 'underline']">
+                    ><div :class="['tabs-top', $route.name === 'accounts' && 'underline']">
                       Accounts
                     </div></v-tab
                   >
                   <v-tab to="/ideas"
-                    ><div :class="['tabs-top', $route.name === 'idea' && 'underline']">
+                    ><div :class="['tabs-top', $route.name === 'ideas' && 'underline']">
                       Ideen
                     </div></v-tab
                   >
@@ -67,7 +66,7 @@
               <v-list-item-group>
                 <v-list-item to="/"
                   ><div
-                    :class="['tabs-top', $route.name === 'place' && 'underline']"
+                    :class="['tabs-top', $route.name === 'places' && 'underline']"
                     @click="drawer = false"
                   >
                     Orte
@@ -75,7 +74,7 @@
                 </v-list-item>
                 <v-list-item to="/account">
                   <div
-                    :class="['tabs-top', $route.name === 'account' && 'underline']"
+                    :class="['tabs-top', $route.name === 'accounts' && 'underline']"
                     @click="drawer = false"
                   >
                     Accounts
@@ -83,7 +82,7 @@
                 </v-list-item>
                 <v-list-item to="/idea">
                   <div
-                    :class="['tabs-top', $route.name === 'idea' && 'underline']"
+                    :class="['tabs-top', $route.name === 'ideas' && 'underline']"
                     @click="drawer = false"
                   >
                     Ideen
@@ -94,7 +93,7 @@
           </v-menu>
           <div style="z-index: 8; width: 100%; height: 5px; background-color: #b0dcd9"></div>
           <v-dialog overlay-opacity="0" width="20vw" v-model="introPopUp">
-            <v-card-title id="pop-up-title">Willkommen</v-card-title>
+            <v-card-title class="pop-up-title">Willkommen</v-card-title>
             <v-card-text style="height: 375px">
               <p>
                 Die YouBeOn Map nimmt Sie mit in die Lebenswelten religiöser, junger Menschen aus
@@ -109,7 +108,7 @@
                 den Funktionen finden Sie außerdem hier.
               </p>
               <v-btn
-                id="pop-up-button"
+                class="pop-up-button"
                 color="#b0dcd9"
                 elevation="0"
                 width="150px"
@@ -161,7 +160,7 @@ export default class App extends Vue {
   -moz-osx-font-smoothing: grayscale;
 }
 
-#pop-up-title {
+.pop-up-title {
   font-weight: 600;
   text-decoration: underline;
   text-decoration-color: rgb(176 220 217);
@@ -183,7 +182,7 @@ export default class App extends Vue {
   background-color: #fff;
 }
 
-#pop-up-button {
+.pop-up-button {
   margin-top: 10px;
   margin-bottom: 10px;
   border-radius: 10px;
@@ -198,7 +197,7 @@ export default class App extends Vue {
   transition: 0.5s;
 }
 
-#phone-nav:hover {
+.phone-nav:hover {
   cursor: pointer;
 }
 
@@ -216,6 +215,10 @@ export default class App extends Vue {
 .underline {
   text-decoration: underline;
   text-decoration-thickness: 2px;
+}
+
+.see-through {
+  background-color: hsl(0deg 0% 91.4% / 70%);
 }
 
 @font-face {
