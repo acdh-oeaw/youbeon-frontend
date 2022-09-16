@@ -741,7 +741,7 @@ export default class IdeasView extends Vue {
           const words = (d.name || d.data.name).split(' ')
           if (words.length <= 1) {
             return (
-              "<tspan x='0' dx='0' dy='0.3rem' text-anchor='middle' class='nodelabel'>" +
+              "<tspan x='0' dx='0' dy='0.3em' text-anchor='middle' class='nodelabel'>" +
               words[0] +
               '</tspan>'
             )
@@ -762,7 +762,7 @@ export default class IdeasView extends Vue {
                 (word, i) =>
                   "<tspan x='0' dx='0' dy='" +
                   (i === 0 ? 0.7 - 0.5 * ret.length : 1) +
-                  "rem' text-anchor='middle' class='nodelabel'>" +
+                  "em' text-anchor='middle' class='nodelabel'>" +
                   word +
                   '</tspan>',
               )
@@ -1124,7 +1124,7 @@ export default class IdeasView extends Vue {
   overflow-x: hidden;
   overflow-y: scroll;
   width: 450px;
-  max-height: 100%;
+  max-height: 50%;
   border: 5px solid #e4625e !important;
 }
 

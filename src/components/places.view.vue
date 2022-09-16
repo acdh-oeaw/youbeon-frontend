@@ -878,7 +878,7 @@ export default class PlacesView extends Vue {
   right: 30px;
   bottom: 30px;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
   width: 450px;
   max-height: 50%;
   border: 5px solid #e4625e !important;
