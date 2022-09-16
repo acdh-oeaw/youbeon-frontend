@@ -243,16 +243,17 @@ export default class AccountsView extends Vue {
   }
 
   async showNodeDetails(node: any) {
-    const tempInfluencerDetailed = node.data
-    if (Array.isArray(tempInfluencerDetailed.idee) && tempInfluencerDetailed.idee.length > 0) {
-      tempInfluencerDetailed.idee = tempInfluencerDetailed.idee
+    if (Array.isArray(node.data.idee) && node.data.idee.length > 0) {
+      const idee = node.data.idee
         .map((key: string) => {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          return dataStore.ideen.find((idea) => idea.id === key)!
+          return this.allIdeas.find((idea) => idea.id === key)!
         })
         .map((idea: any) => idea.name)
+      this.accountDetails = { ...node.data, idee }
+    } else {
+      this.accountDetails = node.data
     }
-    this.accountDetails = tempInfluencerDetailed
   }
 
   onNodeClick(event: any, node: any) {
