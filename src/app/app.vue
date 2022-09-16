@@ -45,7 +45,7 @@
                     </div></v-tab
                   >
                   <v-tab href="https://www.youbeon.eu/youbeon-map">
-                    <div class="tabs_top">
+                    <div class="tabs-top">
                       FAQs
                     </div>
                   </v-tab>
