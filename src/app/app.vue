@@ -45,9 +45,7 @@
                     </div></v-tab
                   >
                   <v-tab href="https://www.youbeon.eu/youbeon-map">
-                    <div class="tabs-top">
-                      FAQs
-                    </div>
+                    <div class="tabs-top">FAQs</div>
                   </v-tab>
                 </v-tabs>
               </v-col>
@@ -92,9 +90,9 @@
             </v-list>
           </v-menu>
           <div style="z-index: 8; width: 100%; height: 5px; background-color: #b0dcd9"></div>
-          <v-dialog overlay-opacity="0" width="20vw" v-model="introPopUp">
+          <v-dialog overlay-opacity="0" content-class="intro-dialog" v-model="introPopUp">
             <v-card-title class="pop-up-title">Willkommen</v-card-title>
-            <v-card-text style="height: 375px">
+            <v-card-text class="intro-text" style="height: 375px">
               <p>
                 Die YouBeOn Map nimmt Sie mit in die Lebenswelten religiöser, junger Menschen aus
                 Wien. Auf drei Ebenen können Sie Orte und Instagram-Accounts, die den Jugendlichen
@@ -205,6 +203,16 @@ export default class App extends Vue {
   align-content: bottom;
   font-size: 1.6em;
   text-transform: none !important;
+}
+
+.intro-dialog {
+  width: 25vw;
+  min-width: 300px;
+}
+
+.intro-text {
+  overflow-y: scroll;
+  height: 375px;
 }
 
 .logo {
