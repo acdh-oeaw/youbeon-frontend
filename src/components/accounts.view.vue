@@ -33,7 +33,7 @@
       </v-row>
     </v-card>
     <div class="network-container">
-      <div class="network"></div>
+      <div class="network" ref="netRef"></div>
       <div class="controls-container">
         <v-btn fab small class="zoomies control">
           <v-icon>{{ icons.plus }}</v-icon>
@@ -479,6 +479,17 @@ export default class AccountsView extends Vue {
     this.allIdeas = dataStore.ideen
     this.initialNetwork()
     this.$router.onReady(() => this.routeLoaded())
+
+    // resize canvas on div resize
+    const sizeOberserver = new ResizeObserver((entries) => {
+      const rect = entries[0]?.contentRect
+      this.width = rect?.width
+      this.height = rect?.height
+
+      d3.select('.network').select('svg').attr('viewBox', `0 0 ${this.width} ${this.height}`)
+    })
+
+    sizeOberserver.observe(this.$refs.netRef)
   }
 
   determinePosition(node: any, width: number, height: number) {
@@ -803,9 +814,9 @@ export default class AccountsView extends Vue {
       .html(function (d: any) {
         if (!d.children) {
           if (d.data) {
-            return d.data.name
+            return `<tspan dy=".3em">${d.data.name}</tspan>`
           } else {
-            return d.name
+            return `<tspan dy=".3em">${d.name}</tspan>`
           }
         } else {
           if (d.data) {

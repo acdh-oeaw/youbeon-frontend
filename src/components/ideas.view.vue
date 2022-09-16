@@ -32,7 +32,7 @@
       </v-col>
     </v-row>
     <div class="network-container">
-      <div class="network"></div>
+      <div class="network" ref="netRef"></div>
       <div class="controls-container">
         <v-btn fab small class="zoomies control">
           <v-icon>{{ icons.plus }}</v-icon>
@@ -790,7 +790,7 @@ export default class IdeasView extends Vue {
                 '</tspan>'
               )
             } else {
-              return d.data.name
+              return `<tspan dy=".3em">${d.data.name}</tspan>`
             }
           } else {
             if (
@@ -813,7 +813,7 @@ export default class IdeasView extends Vue {
                 '</tspan>'
               )
             } else {
-              return d.name
+              return `<tspan dy=".3em">${d.name}</tspan>`
             }
           }
         }
@@ -1068,6 +1068,17 @@ export default class IdeasView extends Vue {
     this.accounts = dataStore.influencer
     this.ideaNetworkPot = this.formatIdeasIntoReligions(dataStore.ideen)
     this.initialNetwork()
+
+    // resize canvas on div resize
+    const sizeOberserver = new ResizeObserver((entries) => {
+      const rect = entries[0]?.contentRect
+      this.width = rect?.width
+      this.height = rect?.height
+
+      d3.select('.network').select('svg').attr('viewBox', `0 0 ${this.width} ${this.height}`)
+    })
+
+    sizeOberserver.observe(this.$refs.netRef)
   }
 }
 </script>
