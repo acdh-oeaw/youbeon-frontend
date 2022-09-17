@@ -8,7 +8,7 @@ WORKDIR /app
 USER node
 
 COPY --chown=node:node package.json package-lock.json ./
-COPY --chown=node:node tsconfig.json tsconfig.node.json .npmrc ./
+COPY --chown=node:node tsconfig.json tsconfig.node.json .npmrc vue.config.mjs ./
 COPY --chown=node:node public ./public
 COPY --chown=node:node scripts ./scripts
 COPY --chown=node:node data ./data
