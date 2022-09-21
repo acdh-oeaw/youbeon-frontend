@@ -37,13 +37,10 @@ export function transformData(input: InputData): TransformedData {
       continue
     }
 
-    // const url = String(new URL(name, 'https://instagram.com'))
-
     const account: Account = {
       kind: 'account',
       key,
       label: name,
-      // url,
       mentions: 0,
       interviews: new Set(),
       ideas: new Set(),
@@ -139,6 +136,7 @@ export function transformData(input: InputData): TransformedData {
       ideas: new Set(),
       religions: new Set(),
       interviews: new Set(),
+      accounts: new Set(),
     }
 
     placesByKey.set(place.key, place)
@@ -179,6 +177,9 @@ export function transformData(input: InputData): TransformedData {
         key: interview,
         label: interview,
         religion: interviewReligion,
+        ideas: new Set(),
+        accounts: new Set(),
+        places: new Set(),
       })
     }
     if (!interviewReligionsByKey.has(interviewReligion)) {
@@ -187,6 +188,9 @@ export function transformData(input: InputData): TransformedData {
         key: interviewReligion,
         label: getInterviewReligionLabel(interviewReligion),
         interviews: new Set(),
+        ideas: new Set(),
+        accounts: new Set(),
+        places: new Set(),
       })
     }
     interviewReligionsByKey.get(interviewReligion)?.interviews.add(interview)
@@ -201,7 +205,9 @@ export function transformData(input: InputData): TransformedData {
     )
 
     for (const _key of keys) {
-      // FIXME: what do plaintext values in the `Kodes` column mean? Example: "Studium", "Instagramnutzung".
+      /**
+       * Ignore non-identifier values in the `Kodes` column, like "Studium", "Instagramnutzung".
+       */
       if (!_key.includes(':')) continue
 
       const { key, name, prefix } = splitKey(_key)
@@ -336,6 +342,35 @@ export function transformData(input: InputData): TransformedData {
         }
         place.religions.add(key)
       }
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      for (const key of keysByKind.get('account')!) {
+        // assert(accountsByKey.has(key), `Missing account with key ${key}.`)
+        if (!accountsByKey.has(key)) {
+          log.error(`Missing account with key ${key}.`)
+          continue // FIXME:
+        }
+        place.accounts.add(key)
+      }
+    }
+
+    const _interview = interviewsByKey.get(interview)
+    const _interviewReligion = interviewReligionsByKey.get(interviewReligion)
+    if (_interview != null && _interviewReligion != null) {
+      keysByKind.get('account')?.forEach((key) => {
+        if (!accountsByKey.has(key)) return
+        _interview.accounts.add(key)
+        _interviewReligion.accounts.add(key)
+      })
+      keysByKind.get('idea')?.forEach((key) => {
+        if (!ideasByKey.has(key)) return
+        _interview.ideas.add(key)
+        _interviewReligion.ideas.add(key)
+      })
+      keysByKind.get('place')?.forEach((key) => {
+        if (!placesByKey.has(key)) return
+        _interview.places.add(key)
+        _interviewReligion.places.add(key)
+      })
     }
   }
 
@@ -361,7 +396,7 @@ function splitKey(key: string): {
 
 /**
  * FIXME:
- * In `relations.xlsx` there are entries in the identifier column which
+ * In `relations.xlsx` there are entries in the identifier column (`Kodes`) which
  * (i) are plaintext values which don't follow the "P: Name" convention (example: 'Studium")
  * (ii) are other resource kinds???
  */

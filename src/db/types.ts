@@ -5,8 +5,6 @@ interface ResourceBase {
 
 export interface Account extends ResourceBase {
   kind: 'account'
-  /** Can be constructed by prepending "https://instagram.com/" to `label`. */
-  // url: string
   mentions: number
   interviews: Set<Interview['key']>
   ideas: Set<Idea['key']>
@@ -30,7 +28,7 @@ export interface Place extends ResourceBase {
   interviews: Set<Interview['key']>
   ideas: Set<Idea['key']>
   religions: Set<Religion['key']>
-  // accounts: Set<Account['key']>
+  accounts: Set<Account['key']>
 }
 
 export interface Religion extends ResourceBase {
@@ -50,13 +48,32 @@ export interface Interview extends ResourceBase {
    */
   religion: InterviewReligion['key']
   // gender: string
+  ideas: Set<Idea['key']>
+  // religions: Set<Religion['key']>
+  accounts: Set<Account['key']>
+  places: Set<Place['key']>
 }
 
 export interface InterviewReligion extends ResourceBase {
   kind: 'interview-religion'
   interviews: Set<Interview['key']>
+  ideas: Set<Idea['key']>
+  // religions: Set<Religion['key']>
+  accounts: Set<Account['key']>
+  places: Set<Place['key']>
 }
 
 export type Resource = Account | Idea | Interview | InterviewReligion | Place | Religion
 
 export type ResourceKind = Resource['kind']
+
+export type ResourceKeyMap = {
+  [Kind in ResourceKind]: Set<Extract<Resource, { kind: Kind }>['key']>
+}
+
+export type ResourceMap = {
+  [Kind in ResourceKind]: Map<
+    Extract<Resource, { kind: Kind }>['key'],
+    Extract<Resource, { kind: Kind }>
+  >
+}

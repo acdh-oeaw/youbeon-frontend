@@ -1,12 +1,11 @@
-import Vue from 'vue'
+import '@fontsource/inter/variable-full.css'
+import 'tailwindcss/tailwind.css'
+import '@/styles/index.css'
+import '@/styles/nprogress.css'
+
+import { createApp } from 'vue'
+
 import App from '@/app/app.vue'
-import router from '@/app/router'
-import vuetify from '@/app/plugins/vuetify'
+import { router } from '@/app/router'
 
-Vue.config.productionTip = false
-
-new Vue({
-  vuetify,
-  router,
-  render: (h) => h(App),
-}).$mount('#app')
+createApp(App).use(router).mount('#app')

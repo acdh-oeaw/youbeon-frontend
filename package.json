@@ -1,174 +1,146 @@
 {
-  "name": "youbeon_frontend",
-  "version": "0.1.0",
+  "name": "@acdh-ch/youbeon-frontend",
   "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "module",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "run-p lint:*:check",
-    "dev": "npm run serve",
+    "build": "vite build",
+    "dev": "vite --port 3000",
     "format": "prettier . --cache --check --ignore-path .gitignore",
     "format:fix": "npm run format -- --write",
-    "generate:db": "ts-node --project tsconfig.node.json ./scripts/generate-db",
-    "generate:favicons": "ts-node --project tsconfig.node.json ./scripts/generate-favicons",
-    "generate:imprint": "ts-node --project tsconfig.node.json ./scripts/generate-imprint",
+    "generate:db": "ts-node --project ./tsconfig.node.json ./scripts/generate-db/index.ts",
+    "generate:favicons": "ts-node --project ./tsconfig.node.json ./scripts/generate-favicons.ts",
+    "generate:imprint": "ts-node --project ./tsconfig.node.json ./scripts/generate-imprint.ts",
+    "lint": "run-p lint:*:check",
+    "lint:fix": "run-p lint:*:fix",
     "lint:code:check": "eslint . --cache --ext cjs,js,mjs,ts,tsx,vue --ignore-path .gitignore",
     "lint:code:fix": "npm run lint:code:check -- --fix",
-    "lint:fix": "run-p lint:*:fix",
-    "lint:styles:check": "stylelint \"**/*.@(css|vue)\" --cache --ignore-path .gitignore",
+    "lint:styles:check": "stylelint \"**/*.@(css|html|vue)\" --cache --ignore-path .gitignore",
     "lint:styles:fix": "npm run lint:styles:check -- --fix",
-    "prepare": "run-p generate:* setup",
+    "prepare": "run-s generate:* setup",
+    "preview": "vite preview --port 3000",
     "setup": "simple-git-hooks || exit 0",
     "test": "exit 0",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "vue-tsc",
     "validate": "run-s format lint typecheck test"
   },
   "engines": {
-    "node": "16.x"
+    "node": "16.x",
+    "npm": "8.x"
   },
+  "packageManager": "npm@8.11.0",
   "dependencies": {
-    "core-js": "^3.25.1",
+    "@fontsource/inter": "^4.5.12",
+    "@headlessui/tailwindcss": "^0.1.1",
+    "@headlessui/vue": "^1.7.2",
+    "@heroicons/vue": "^2.0.11",
+    "@stefanprobst/object": "^1.2.0",
+    "@vueuse/core": "^9.2.0",
     "d3": "^7.6.1",
+    "force-graph": "^1.42.13",
     "leaflet": "^1.8.0",
-    "randomcolor": "^0.6.2",
-    "vue": "^2.7.10",
-    "vue-class-component": "^7.2.6",
-    "vue-property-decorator": "^9.1.2",
-    "vue-router": "^3.6.5",
-    "vue2-leaflet": "^2.7.1",
-    "vuetify": "^2.6.10"
+    "nprogress": "^0.2.0",
+    "tailwindcss": "^3.1.8",
+    "vue": "^3.2.39",
+    "vue-router": "^4.1.5"
   },
   "devDependencies": {
-    "@mdi/js": "^7.0.96",
+    "@commitlint/cli": "^17.1.2",
     "@stefanprobst/assert": "^1.0.3",
+    "@stefanprobst/commitlint-config": "^1.0.2",
+    "@stefanprobst/eslint-config": "^1.0.5",
+    "@stefanprobst/eslint-config-vue": "^1.0.2",
     "@stefanprobst/favicons": "^2.1.0",
     "@stefanprobst/log": "^1.0.3",
     "@stefanprobst/prettier-config": "^2.0.2",
     "@stefanprobst/request": "^0.1.11",
-    "@stefanprobst/stylelint-config": "^2.4.0",
+    "@stefanprobst/stylelint-config": "^2.5.0",
     "@stefanprobst/tsconfig": "^2.2.0",
     "@types/d3": "^7.4.0",
-    "@types/leaflet": "^1.7.11",
+    "@types/leaflet": "^1.8.0",
     "@types/node": "^16.11.59",
+    "@types/nprogress": "^0.2.0",
     "@types/prettier": "^2.7.0",
-    "@types/randomcolor": "^0.5.6",
     "@types/serialize-javascript": "^5.0.2",
-    "@typescript-eslint/eslint-plugin": "^5.37.0",
-    "@typescript-eslint/parser": "^5.37.0",
-    "@vue/cli-plugin-babel": "^5.0.8",
-    "@vue/cli-plugin-eslint": "^5.0.8",
-    "@vue/cli-plugin-router": "^5.0.8",
-    "@vue/cli-plugin-typescript": "^5.0.8",
-    "@vue/cli-service": "^5.0.8",
-    "@vue/eslint-config-typescript": "^11.0.1",
+    "@vitejs/plugin-vue": "^3.1.0",
     "autoprefixer": "^10.4.11",
-    "eslint": "^8.23.0",
-    "eslint-plugin-vue": "^9.4.0",
+    "dotenv": "^16.0.2",
+    "eslint": "^8.23.1",
     "lint-staged": "^13.0.3",
     "npm-run-all": "^4.1.5",
-    "postcss": "^8.4.16",
+    "postcss-custom-media": "^8.0.2",
     "postcss-html": "^1.5.0",
     "postcss-nesting": "^10.2.0",
     "prettier": "^2.7.1",
-    "sass": "^1.54.9",
-    "sass-loader": "^13.0.2",
+    "prettier-plugin-tailwindcss": "^0.1.13",
     "serialize-javascript": "^6.0.0",
     "serve": "^14.0.1",
     "simple-git-hooks": "^2.8.0",
     "stylelint": "^14.11.0",
     "stylelint-config-html": "^1.1.0",
-    "ts-node": "^10.9.1",
     "typescript": "^4.8.3",
-    "vue-cli-plugin-vuetify": "~2.5.8",
-    "vue-template-compiler": "^2.7.10",
-    "vuetify-loader": "^1.7.0",
+    "vite": "^3.1.1",
+    "vue-tsc": "^0.40.13",
     "xlsx": "^0.18.5"
   },
-  "babel": {
-    "presets": [
-      "@vue/cli-plugin-babel/preset"
+  "browserslist": {
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ],
+    "production": [
+      ">=0.75%",
+      "not dead",
+      "not op_mini all"
     ]
+  },
+  "commitlint": {
+    "extends": "@stefanprobst/commitlint-config"
   },
   "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
     "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended",
-      "@vue/typescript/recommended"
-    ],
-    "parserOptions": {
-      "ecmaVersion": 2021
-    },
-    "rules": {
-      "no-console": [
-        "warn",
-        {
-          "allow": [
-            "warn",
-            "error"
-          ]
-        }
-      ]
-    },
-    "overrides": [
-      {
-        "files": [
-          "**/__tests__/*.{j,t}s?(x)",
-          "**/tests/unit/**/*.spec.{j,t}s?(x)"
-        ],
-        "env": {
-          "jest": true
-        }
-      }
+      "@stefanprobst/eslint-config",
+      "@stefanprobst/eslint-config-vue"
     ]
   },
-  "prettier": "@stefanprobst/prettier-config",
-  "postcss": {
-    "plugins": {
-      "postcss-html": {},
-      "postcss-nesting": {},
-      "autoprefixer": {}
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "not dead",
-    "not op_mini all"
-  ],
-  "license": "MIT",
   "lint-staged": {
     "*.@(cjs|js|mjs|ts|tsx)": [
       "eslint --cache --fix",
-      "prettier --write"
+      "prettier --cache --write"
     ],
-    "*.@(json|md)": "prettier --write",
-    "*.@css": [
+    "*.@(css|html)": [
       "stylelint --cache --fix",
-      "prettier --write"
+      "prettier --cache --write"
     ],
     "*.vue": [
       "eslint --cache --fix",
       "stylelint --cache --fix",
-      "prettier --write"
-    ]
+      "prettier --cache --write"
+    ],
+    "*.@(json|md)": "prettier --cache --write"
   },
+  "postcss": {
+    "plugins": {
+      "postcss-html": {},
+      "postcss-custom-media": {},
+      "tailwindcss/nesting": {},
+      "tailwindcss": {},
+      "autoprefixer": {}
+    }
+  },
+  "prettier": "@stefanprobst/prettier-config",
   "simple-git-hooks": {
+    "//commit-msg": "npx commitlint --edit",
     "pre-commit": "npx lint-staged",
     "pre-push": "npm run validate"
   },
   "stylelint": {
     "extends": [
-      "@stefanprobst/stylelint-config",
-      "stylelint-config-html/vue"
-    ],
-    "rules": {
-      "color-no-hex": null
-    }
-  },
-  "volta": {
-    "node": "16.17.0"
+      "stylelint-config-html/html",
+      "stylelint-config-html/vue",
+      "@stefanprobst/stylelint-config"
+    ]
   }
 }

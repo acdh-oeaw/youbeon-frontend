@@ -1,12 +1,15 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["**/*.ts"],
+  "include": [
+    "vite.config.ts",
+    "tailwind.config.cjs",
+    "./scripts/**/*.ts",
+    "./config/**/*.ts",
+    "./src/db/*.ts"
+  ],
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node",
-    "moduleTypes": {
-      "./scripts/**/*.ts": "esm"
-    },
     "transpileOnly": true
   }
 }
