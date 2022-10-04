@@ -35,5 +35,6 @@ defineEmits<{
     >
       <zoom-reset-icon aria-hidden="true" class="h-4 w-4" />
     </button>
+    <slot />
   </aside>
 </template>

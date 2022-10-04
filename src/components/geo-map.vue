@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import 'leaflet/dist/leaflet.css'
 
+import { MapIcon } from '@heroicons/vue/24/outline'
 import { entries, keys } from '@stefanprobst/object'
 import type { FeatureGroup, Map as LeafletMap } from 'leaflet'
 import { circleMarker, featureGroup, map as createMap, tileLayer } from 'leaflet'
@@ -133,11 +134,23 @@ function onZoomOut() {
 function onResetZoom() {
   geomap.map?.setZoom(initialViewState.zoom)
 }
+
+function onFitWorld() {
+  geomap.map?.fitWorld()
+}
 </script>
 
 <template>
   <div id="map" class="h-full w-full"></div>
-  <zoom-controls @zoom-in="onZoomIn" @zoom-out="onZoomOut" @zoom-reset="onResetZoom" />
+  <zoom-controls @zoom-in="onZoomIn" @zoom-out="onZoomOut" @zoom-reset="onResetZoom">
+    <button
+      aria-label="Fit to world"
+      class="grid h-8 w-8 place-items-center rounded-full border-4 border-brand-cyan bg-brand-cyan-tint shadow-lg transition hover:bg-brand-cyan"
+      @click="onFitWorld"
+    >
+      <map-icon aria-hidden="true" class="h-4 w-4" />
+    </button>
+  </zoom-controls>
 </template>
 
 <style>
