@@ -9,7 +9,7 @@ import places from '@/assets/images/places.png'
     <div class="absolute inset-0 overflow-hidden opacity-30">
       <img alt="" class="h-full w-full object-cover" :src="places" />
     </div>
-    <div class="relative mx-auto grid w-full max-w-7xl gap-8 px-8 py-16 sm:py-32">
+    <div class="relative mx-auto grid w-full max-w-5xl gap-8 px-8 py-16 sm:py-32">
       <div class="grid gap-4">
         <div class="font-display font-semibold text-neutral-500 sm:text-lg">
           Mapping On- and Offline Identifications of Urban Religious Youth

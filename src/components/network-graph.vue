@@ -59,6 +59,13 @@ function nodeColor(node: NodeObject) {
   return nodeColors[node.kind]
 }
 
+function edgeColor(edge: LinkObject) {
+  if (props.selected.has(edge.source?.key) || props.selected.has(edge.target?.key)) {
+    return nodeColors.selected
+  }
+  return edgeStrokeColor
+}
+
 const element = ref<HTMLElement | null>(null)
 const graph = ForceGraph()
 
@@ -113,9 +120,7 @@ graph.nodeCanvasObject((node, ctx, globalScale) => {
 })
 graph.enableNodeDrag(false)
 
-graph.linkColor(() => {
-  return edgeStrokeColor
-})
+graph.linkColor(edgeColor)
 
 graph.nodeId('key')
 graph.graphData({

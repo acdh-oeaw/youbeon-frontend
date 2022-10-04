@@ -4,7 +4,7 @@ import { metadata } from '~/config/metadata.config'
 
 <template>
   <footer class="bg-neutral-900 text-neutral-100">
-    <div class="mx-auto max-w-7xl">
+    <div class="mx-auto max-w-5xl">
       <div class="flex justify-between px-8 py-2 font-medium">
         <small class="text-xs"
           >&copy;

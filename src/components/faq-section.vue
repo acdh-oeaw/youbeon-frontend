@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="mx-auto grid max-w-7xl gap-12 py-16 px-8">
+    <div class="mx-auto grid max-w-5xl gap-12 py-16 px-8">
       <h2 class="font-display text-2xl font-bold">Frequently Asked Questions</h2>
       <div class="grid gap-12">
         <div class="grid gap-4">

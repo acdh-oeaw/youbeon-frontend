@@ -4,7 +4,7 @@ import PreviewCard from '@/components/preview-card.vue'
 
 <template>
   <section>
-    <div class="mx-auto grid max-w-7xl gap-12 py-16 px-8">
+    <div class="mx-auto grid max-w-5xl gap-12 py-16 px-8">
       <div class="grid gap-4">
         <h2 class="font-display text-2xl font-bold">Die YouBeOn Map</h2>
         <p class="max-w-xl font-medium leading-relaxed text-neutral-600">
@@ -14,17 +14,17 @@ import PreviewCard from '@/components/preview-card.vue'
         </p>
       </div>
       <div class="grid gap-8 sm:grid-cols-3">
-        <preview-card title="Orte" :to="{ name: 'places' }">
+        <preview-card title="Orte" :to="{ name: 'places' }" color="bg-brand-red">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident illo asperiores nostrum
           harum sed minus, ea animi nemo porro assumenda voluptate ipsa odit incidunt labore
           explicabo eligendi fuga doloribus quae?
         </preview-card>
-        <preview-card title="Accounts" :to="{ name: 'accounts' }">
+        <preview-card title="Accounts" :to="{ name: 'accounts' }" color="bg-brand-cyan">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident illo asperiores nostrum
           harum sed minus, ea animi nemo porro assumenda voluptate ipsa odit incidunt labore
           explicabo eligendi fuga doloribus quae?
         </preview-card>
-        <preview-card title="Ideen" :to="{ name: 'ideas' }">
+        <preview-card title="Ideen" :to="{ name: 'ideas' }" color="bg-brand-yellow">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident illo asperiores nostrum
           harum sed minus, ea animi nemo porro assumenda voluptate ipsa odit incidunt labore
           explicabo eligendi fuga doloribus quae?

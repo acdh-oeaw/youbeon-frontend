@@ -132,7 +132,6 @@
   },
   "prettier": "@stefanprobst/prettier-config",
   "simple-git-hooks": {
-    "//commit-msg": "npx commitlint --edit",
     "pre-commit": "npx lint-staged",
     "pre-push": "npm run validate"
   },
