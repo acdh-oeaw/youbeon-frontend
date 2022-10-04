@@ -189,6 +189,15 @@ function onCloseDetailsPanel() {
       :title="selectedAccount?.label"
       @close-panel="onCloseDetailsPanel"
     >
+      <template #link>
+        <a
+          aria-label="Instagram"
+          :href="`https://instagram.com/${selectedAccount?.label}`"
+          rel="noreferrer"
+          target="_blank"
+          ><img alt="" class="w-h h-5" src="@/assets/images/instagram.svg"
+        /></a>
+      </template>
       <details-panel-section
         label="Verknüpfte Ideen"
         :keys="selectedAccount?.ideas"
