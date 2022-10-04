@@ -38,7 +38,9 @@ function getDisplayLabel(selectedKey: Item['key']) {
     @update:model-value="(value) => emit('update:model-value', value)"
   >
     <div class="grid gap-y-1">
-      <listbox-label class="text-xs font-medium text-neutral-600">{{ label }}</listbox-label>
+      <listbox-label class="sr-only text-xs font-medium text-neutral-600">{{
+        label
+      }}</listbox-label>
       <listbox-button
         class="relative w-full cursor-default rounded-lg bg-neutral-0 py-2 pl-3 pr-10 text-left text-sm shadow-md focus:outline-none focus-visible:border-accent-500 focus-visible:ring-2 focus-visible:ring-neutral-0/75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300"
       >

@@ -89,7 +89,9 @@ const nothingFoundMessage = 'Nichts gefunden.'
     @update:model-value="(value) => emit('update:model-value', value)"
   >
     <div class="grid gap-y-1">
-      <combobox-label class="text-xs font-medium text-neutral-600">{{ label }}</combobox-label>
+      <combobox-label class="sr-only text-xs font-medium text-neutral-600">{{
+        label
+      }}</combobox-label>
       <div
         class="relative w-full cursor-default overflow-hidden rounded-lg bg-neutral-0 text-left text-sm shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-0/75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300"
       >
