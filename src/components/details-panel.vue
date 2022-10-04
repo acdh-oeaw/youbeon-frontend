@@ -38,7 +38,7 @@ onUnmounted(() => {
   document.removeEventListener('keyup', onEscapeKey)
 })
 
-const { borderColor } = useScreenColors()
+const colors = useScreenColors()
 const titleId = 'popover-title'
 </script>
 
@@ -57,7 +57,7 @@ const titleId = 'popover-title'
       v-if="isOpen"
       :aria-labelledby="titleId"
       :class="[
-        borderColor[0],
+        colors.borderColor[0],
         'absolute inset-x-4 bottom-4 z-dialog ml-auto max-w-sm rounded-lg border-4 bg-background shadow-lg sm:inset-x-8 sm:bottom-8',
       ]"
     >

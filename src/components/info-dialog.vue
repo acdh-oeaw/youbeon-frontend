@@ -22,7 +22,7 @@ function toggle() {
   isOpen.value = !isOpen.value
 }
 
-const { borderColor, backgroundColor, hover } = useScreenColors()
+const colors = useScreenColors()
 const label = 'Info'
 </script>
 
@@ -30,9 +30,9 @@ const label = 'Info'
   <button
     :aria-label="label"
     :class="[
-      borderColor[0],
-      backgroundColor[1],
-      hover.backgroundColor[0],
+      colors.borderColor[0],
+      colors.backgroundColor[1],
+      colors.hover.backgroundColor[0],
       'absolute left-4 bottom-4 z-overlay hidden h-12 w-12 place-items-center rounded-full border-2 shadow-lg transition xs:grid',
     ]"
     @click="toggle"
@@ -65,7 +65,7 @@ const label = 'Info'
         >
           <dialog-panel
             :class="[
-              borderColor[0],
+              colors.borderColor[0],
               'grid w-full max-w-sm transform gap-4 rounded-lg border-4 bg-neutral-0 p-8 shadow-lg transition',
             ]"
           >

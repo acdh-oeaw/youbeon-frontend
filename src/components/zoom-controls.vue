@@ -13,7 +13,7 @@ defineEmits<{
   (event: 'zoom-reset'): void
 }>()
 
-const { backgroundColor, borderColor, hover } = useScreenColors()
+const colors = useScreenColors()
 </script>
 
 <template>
@@ -21,9 +21,9 @@ const { backgroundColor, borderColor, hover } = useScreenColors()
     <button
       aria-label="Zoom in"
       :class="[
-        borderColor[0],
-        backgroundColor[1],
-        hover.backgroundColor[0],
+        colors.borderColor[0],
+        colors.backgroundColor[1],
+        colors.hover.backgroundColor[0],
         'grid h-8 w-8 place-items-center rounded-full border-2 shadow-lg transition',
       ]"
       @click="$emit('zoom-in')"
@@ -33,9 +33,9 @@ const { backgroundColor, borderColor, hover } = useScreenColors()
     <button
       aria-label="Zoom out"
       :class="[
-        borderColor[0],
-        backgroundColor[1],
-        hover.backgroundColor[0],
+        colors.borderColor[0],
+        colors.backgroundColor[1],
+        colors.hover.backgroundColor[0],
         'grid h-8 w-8 place-items-center rounded-full border-2 shadow-lg transition',
       ]"
       @click="$emit('zoom-out')"
@@ -45,9 +45,9 @@ const { backgroundColor, borderColor, hover } = useScreenColors()
     <button
       aria-label="Reset zoom"
       :class="[
-        borderColor[0],
-        backgroundColor[1],
-        hover.backgroundColor[0],
+        colors.borderColor[0],
+        colors.backgroundColor[1],
+        colors.hover.backgroundColor[0],
         'grid h-8 w-8 place-items-center rounded-full border-2 shadow-lg transition',
       ]"
       @click="$emit('zoom-reset')"
