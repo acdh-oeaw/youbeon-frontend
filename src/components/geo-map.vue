@@ -145,7 +145,7 @@ function onFitWorld() {
   <zoom-controls @zoom-in="onZoomIn" @zoom-out="onZoomOut" @zoom-reset="onResetZoom">
     <button
       aria-label="Fit to world"
-      class="grid h-8 w-8 place-items-center rounded-full border-4 border-brand-cyan bg-brand-cyan-tint shadow-lg transition hover:bg-brand-cyan"
+      class="grid h-8 w-8 place-items-center rounded-full border-2 border-brand-red bg-brand-red-tint shadow-lg transition hover:bg-brand-red"
       @click="onFitWorld"
     >
       <map-icon aria-hidden="true" class="h-4 w-4" />

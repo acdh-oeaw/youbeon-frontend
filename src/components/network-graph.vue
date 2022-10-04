@@ -60,6 +60,7 @@ function nodeColor(node: NodeObject) {
 }
 
 function edgeColor(edge: LinkObject) {
+  // @ts-expect-error Source and target should already be resolved to objects here.
   if (props.selected.has(edge.source?.key) || props.selected.has(edge.target?.key)) {
     return nodeColors.selected
   }

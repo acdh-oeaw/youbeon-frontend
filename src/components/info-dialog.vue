@@ -10,6 +10,8 @@ import { XMarkIcon } from '@heroicons/vue/20/solid'
 import { InformationCircleIcon } from '@heroicons/vue/24/outline'
 import { ref } from 'vue'
 
+import { useScreenColors } from '@/lib/use-screen-colors'
+
 const _props = defineProps<{
   title: string
 }>()
@@ -20,13 +22,19 @@ function toggle() {
   isOpen.value = !isOpen.value
 }
 
+const { borderColor, backgroundColor, hover } = useScreenColors()
 const label = 'Info'
 </script>
 
 <template>
   <button
     :aria-label="label"
-    class="absolute left-4 bottom-4 z-overlay hidden h-12 w-12 place-items-center rounded-full border-4 border-brand-cyan bg-brand-cyan-tint shadow-lg transition hover:bg-brand-cyan xs:grid"
+    :class="[
+      borderColor[0],
+      backgroundColor[1],
+      hover.backgroundColor[0],
+      'absolute left-4 bottom-4 z-overlay hidden h-12 w-12 place-items-center rounded-full border-2 shadow-lg transition xs:grid',
+    ]"
     @click="toggle"
   >
     <information-circle-icon aria-hidden="true" class="h-6 w-6" />
@@ -56,7 +64,10 @@ const label = 'Info'
           leave-to="opacity-0 scale-95"
         >
           <dialog-panel
-            class="grid w-full max-w-sm transform gap-4 rounded-lg border-4 border-brand-cyan bg-neutral-0 p-8 shadow-lg transition"
+            :class="[
+              borderColor[0],
+              'grid w-full max-w-sm transform gap-4 rounded-lg border-4 bg-neutral-0 p-8 shadow-lg transition',
+            ]"
           >
             <button aria-label="Close dialog" class="absolute right-4 top-4" @click="toggle">
               <x-mark-icon aria-hidden="true" class="h-5 w-5" />

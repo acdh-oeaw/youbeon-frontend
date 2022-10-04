@@ -1,3 +1,3 @@
 <template>
-  <h3 class="font-display text-sm font-medium leading-tight"><slot /></h3>
+  <h3 class="my-2 font-display font-medium leading-tight"><slot /></h3>
 </template>

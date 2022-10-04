@@ -3,6 +3,7 @@ import { XMarkIcon } from '@heroicons/vue/20/solid'
 import { onMounted, onUnmounted } from 'vue'
 
 import DetailsPanelTitle from '@/components/details-panel-title.vue'
+import { useScreenColors } from '@/lib/use-screen-colors'
 
 const _props = defineProps<{
   title: string | undefined
@@ -37,6 +38,7 @@ onUnmounted(() => {
   document.removeEventListener('keyup', onEscapeKey)
 })
 
+const { borderColor } = useScreenColors()
 const titleId = 'popover-title'
 </script>
 
@@ -54,12 +56,13 @@ const titleId = 'popover-title'
     <aside
       v-if="isOpen"
       :aria-labelledby="titleId"
-      class="absolute inset-x-4 bottom-4 z-dialog ml-auto max-w-sm rounded-lg border-4 border-brand-red bg-background shadow-lg sm:inset-x-8 sm:bottom-8"
+      :class="[
+        borderColor[0],
+        'absolute inset-x-4 bottom-4 z-dialog ml-auto max-w-sm rounded-lg border-4 bg-background shadow-lg sm:inset-x-8 sm:bottom-8',
+      ]"
     >
       <div class="divide-neutral-200 overflow-hidden">
-        <div
-          class="flex items-start justify-between gap-4 border-b-4 border-brand-red bg-brand-red-tint px-4 py-2"
-        >
+        <div class="flex items-start justify-between gap-4 px-4 py-2">
           <details-panel-title :id="titleId">{{ title }}</details-panel-title>
           <button aria-label="Close details panel" @click="onClose">
             <x-mark-icon aria-hidden="true" class="h-5 w-5" />
