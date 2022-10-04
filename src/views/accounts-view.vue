@@ -119,11 +119,13 @@ function syncFiltersWithSearchParams() {
   }
 }
 
-syncFiltersWithSearchParams()
-
-watch(() => {
-  return route.query
-}, syncFiltersWithSearchParams)
+watch(
+  () => {
+    return route.query
+  },
+  syncFiltersWithSearchParams,
+  { immediate: true },
+)
 
 function onClickNode(key: Resource['key'], kind: Resource['kind']) {
   if (kind === 'interview-religion') {

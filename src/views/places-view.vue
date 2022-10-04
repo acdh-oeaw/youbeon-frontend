@@ -207,11 +207,13 @@ function syncFiltersWithSearchParams() {
   }
 }
 
-syncFiltersWithSearchParams()
-
-watch(() => {
-  return route.query
-}, syncFiltersWithSearchParams)
+watch(
+  () => {
+    return route.query
+  },
+  syncFiltersWithSearchParams,
+  { immediate: true },
+)
 
 function onClickPlace(place: Place) {
   router.push({ query: { ...route.query, details: place.key } })
