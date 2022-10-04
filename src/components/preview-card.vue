@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { ChatBubbleBottomCenterIcon } from '@heroicons/vue/24/outline'
+
 const _props = defineProps<{
   color: string
   title: string
@@ -9,7 +11,9 @@ const _props = defineProps<{
 <template>
   <router-link :to="to" class="grid gap-3">
     <div class="grid gap-1">
-      <h3 class="font-display text-lg font-semibold">{{ title }}</h3>
+      <h3 class="flex items-center gap-1.5 font-display text-lg font-semibold">
+        <chat-bubble-bottom-center-icon aria-hidden="true" class="h-6 w-6" />{{ title }}
+      </h3>
       <div :class="[color, 'h-0.5']" />
     </div>
     <p class="text-sm leading-relaxed text-neutral-600">
