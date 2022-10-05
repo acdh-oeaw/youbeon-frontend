@@ -209,14 +209,17 @@ function onCloseDetailsPanel() {
     </details-panel>
 
     <info-dialog title="Info">
-      <p>
-        Auf dieser Ebene der YouBeOn Map sehen Sie die Instagram-Accounts, von denen die
-        Interviewteilnehmer*innen im Gespräch erzählt haben. Sie sind nach Religionstraditionen
-        geclustert (das bedeutet, dass mindestens eine Person aus einer Tradition einem Account in
-        diesem Cluster folgt). In der Mitte sehen Sie Accounts, denen Personen aus mehreren
-        Religionstraditionen folgen. Erkunden Sie die Insta-Profile und die mit den Accounts
-        assoziierten Ideen.
-      </p>
+      <div>Klick auf Account: hebt den Account hervor und öffnet das Kontext-Menü</div>
+      <div>Suche nach Accounts: hebt den gesuchten Account hervor</div>
+      <div>
+        Suche nach einer Religionsgruppen: hebt alle Accounts hervor, die mit der gesuchten
+        Religionsgruppe assoziiert sind
+      </div>
+      <div>
+        Suche nach mehreren Religionsgruppen: hebt alle Accounts hervor, die mit den jeweiligen
+        Religionen assoziiert sind; Accounts, die von mehreren der ausgewählten Religionen "geteilt"
+        werden, werden gesondert hervorgehoben
+      </div>
     </info-dialog>
   </main-content>
 </template>

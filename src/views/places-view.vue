@@ -287,11 +287,20 @@ function onCloseDetailsPanel() {
     </details-panel>
 
     <info-dialog title="Info">
-      <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eaque cupiditate a doloribus iure
-        perferendis, aperiam reiciendis doloremque possimus quo autem id vel sint asperiores,
-        voluptas in totam tempora commodi magnam?
-      </p>
+      <div>Klick auf Ort: hebt den Ort hervor und öffnet das Kontext-Menü</div>
+      <div>Suche nach Orten: hebt den gesuchten Ort hervor</div>
+      <div>
+        Suche nach Ideen: hebt alle Orte hervor, die mit einer bestimmten Idee assoziiert sind
+      </div>
+      <div>
+        Suche nach einer Religionsgruppe: hebt alle Orte hervor, die von Interviewteilnehmer*innen
+        einer Religionsgruppe genannt wurden.
+      </div>
+      <div>
+        Suche nach mehreren Religionsgruppen: hebt alle Orte hervor, die mit den jeweiligen
+        Religionen assoziiert sind in der Farbe der Religionen; Orte, an denen sich mehrere der
+        ausgewählten Religionen "treffen", werden gesondert hervorgehoben
+      </div>
     </info-dialog>
   </main-content>
 </template>

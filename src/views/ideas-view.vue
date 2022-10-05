@@ -214,14 +214,17 @@ function onCloseDetailsPanel() {
     </details-panel>
 
     <info-dialog title="Info">
-      <p>
-        Auf dieser Ebene der YouBeOn Map sehen Sie die Ideen, die in den Interviews aufgekommen
-        sind. Das YouBeOn Forscher*innen-Team hat diese Ideen gesammelt und benannt. Mit Zitaten aus
-        den Interviews möchten wir Ihnen einen Eindruck vermitteln, was hinter diesen Benennungen
-        steht. In der Mitte sehen Sie Ideen, die von Personen aus mehreren Religionstraditionen
-        eingebracht wurden. Erkunden Sie wie Orte und Accounts durch Ideen miteinander verbunden
-        sind.
-      </p>
+      <div>Klick auf Idee/Religionsgruppe: hebt den Knoten hervor und öffnet das Kontext-Menü</div>
+      <div>Suche nach Ideen: hebt die gesuchte Idee und damit assoziierte Ideen hervor</div>
+      <div>
+        Suche nach einer Religionsgruppen: hebt alle Accounts hervor, die mit einer Religionsgruppe
+        assoziiert sind
+      </div>
+      <div>
+        Suche nach mehreren Religionsgruppen: zeigt alle Ideen, die mit den jeweiligen Religionen
+        assoziiert sind in der Farbe der Religionen; Ideen, an denen sich mehrere der ausgewählten
+        Religionen "treffen", werden gesondert hervorgehoben
+      </div>
     </info-dialog>
   </main-content>
 </template>

@@ -17,21 +17,24 @@ import places from '@/assets/images/places.png'
         <h1
           class="max-w-[64rem] font-display text-4xl font-black tracking-tight text-neutral-900 sm:text-6xl xs:text-5xl"
         >
-          Young Believers Online
+          YouBeOn Map
         </h1>
       </div>
       <div class="grid max-w-xl gap-4 text-base font-medium leading-relaxed text-neutral-600">
         <p>
-          Die YouBeOn Map nimmt Sie mit in die Lebenswelten religiöser, junger Menschen aus Wien.
-          Auf drei Ebenen können Sie Orte und Instagram-Accounts, die den Jugendlichen wichtig sind,
-          und die damit verbundenen Ideen erkunden.
+          Die YouBeOn Map nimmt Sie mit in die Lebenswelten von 41 religiösen, jungen Menschen von
+          sieben unterschiedlichen Religionstraditionen aus Wien. Sie zeigt exemplarisch wie sich
+          religiöses Leben online (auf Instagram) und offline (in der Stadt) abspielt, was junge
+          Menschen unterschiedlicher Religionen verbindet, und wo es charakteristische Eigenheiten
+          gibt.
         </p>
       </div>
       <div class="my-2 flex flex-col gap-4 sm:gap-8 xs:flex-row">
         <router-link
           class="inline-flex min-w-[8rem] items-center justify-between gap-2 rounded-lg bg-neutral-900 px-4 py-3 text-sm font-semibold text-neutral-0 hover:bg-neutral-700 hover:text-neutral-0"
           :to="{ name: 'places' }"
-          >Zur Map <chevron-right-icon aria-hidden="true" class="h-4 w-4 text-neutral-400"
+          >Hier gehts zur YouBeOn Map
+          <chevron-right-icon aria-hidden="true" class="h-4 w-4 text-neutral-400"
         /></router-link>
       </div>
     </div>
