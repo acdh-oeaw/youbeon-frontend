@@ -17,7 +17,7 @@ import FaqDisclosure from '@/components/faq-disclosure.vue'
             ist ein Versuch die Lebenswelten der jungen Menschen durch das Zusammenspiel von drei
             Ebenen abzubilden. Diese Ebenen sind
           </p>
-          <ul role="list">
+          <ul role="list" class="list-disc pl-4">
             <li>
               eine geographische Ebene. Diese zeigt Orte, die die Befragten genannt haben und zu
               denen sie einen Bezug haben.
