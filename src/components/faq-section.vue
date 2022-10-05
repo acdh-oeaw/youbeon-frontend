@@ -4,7 +4,7 @@ import FaqDisclosure from '@/components/faq-disclosure.vue'
 
 <template>
   <section>
-    <div class="mx-auto grid max-w-5xl gap-12 py-16 px-8">
+    <div class="mx-auto grid max-w-5xl gap-12 border-t border-brand-cyan py-16 px-8">
       <h2 class="font-display text-2xl font-bold">Fragen zur YouBeOn Map</h2>
       <div class="grid gap-12">
         <faq-disclosure title="Was ist die YouBeOn Map genau?">

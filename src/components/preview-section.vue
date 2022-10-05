@@ -6,13 +6,13 @@ import PreviewCard from '@/components/preview-card.vue'
   <section>
     <div class="mx-auto grid max-w-5xl gap-12 py-16 px-8">
       <div class="grid gap-4">
-        <h2 class="font-display text-2xl font-bold">Die YouBeOn Map</h2>
+        <h2 class="sr-only font-display text-2xl font-bold">Die YouBeOn Map</h2>
         <p class="max-w-xl font-medium leading-relaxed text-neutral-600">
           Die YouBeOn Map besteht aus drei Ebenen, die gemeinsam einen Einblick in die online und
           offline Lebenswelten von religiösen jungen Menschen aus Wien vermitteln sollen.
         </p>
       </div>
-      <div class="grid gap-8 sm:grid-cols-3">
+      <div class="grid items-start gap-12 md:grid-cols-3">
         <preview-card title="Orte" :to="{ name: 'places' }" color="bg-brand-red">
           Die Ebene der Orte zeigt Orte der Religionsausübung sowie nicht-religiöse Orte, die
           unseren Interviewteilnehmer*innen wichtig waren. Außerdem kann man hier die mit den Orten
