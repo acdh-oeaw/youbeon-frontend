@@ -41,6 +41,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (event: 'click-place', place: Place): void
+  (event: 'map-ready', map: LeafletMap): void
 }>()
 
 //
@@ -61,6 +62,7 @@ onMounted(() => {
   )
 
   geomap.map = map
+  emit('map-ready', map)
 
   /**
    * Add base layer to map.

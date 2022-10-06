@@ -34,10 +34,10 @@ const ideaColors = generateIdeaColors()
 export const colors = {
   idea: ideaColors,
   'interview-religion': interviewReligionColors,
-  place: '#b0dcd9',
+  place: 'hsl(1.8deg 71.3% 63.1%)' /** brand-red */,
   multiple: '#425c66',
-  default: 'hsl(175.9deg 38.6% 77.6%)' /** brand-cyan */,
-  muted: 'hsl(175.9deg 38.6% 82.6%)',
+  default: 'hsl(1.8deg 71.3% 82%)' /** brand-red-tint */,
+  muted: 'hsl(1.8deg 71.3% 87%)' /** brand-red-tint */,
 }
 
 function generateIdeaColors() {

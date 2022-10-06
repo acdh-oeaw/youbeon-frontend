@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import type { Map as LeafletMap } from 'leaflet'
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -167,6 +168,25 @@ const layers = computed(() => {
 
 //
 
+const map = ref<LeafletMap | null>(null)
+
+function onMapReady(leaflet: LeafletMap) {
+  map.value = leaflet
+
+  /**
+   * Center the map when an initial place filter was set via search params.
+   */
+  if (placeFilterKind.value === 'place' && placeFilters.value.place.size > 0) {
+    const id = placeFilters.value.place.values().next().value
+    const place = places.get(id)
+    if (place?.coordinates) {
+      map.value.setView(place.coordinates)
+    }
+  }
+}
+
+//
+
 const route = useRoute()
 const router = useRouter()
 
@@ -197,6 +217,17 @@ function syncFiltersWithSearchParams() {
     }
 
     placeFilterKind.value = kind
+
+    /**
+     * Center the map on the first selected place.
+     */
+    if (map.value != null && kind === 'place' && keys.size > 0) {
+      const id = keys.values().next().value
+      const place = places.get(id)
+      if (place?.coordinates) {
+        map.value.setView(place.coordinates)
+      }
+    }
   }
 
   if (details != null && placeFilterItems.place.has(details)) {
@@ -237,7 +268,7 @@ function onCloseDetailsPanel() {
   <main-content class="h-full overflow-hidden">
     <h1 class="sr-only">{{ $router.currentRoute.value.meta['title'] }}</h1>
 
-    <geo-map :layers="layers" @click-place="onClickPlace" />
+    <geo-map :layers="layers" @click-place="onClickPlace" @map-ready="onMapReady" />
 
     <filters-panel
       id="places-filters"
