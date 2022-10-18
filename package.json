@@ -33,7 +33,7 @@
   "dependencies": {
     "@fontsource/inter": "^4.5.13",
     "@headlessui/tailwindcss": "^0.1.1",
-    "@headlessui/vue": "^1.7.3",
+    "@headlessui/vue": "^0.0.0-insiders.ab78fbd",
     "@heroicons/vue": "^2.0.12",
     "@stefanprobst/object": "^1.2.0",
     "@vueuse/core": "^9.3.0",

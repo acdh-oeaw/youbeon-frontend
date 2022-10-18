@@ -12,7 +12,7 @@ import InfoDialog from '@/components/info-dialog.vue'
 import MainContent from '@/components/main-content.vue'
 import MultiCombobox from '@/components/multi-combobox.vue'
 import SingleSelect from '@/components/single-select.vue'
-import { colors, marker } from '@/config/geo-map.config'
+import { colors, marker, strokes } from '@/config/geo-map.config'
 import { accounts, ideas, interviewReligions, interviews, places } from '@/db'
 import type {
   Interview,
@@ -101,12 +101,19 @@ const layers = computed(() => {
         fillOpacity: marker.fillOpacity,
         strokeColor: marker.strokeColor,
         strokeOpacity: marker.strokeOpacity,
+        strokeWidth: marker.strokeWidth,
         ...options,
       },
     }
   }
 
-  const layers: PointLayers = { base: [], highlight: [] }
+  const layers: PointLayers = { base: [], highlight: [], selected: [] }
+
+  const selectedPointOptions = {
+    strokeColor: strokes.selected.color,
+    strokeWidth: strokes.selected.width,
+    strokeOpacity: strokes.selected.opacity,
+  }
 
   if (
     Object.values(placeFilters.value).every((filter) => {
@@ -118,7 +125,11 @@ const layers = computed(() => {
      * All points have the default color.
      */
     places.forEach((place) => {
-      layers.base.push(createPoint(place))
+      if (place.key === selectedPlace.value?.key) {
+        layers.selected.push(createPoint(selectedPlace.value, selectedPointOptions))
+      } else {
+        layers.base.push(createPoint(place))
+      }
     })
   } else {
     /**
@@ -150,15 +161,25 @@ const layers = computed(() => {
         }
       }
 
-      if (highlights.length === 0) {
-        layers.base.push(createPoint(place, { fillColor: colors.muted }))
-      } else if (highlights.length > 1) {
-        layers.highlight.push(createPoint(place, { fillColor: colors.multiple }))
+      function getPointOptions() {
+        if (highlights.length === 0) {
+          return { fillColor: colors.muted }
+        } else if (highlights.length > 1) {
+          return { fillColor: colors.multiple }
+        } else {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const highlight = highlights[0]!
+          const fillColor = getColor(highlight.key, highlight.kind)
+          return { fillColor }
+        }
+      }
+
+      if (place.key === selectedPlace.value?.key) {
+        layers.selected.push(createPoint(place, { ...getPointOptions(), ...selectedPointOptions }))
+      } else if (highlights.length === 0) {
+        layers.base.push(createPoint(place, getPointOptions()))
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const highlight = highlights[0]!
-        const fillColor = getColor(highlight.key, highlight.kind)
-        layers.highlight.push(createPoint(place, { fillColor }))
+        layers.highlight.push(createPoint(place, getPointOptions()))
       }
     })
   }

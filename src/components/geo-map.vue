@@ -20,12 +20,14 @@ export interface Point {
     fillOpacity: number
     strokeColor: string
     strokeOpacity: number
+    strokeWidth: number
   }
 }
 
 export interface PointLayers {
   base: Array<Point>
   highlight: Array<Point>
+  selected: Array<Point>
 }
 
 interface GeoMapState {
@@ -50,7 +52,10 @@ function onClickPlace(place: Place) {
   emit('click-place', place)
 }
 
-const geomap: GeoMapState = { map: null, featureGroups: { base: null, highlight: null } }
+const geomap: GeoMapState = {
+  map: null,
+  featureGroups: { base: null, highlight: null, selected: null },
+}
 
 onMounted(() => {
   /**
@@ -111,7 +116,7 @@ function updateLayers() {
           fillOpacity: point.options.fillOpacity,
           color: point.options.strokeColor,
           opacity: point.options.strokeOpacity,
-          weight: marker.strokeWidth,
+          weight: point.options.strokeWidth,
           radius: marker.radius,
         })
           .on('click', () => {

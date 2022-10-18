@@ -62,13 +62,27 @@ export const opacities = {
   default: 0.8,
   muted: 0.4,
   highlighted: 0.8,
+  selected: 0.8,
+}
+
+export const strokes = {
+  default: {
+    width: 1,
+    color: 'hsl(0deg 0% 98%)' /** background */,
+    opacity: opacities.default,
+  },
+  selected: {
+    width: 2,
+    color: 'black',
+    opacity: opacities.selected,
+  },
 }
 
 export const marker = {
   fillColor: colors.default,
   fillOpacity: opacities.default,
-  strokeColor: 'hsl(0deg 0% 98%)' /** background */,
-  strokeOpacity: opacities.default,
+  strokeColor: strokes.default.color,
+  strokeWidth: strokes.default.width,
+  strokeOpacity: strokes.default.opacity,
   radius: 5,
-  strokeWidth: 1,
 }
