@@ -159,7 +159,8 @@ function onCloseDetailsPanel() {
         :height="height"
         :graph="graph"
         :highlighted="highlightedAccounts"
-        :selected="accountFilters[accountFilterKind]"
+        :matched="accountFilters[accountFilterKind]"
+        :selected="selectedAccount"
         @click-node="onClickNode"
       />
     </visualisation-container>

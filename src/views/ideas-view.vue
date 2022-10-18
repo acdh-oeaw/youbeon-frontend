@@ -160,7 +160,8 @@ function onCloseDetailsPanel() {
         :height="height"
         :graph="graph"
         :highlighted="highlightedIdeas"
-        :selected="ideaFilters[ideaFilterKind]"
+        :matched="ideaFilters[ideaFilterKind]"
+        :selected="selectedIdea"
         @click-node="onClickNode"
       />
     </visualisation-container>

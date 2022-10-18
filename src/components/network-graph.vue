@@ -21,7 +21,8 @@ const props = defineProps<{
   height: number
   graph: Graph
   highlighted: Set<NodeObject['key']>
-  selected: Set<NodeObject['key']>
+  matched: Set<NodeObject['key']>
+  selected: NodeObject | null
 }>()
 
 const emit = defineEmits<{
@@ -54,14 +55,14 @@ function nodeValue(node: NodeObject) {
 }
 
 function nodeColor(node: NodeObject) {
-  if (props.selected.has(node.key)) return nodeColors.selected
+  if (props.matched.has(node.key)) return nodeColors.selected
   if (props.highlighted.has(node.key)) return nodeColors.highlighted
   return nodeColors[node.kind]
 }
 
 function edgeColor(edge: LinkObject) {
   // @ts-expect-error Source and target should already be resolved to objects here.
-  if (props.selected.has(edge.source?.key) || props.selected.has(edge.target?.key)) {
+  if (props.matched.has(edge.source?.key) || props.matched.has(edge.target?.key)) {
     return nodeColors.selected
   }
   return edgeStrokeColor
@@ -95,9 +96,26 @@ graph.nodeLabel((node) => {
 })
 graph.nodeCanvasObjectMode((node) => {
   if (node.kind === 'interview-religion') return 'after'
+  if (node.key === props.selected?.key) return 'after'
   return undefined
 })
 graph.nodeCanvasObject((node, ctx, globalScale) => {
+  /**
+   * Draw outline around (before) selected node.
+   */
+  if (node.key === props.selected?.key) {
+    ctx.beginPath()
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    ctx.arc(node.x!, node.y!, nodeValue(node) * nodeRelativeSize + 2, 0, 360)
+    ctx.strokeStyle = 'black'
+    ctx.lineWidth = 2
+    ctx.stroke()
+    return
+  }
+
+  /**
+   * Draw label on top of (after) `interview-religion` nodes.
+   */
   const label = node.label
   const fontSize = Math.max(12 / globalScale, 3)
   ctx.font = `500 ${fontSize}px InterVariable, ui-sans-serif, system-ui, sans-serif`
@@ -153,7 +171,7 @@ watch(
       return props.highlighted
     },
     () => {
-      return props.selected
+      return props.matched
     },
   ],
   () => {
