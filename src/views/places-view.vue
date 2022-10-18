@@ -312,6 +312,14 @@ function onCloseDetailsPanel() {
         class="min-w-[8rem] flex-1"
         @update:model-value="onChangePlaceFilterKind"
       />
+      <div class="text-xs">
+        Mehrfach-Treffer werden mit
+        <span
+          class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
+          :style="{ backgroundColor: colors.multiple }"
+        />
+        bezeichnet.
+      </div>
     </filters-panel>
 
     <details-panel
