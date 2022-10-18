@@ -1,7 +1,7 @@
 import { accounts as _accounts } from '@/db/accounts'
 import { ideas as _ideas } from '@/db/ideas'
-import { interviews as _interviews } from '@/db/interviews'
 import { interviewReligions as _interviewReligions } from '@/db/interviewReligions'
+import { interviews as _interviews } from '@/db/interviews'
 import { places as _places } from '@/db/places'
 import { religions as _religions } from '@/db/religions'
 import type { Account, Idea, Interview, InterviewReligion, Place, Religion } from '@/db/types'

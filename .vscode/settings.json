@@ -16,6 +16,7 @@
   "stylelint.enable": true,
   "stylelint.snippet": ["css", "postcss", "vue"],
   "stylelint.validate": ["css", "postcss", "vue"],
+  "tailwindCSS.validate": true,
   "terminal.integrated.enablePersistentSessions": false,
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.preferences.importModuleSpecifier": "non-relative",

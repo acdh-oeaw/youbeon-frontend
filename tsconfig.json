@@ -1,15 +1,14 @@
 {
   "extends": "@stefanprobst/tsconfig",
   "compilerOptions": {
-    "exactOptionalPropertyTypes": false,
-    "experimentalDecorators": true,
     "baseUrl": ".",
+    "exactOptionalPropertyTypes": false,
     "paths": {
       "@/*": ["./src/*"],
       "~/*": ["./*"]
     },
-    "lib": ["dom", "dom.iterable", "es2021", "scripthost"]
+    "sourceMap": true,
+    "useDefineForClassFields": true
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.vue", "**/*.config.mjs"],
-  "exclude": ["node_modules"]
+  "include": ["app.d.ts", "./config/**/*.ts", "./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.vue"]
 }

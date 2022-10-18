@@ -3,64 +3,39 @@ import '@stefanprobst/request/fetch'
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
-import { assert } from '@stefanprobst/assert'
 import { log } from '@stefanprobst/log'
-import { createUrl, HttpError, request } from '@stefanprobst/request'
-import dotenv from 'dotenv'
+import config from '@stefanprobst/prettier-config'
+import { HttpError, request } from '@stefanprobst/request'
 import { format } from 'prettier'
 
-dotenv.config()
-
-const baseUrl = 'https://shared.acdh.oeaw.ac.at'
-const pathname = '/acdh-common-assets/api/imprint.php'
-const redmineId = process.env['REDMINE_ID']
-const locale = 'de'
+import { url } from '../config/imprint.config'
 
 async function generate() {
-  assert(
-    redmineId != null,
-    'Please set the REDMINE_ID environment variable to the redmine service issue id.',
-  )
-
-  const url = createUrl({
-    baseUrl,
-    pathname,
-    searchParams: { serviceID: redmineId, outputLang: locale },
-  })
-
   const html = await request(url, { responseType: 'text' })
 
   const view = format(
     `
-    <script lang="ts">
-    import { defineComponent } from 'vue'
+    <script lang="ts" setup>
+    import '@/styles/prose.css'
 
-    export default defineComponent({
-      name: 'ImprintView',
-    })
+    import MainContent from '@/components/main-content.vue'
     </script>
 
     <template>
-    <div class="container">
-      <h1>Impressum</h1>
-      ${html}
-    </div>
+    <main-content>
+      <div class="prose mx-auto grid max-w-3xl gap-4 px-8 py-16">
+        <h1 class="text-4xl font-extrabold">Impressum</h1>
+        ${html}
+      </div>
+    </main-content>
     </template>
-
-    <style scoped>
-    .container {
-      display: grid;
-      max-width: 64rem;
-      margin-inline: auto;
-    }
-    </style>
   `,
-    { parser: 'vue' },
+    { ...config, parser: 'vue' },
   )
 
-  const outputFilePath = join(process.cwd(), 'src', 'components', 'imprint.view.vue')
+  const outputFilePath = join(process.cwd(), 'src', 'views', 'imprint-view.vue')
 
-  await writeFile(outputFilePath, format(view, { parser: 'vue' }), { encoding: 'utf-8' })
+  await writeFile(outputFilePath, view, { encoding: 'utf-8' })
 }
 
 generate()

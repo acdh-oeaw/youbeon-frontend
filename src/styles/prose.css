@@ -1,0 +1,26 @@
+.prose {
+  & h1 {
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+  }
+
+  & h2 {
+    margin-bottom: 2.5rem;
+    font-size: 1.25rem;
+  }
+
+  & h3 {
+    margin-block: 2.25rem 1.25rem;
+    font-weight: 600;
+  }
+
+  & br {
+    display: block;
+    margin-top: 0.5rem;
+  }
+
+  & a {
+    font-weight: 500;
+    text-decoration: underline;
+  }
+}

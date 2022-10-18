@@ -4,7 +4,7 @@ import { extname, join } from 'node:path'
 import generateFavicons, { generateSocialImage } from '@stefanprobst/favicons'
 import { log } from '@stefanprobst/log'
 
-import { manifestFileName, metadata, openGraphImageName } from '../config/metadata.config.mjs'
+import { manifestFileName, metadata, openGraphImageName } from '../config/metadata.config'
 
 async function generate() {
   const inputFilePath = join(process.cwd(), metadata.logo.href)
