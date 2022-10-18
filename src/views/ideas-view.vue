@@ -13,6 +13,7 @@ import type { Graph } from '@/components/network-graph.vue'
 import NetworkGraph from '@/components/network-graph.vue'
 import SingleSelect from '@/components/single-select.vue'
 import VisualisationContainer from '@/components/visualisation-container.vue'
+import { nodeColors } from '@/config/network-graph.config'
 import { accounts, ideas, interviewReligions, interviews, places } from '@/db'
 import type { Idea, Resource, ResourceKeyMap, ResourceMap } from '@/db/types'
 
@@ -186,6 +187,18 @@ function onCloseDetailsPanel() {
         class="min-w-[8rem] flex-1"
         @update:model-value="onChangeIdeaFilterKind"
       />
+      <div class="text-xs">
+        Suchtreffer werden
+        <span
+          class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
+          :style="{ backgroundColor: nodeColors.selected }"
+        />
+        markiert, Kookkurrenzen
+        <span
+          class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
+          :style="{ backgroundColor: nodeColors.highlighted }"
+        />.
+      </div>
     </filters-panel>
 
     <details-panel
