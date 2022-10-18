@@ -13,7 +13,7 @@ import type { Graph } from '@/components/network-graph.vue'
 import NetworkGraph from '@/components/network-graph.vue'
 import SingleSelect from '@/components/single-select.vue'
 import VisualisationContainer from '@/components/visualisation-container.vue'
-import { nodeColors } from '@/config/network-graph.config'
+import { edgeStrokeColor, nodeColors } from '@/config/network-graph.config'
 import { accounts, ideas, interviewReligions, interviews, places } from '@/db'
 import type { Idea, Resource, ResourceKeyMap, ResourceMap } from '@/db/types'
 
@@ -163,6 +163,7 @@ function onCloseDetailsPanel() {
         :highlighted="highlightedIdeas"
         :matched="ideaFilters[ideaFilterKind]"
         :selected="selectedIdea"
+        :edge-stroke-color="edgeStrokeColor.idea"
         @click-node="onClickNode"
       />
     </visualisation-container>

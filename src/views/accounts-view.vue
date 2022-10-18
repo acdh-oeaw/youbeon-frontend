@@ -12,6 +12,7 @@ import type { Graph } from '@/components/network-graph.vue'
 import NetworkGraph from '@/components/network-graph.vue'
 import SingleSelect from '@/components/single-select.vue'
 import VisualisationContainer from '@/components/visualisation-container.vue'
+import { edgeStrokeColor } from '@/config/network-graph.config'
 import { accounts, ideas, interviewReligions, interviews } from '@/db'
 import type { Account, Resource, ResourceKeyMap, ResourceMap } from '@/db/types'
 
@@ -161,6 +162,7 @@ function onCloseDetailsPanel() {
         :highlighted="highlightedAccounts"
         :matched="accountFilters[accountFilterKind]"
         :selected="selectedAccount"
+        :edge-stroke-color="edgeStrokeColor.account"
         @click-node="onClickNode"
       />
     </visualisation-container>

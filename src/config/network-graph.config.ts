@@ -2,9 +2,9 @@ import type { ResourceKind } from '@/db/types'
 
 export const nodeColors: Record<ResourceKind | 'highlighted' | 'selected', string> = {
   account: 'hsl(175.9deg 38.6% 77.6%)' /** brand-cyan */,
-  idea: 'hsl(175.9deg 38.6% 77.6%)' /** brand-cyan */,
+  idea: 'hsl(47deg 77.8% 59.4%)' /** brand-yellow */,
   interview: 'hsl(175.9deg 38.6% 77.6%)' /** brand-cyan */,
-  place: 'hsl(175.9deg 38.6% 77.6%)' /** brand-cyan */,
+  place: 'hsl(1.8deg 71.3% 63.1%)' /** brand-red */,
   religion: 'hsl(175.9deg 38.6% 77.6%)' /** brand-cyan */,
   'interview-religion': 'hsl(175.9deg 38.6% 77.6%)' /** brand-cyan */,
   highlighted: 'hsl(47deg 77.8% 59.4%)' /** brand-yellow */,
@@ -20,4 +20,7 @@ export const nodeSizes: Record<ResourceKind, number> = {
   'interview-religion': 3,
 }
 
-export const edgeStrokeColor = 'hsl(175.9deg 38.6% 92%)' /** brand-cyan-tint */
+export const edgeStrokeColor = {
+  account: 'hsl(175.9deg 38.6% 92%)' /** brand-cyan-tint */,
+  idea: 'hsl(47deg 77.8% 92%)' /** brand-yellow-tint */,
+}
