@@ -13,7 +13,7 @@ import PreviewCard from '@/components/preview-card.vue'
         </p>
       </div>
       <div class="grid items-start gap-12 md:grid-cols-3">
-        <preview-card title="Orte" :to="{ name: 'places' }" color="bg-brand-red">
+        <preview-card title="Orte" color="bg-brand-red">
           Die Ebene der Orte zeigt Orte der Religionsausübung sowie nicht-religiöse Orte, die
           unseren Interviewteilnehmer*innen wichtig waren. Außerdem kann man hier die mit den Orten
           assoziierte Ideen erkunden, sehen welche Religionsgruppen welche Orte genannt haben und wo
@@ -22,14 +22,14 @@ import PreviewCard from '@/components/preview-card.vue'
           Größe angezeigt werden, z.B. Bezirke (Innere Stadt, 1.Bezirk) oder Dörfer (Hacibektas,
           Neveshir, Türkei)
         </preview-card>
-        <preview-card title="Accounts" :to="{ name: 'accounts' }" color="bg-brand-cyan">
+        <preview-card title="Accounts" color="bg-brand-cyan">
           Die Ebene der Accounts zeigt die wichtigsten Accounts, denen unsere
           Interviewteilnehmer*innen auf der Plattform Instagram folgen. Die Accounts sind nach
           Religionsgruppen geclustert. In der Mitte befinden sich Accounts, die bei mehr als einer
           Religion vorkommen. Die Verbindung von einem Account zu einer Religion bedeutet, dass
           mindestens eine Person aus dieser Religionstradition diesem Account folgt.
         </preview-card>
-        <preview-card title="Ideen" :to="{ name: 'ideas' }" color="bg-brand-yellow">
+        <preview-card title="Ideen" color="bg-brand-yellow">
           Die Ebene der Ideen zeigt die Begriffe und Konzepte, die den Teilnehmenden wichtig sind.
           Dazu hat das YouBeOn-Team Aussagen aus den Interviews systematisch aufgearbeitet und zu
           "Ideen" verdichtet. Die Ideen sind nach Religionsgruppen geclustert. In der Mitte befinden

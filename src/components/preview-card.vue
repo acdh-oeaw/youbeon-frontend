@@ -2,12 +2,11 @@
 const _props = defineProps<{
   color: string
   title: string
-  to: { name: string }
 }>()
 </script>
 
 <template>
-  <router-link :to="to" class="grid gap-8">
+  <div class="grid gap-8">
     <div class="relative">
       <img alt="" class="absolute -top-5 -left-8 h-20 w-20" src="@/assets/images/bubble.svg" />
       <h3 class="relative flex items-center gap-2 bg-neutral-50 font-display text-lg font-semibold">
@@ -18,5 +17,5 @@ const _props = defineProps<{
     <p class="text-sm leading-loose text-neutral-600">
       <slot />
     </p>
-  </router-link>
+  </div>
 </template>
