@@ -121,7 +121,7 @@ graph.nodeCanvasObject((node, ctx, globalScale) => {
   const fontSize = Math.max(12 / globalScale, 3)
   ctx.font = `500 ${fontSize}px InterVariable, ui-sans-serif, system-ui, sans-serif`
   const textWidth = ctx.measureText(label).width
-  const bckgDimensions = [textWidth, fontSize].map((n) => {
+  const dimensions = [textWidth, fontSize].map((n) => {
     return n + fontSize * 0.25 /** padding */
   }) as [number, number]
 
@@ -131,12 +131,32 @@ graph.nodeCanvasObject((node, ctx, globalScale) => {
   const y = node.y!
 
   ctx.fillStyle = '#ffffff7f' // nodeColor(node)
-  ctx.fillRect(x - bckgDimensions[0] / 2, y - bckgDimensions[1] / 2, ...bckgDimensions)
+  ctx.fillRect(x - dimensions[0] / 2, y - dimensions[1] / 2, ...dimensions)
 
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   ctx.fillStyle = 'hsl(175.9deg 38.6% 38.8%)'
   ctx.fillText(label, x, y)
+
+  // @ts-expect-error Used internally for passing dimensions to `nodePointerAreaPaint`.
+  node.__dimensions = dimensions
+})
+graph.nodePointerAreaPaint((node, color, ctx) => {
+  ctx.fillStyle = color
+
+  ctx.beginPath()
+  ctx.arc(node.x!, node.y!, nodeValue(node) * nodeRelativeSize + 2, 0, 360)
+  ctx.fill()
+
+  if (!('__dimensions' in node)) return
+
+  /**
+   * Increase clickable area for `interview-religion` nodes to include the text label.
+   */
+  // @ts-expect-error Passed from `nodeCanvasObject`.
+  const dimensions = node.__dimensions as [number, number]
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  ctx.fillRect(node.x! - dimensions[0] / 2, node.y! - dimensions[1] / 2, ...dimensions)
 })
 graph.enableNodeDrag(false)
 
