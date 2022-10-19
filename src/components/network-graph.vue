@@ -95,14 +95,12 @@ graph.nodeLabel((node) => {
   if (node.kind === 'interview-religion') return ''
   return node.label
 })
-graph.nodeCanvasObjectMode((node) => {
-  if (node.kind === 'interview-religion') return 'after'
-  if (node.key === props.selected?.key) return 'after'
-  return undefined
+graph.nodeCanvasObjectMode(() => {
+  return 'after'
 })
 graph.nodeCanvasObject((node, ctx, globalScale) => {
   /**
-   * Draw outline around (before) selected node.
+   * Draw outline around selected node.
    */
   if (node.key === props.selected?.key) {
     ctx.beginPath()
@@ -115,8 +113,11 @@ graph.nodeCanvasObject((node, ctx, globalScale) => {
   }
 
   /**
-   * Draw label on top of (after) `interview-religion` nodes.
+   * Draw permanent label on top of `interview-religion` nodes, labels for other
+   * nodes are only visible when zoomed in.
    */
+  if (node.kind !== 'interview-religion' && globalScale < 1.5) return
+
   const label = node.label
   const fontSize = Math.max(12 / globalScale, 3)
   ctx.font = `500 ${fontSize}px InterVariable, ui-sans-serif, system-ui, sans-serif`
@@ -135,7 +136,7 @@ graph.nodeCanvasObject((node, ctx, globalScale) => {
 
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
-  ctx.fillStyle = 'hsl(175.9deg 38.6% 38.8%)'
+  ctx.fillStyle = '#333'
   ctx.fillText(label, x, y)
 
   // @ts-expect-error Used internally for passing dimensions to `nodePointerAreaPaint`.
@@ -145,6 +146,7 @@ graph.nodePointerAreaPaint((node, color, ctx) => {
   ctx.fillStyle = color
 
   ctx.beginPath()
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   ctx.arc(node.x!, node.y!, nodeValue(node) * nodeRelativeSize + 2, 0, 360)
   ctx.fill()
 

@@ -6,7 +6,7 @@ export const nodeColors: Record<ResourceKind | 'highlighted' | 'selected', strin
   interview: 'hsl(175.9deg 38.6% 77.6%)' /** brand-cyan */,
   place: 'hsl(1.8deg 71.3% 63.1%)' /** brand-red */,
   religion: 'hsl(175.9deg 38.6% 77.6%)' /** brand-cyan */,
-  'interview-religion': 'hsl(175.9deg 38.6% 77.6%)' /** brand-cyan */,
+  'interview-religion': '#ddd',
   highlighted: 'hsl(47deg 77.8% 59.4%)' /** brand-yellow */,
   selected: 'hsl(1.8deg 71.3% 63.1%)' /** brand-red */,
 }
