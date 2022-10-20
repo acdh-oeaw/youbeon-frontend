@@ -15,7 +15,7 @@ import SingleSelect from '@/components/single-select.vue'
 import VisualisationContainer from '@/components/visualisation-container.vue'
 import { edgeStrokeColor, nodeColors } from '@/config/network-graph.config'
 import { accounts, ideas, interviewReligions, interviews, places } from '@/db'
-import type { Idea, Resource, ResourceKeyMap, ResourceMap } from '@/db/types'
+import type { Idea, InterviewReligion, Resource, ResourceKeyMap, ResourceMap } from '@/db/types'
 
 //
 
@@ -59,7 +59,9 @@ const ideaFilters = ref<IdeaFilters>({ idea: new Set(), 'interview-religion': ne
 const defaultIdeaFilterKind = 'idea'
 const ideaFilterKind = ref<IdeaFilterKind>(defaultIdeaFilterKind)
 
-const selectedIdea = ref<Idea | null>(null)
+const selectedEntity = ref<
+  { entity: Idea; kind: 'idea' } | { entity: InterviewReligion; kind: 'interview-religion' } | null
+>(null)
 
 const highlightedIdeas = computed(() => {
   const highlights = new Set<Resource['key']>()
@@ -91,7 +93,8 @@ function isFilterKind(value: string): value is IdeaFilterKind {
 
 function syncFiltersWithSearchParams() {
   const searchParams = new URLSearchParams(window.location.search)
-  const details = searchParams.get('details')
+  const detailsId = searchParams.get('details-id')
+  const detailsKind = searchParams.get('details-kind')
   const ids = searchParams.getAll('id').filter(Boolean)
   const kind = searchParams.get('kind') ?? defaultIdeaFilterKind
 
@@ -113,11 +116,23 @@ function syncFiltersWithSearchParams() {
     ideaFilterKind.value = kind
   }
 
-  if (details != null && ideaFilterItems.idea.has(details)) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    selectedIdea.value = ideaFilterItems.idea.get(details)!
+  function isValidDetailsKind(value: string): value is 'idea' | 'interview-religion' {
+    return ['idea', 'interview-religion'].includes(value)
+  }
+
+  if (
+    detailsId != null &&
+    detailsKind != null &&
+    isValidDetailsKind(detailsKind) &&
+    ideaFilterItems[detailsKind].has(detailsId)
+  ) {
+    selectedEntity.value = {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      entity: ideaFilterItems[detailsKind].get(detailsId)!,
+      kind: detailsKind,
+    } as { entity: Idea; kind: 'idea' } | { entity: InterviewReligion; kind: 'interview-religion' }
   } else {
-    selectedIdea.value = null
+    selectedEntity.value = null
   }
 }
 
@@ -130,11 +145,7 @@ watch(
 )
 
 function onClickNode(key: Resource['key'], kind: Resource['kind']) {
-  if (kind === 'interview-religion') {
-    router.push({ query: { ...route.query, kind: kind as IdeaFilterKind, id: [key] } })
-  } else {
-    router.push({ query: { ...route.query, details: key } })
-  }
+  router.push({ query: { ...route.query, 'details-id': key, 'details-kind': kind } })
 }
 
 function onChangeIdeaFilterKind(kind: string) {
@@ -146,7 +157,7 @@ function onChangeIdeaFilters(id: Array<Resource['key']>) {
 }
 
 function onCloseDetailsPanel() {
-  const { details: _, ...query } = route.query
+  const { 'details-id': _, 'details-kind': __, ...query } = route.query
   router.push({ query })
 }
 </script>
@@ -162,7 +173,7 @@ function onCloseDetailsPanel() {
         :graph="graph"
         :highlighted="highlightedIdeas"
         :matched="ideaFilters[ideaFilterKind]"
-        :selected="selectedIdea"
+        :selected="selectedEntity?.entity"
         :edge-stroke-color="edgeStrokeColor.idea"
         @click-node="onClickNode"
       />
@@ -203,29 +214,33 @@ function onCloseDetailsPanel() {
     </filters-panel>
 
     <details-panel
-      :is-open="selectedIdea != null"
-      :title="selectedIdea?.label"
+      :is-open="selectedEntity != null"
+      :title="selectedEntity?.entity.label"
       @close-panel="onCloseDetailsPanel"
     >
       <details-panel-section
         label="Verknüpfte Accounts"
-        :keys="selectedIdea?.accounts"
+        :keys="selectedEntity?.entity.accounts"
         :items="accounts"
         route="accounts"
       />
       <details-panel-section
         label="Verknüpfte Orte"
-        :keys="selectedIdea?.places"
+        :keys="selectedEntity?.entity.places"
         :items="places"
         route="places"
       />
       <details-panel-section
         label="Verknüpfte Ideen"
-        :keys="selectedIdea?.ideas"
+        :keys="selectedEntity?.entity.ideas"
         :items="ideas"
         route="ideas"
       />
-      <details-panel-quotes label="Zitate" :items="selectedIdea?.quotes" />
+      <details-panel-quotes
+        v-if="selectedEntity?.kind === 'idea'"
+        label="Zitate"
+        :items="selectedEntity?.entity.quotes"
+      />
     </details-panel>
 
     <info-dialog title="Info">

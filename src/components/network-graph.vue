@@ -22,7 +22,7 @@ const props = defineProps<{
   graph: Graph
   highlighted: Set<NodeObject['key']>
   matched: Set<NodeObject['key']>
-  selected: NodeObject | null
+  selected: NodeObject | null | undefined
   edgeStrokeColor: string
 }>()
 

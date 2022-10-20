@@ -63,7 +63,11 @@ const placeFilters = ref<PlaceFilters>({
 const defaultPlaceFilterKind = 'interview-religion'
 const placeFilterKind = ref<PlaceFilterKind>(defaultPlaceFilterKind)
 
-const selectedPlace = ref<Place | null>(null)
+const selectedEntity = ref<
+  | { entity: InterviewReligion; kind: 'interview-religion' }
+  | { entity: Place; kind: 'place' }
+  | null
+>(null)
 
 //
 
@@ -125,8 +129,8 @@ const layers = computed(() => {
      * All points have the default color.
      */
     places.forEach((place) => {
-      if (place.key === selectedPlace.value?.key) {
-        layers.selected.push(createPoint(selectedPlace.value, selectedPointOptions))
+      if (selectedEntity.value?.kind === 'place' && place.key === selectedEntity.value.entity.key) {
+        layers.selected.push(createPoint(selectedEntity.value.entity, selectedPointOptions))
       } else {
         layers.base.push(createPoint(place))
       }
@@ -174,7 +178,7 @@ const layers = computed(() => {
         }
       }
 
-      if (place.key === selectedPlace.value?.key) {
+      if (selectedEntity.value?.kind === 'place' && place.key === selectedEntity.value.entity.key) {
         layers.selected.push(createPoint(place, { ...getPointOptions(), ...selectedPointOptions }))
       } else if (highlights.length === 0) {
         layers.base.push(createPoint(place, getPointOptions()))
@@ -217,7 +221,8 @@ function isFilterKind(value: string): value is PlaceFilterKind {
 
 function syncFiltersWithSearchParams() {
   const searchParams = new URLSearchParams(window.location.search)
-  const details = searchParams.get('details')
+  const detailsId = searchParams.get('details-id')
+  const detailsKind = searchParams.get('details-kind')
   const ids = searchParams.getAll('id').filter(Boolean)
   const kind = searchParams.get('kind') ?? defaultPlaceFilterKind
 
@@ -251,11 +256,25 @@ function syncFiltersWithSearchParams() {
     }
   }
 
-  if (details != null && placeFilterItems.place.has(details)) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    selectedPlace.value = placeFilterItems.place.get(details)!
+  function isValidDetailsKind(value: string): value is 'interview-religion' | 'place' {
+    return ['place', 'interview-religion'].includes(value)
+  }
+
+  if (
+    detailsId != null &&
+    detailsKind != null &&
+    isValidDetailsKind(detailsKind) &&
+    placeFilterItems[detailsKind].has(detailsId)
+  ) {
+    selectedEntity.value = {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      entity: placeFilterItems[detailsKind].get(detailsId)!,
+      kind: detailsKind,
+    } as
+      | { entity: InterviewReligion; kind: 'interview-religion' }
+      | { entity: Place; kind: 'place' }
   } else {
-    selectedPlace.value = null
+    selectedEntity.value = null
   }
 }
 
@@ -268,7 +287,7 @@ watch(
 )
 
 function onClickPlace(place: Place) {
-  router.push({ query: { ...route.query, details: place.key } })
+  router.push({ query: { ...route.query, 'details-id': place.key, 'details-kind': 'place' } })
 }
 
 function onChangePlaceFilterKind(kind: string) {
@@ -280,7 +299,7 @@ function onChangePlaceFilters(id: Array<Resource['key']>) {
 }
 
 function onCloseDetailsPanel() {
-  const { details: _, ...query } = route.query
+  const { 'details-id': _, 'details-kind': __, ...query } = route.query
   router.push({ query })
 }
 </script>
@@ -323,24 +342,24 @@ function onCloseDetailsPanel() {
     </filters-panel>
 
     <details-panel
-      :is-open="selectedPlace != null"
-      :title="selectedPlace?.label"
+      :is-open="selectedEntity != null && selectedEntity.kind === 'place'"
+      :title="selectedEntity?.entity.label"
       @close-panel="onCloseDetailsPanel"
     >
       <details-panel-section
         label="Verknüpfte Ideen"
-        :keys="selectedPlace?.ideas"
+        :keys="selectedEntity?.entity.ideas"
         :items="ideas"
         route="ideas"
       />
       <details-panel-section
         label="Verknüpfte Religionsgruppen"
-        :keys="getInterviewReligions(selectedPlace?.interviews)"
+        :keys="getInterviewReligions(selectedEntity?.entity.interviews)"
         :items="interviewReligions"
       />
       <details-panel-section
         label="Verknüpfte Accounts"
-        :keys="selectedPlace?.accounts"
+        :keys="selectedEntity?.entity.accounts"
         :items="accounts"
         route="accounts"
       />

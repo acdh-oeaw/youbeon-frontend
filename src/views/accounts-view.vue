@@ -14,7 +14,7 @@ import SingleSelect from '@/components/single-select.vue'
 import VisualisationContainer from '@/components/visualisation-container.vue'
 import { edgeStrokeColor } from '@/config/network-graph.config'
 import { accounts, ideas, interviewReligions, interviews } from '@/db'
-import type { Account, Resource, ResourceKeyMap, ResourceMap } from '@/db/types'
+import type { Account, InterviewReligion, Resource, ResourceKeyMap, ResourceMap } from '@/db/types'
 
 //
 
@@ -58,7 +58,11 @@ const accountFilters = ref<AccountFilters>({ account: new Set(), 'interview-reli
 const defaultAccountFilterKind = 'account'
 const accountFilterKind = ref<AccountFilterKind>(defaultAccountFilterKind)
 
-const selectedAccount = ref<Account | null>(null)
+const selectedEntity = ref<
+  | { entity: Account; kind: 'account' }
+  | { entity: InterviewReligion; kind: 'interview-religion' }
+  | null
+>(null)
 
 const highlightedAccounts = computed(() => {
   const highlights = new Set<Resource['key']>()
@@ -90,7 +94,8 @@ function isFilterKind(value: string): value is AccountFilterKind {
 
 function syncFiltersWithSearchParams() {
   const searchParams = new URLSearchParams(window.location.search)
-  const details = searchParams.get('details')
+  const detailsId = searchParams.get('details-id')
+  const detailsKind = searchParams.get('details-kind')
   const ids = searchParams.getAll('id').filter(Boolean)
   const kind = searchParams.get('kind') ?? defaultAccountFilterKind
 
@@ -112,11 +117,25 @@ function syncFiltersWithSearchParams() {
     accountFilterKind.value = kind
   }
 
-  if (details != null && accountFilterItems.account.has(details)) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    selectedAccount.value = accountFilterItems.account.get(details)!
+  function isValidDetailsKind(value: string): value is 'account' | 'interview-religion' {
+    return ['account', 'interview-religion'].includes(value)
+  }
+
+  if (
+    detailsId != null &&
+    detailsKind != null &&
+    isValidDetailsKind(detailsKind) &&
+    accountFilterItems[detailsKind].has(detailsId)
+  ) {
+    selectedEntity.value = {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      entity: accountFilterItems[detailsKind].get(detailsId)!,
+      kind: detailsKind,
+    } as
+      | { entity: Account; kind: 'account' }
+      | { entity: InterviewReligion; kind: 'interview-religion' }
   } else {
-    selectedAccount.value = null
+    selectedEntity.value = null
   }
 }
 
@@ -129,11 +148,7 @@ watch(
 )
 
 function onClickNode(key: Resource['key'], kind: Resource['kind']) {
-  if (kind === 'interview-religion') {
-    router.push({ query: { ...route.query, kind: kind as AccountFilterKind, id: [key] } })
-  } else {
-    router.push({ query: { ...route.query, details: key } })
-  }
+  router.push({ query: { ...route.query, 'details-id': key, 'details-kind': kind } })
 }
 
 function onChangeAccountFilterKind(kind: string) {
@@ -145,7 +160,7 @@ function onChangeAccountFilters(id: Array<Resource['key']>) {
 }
 
 function onCloseDetailsPanel() {
-  const { details: _, ...query } = route.query
+  const { 'details-id': _, 'details-kind': __, ...query } = route.query
   router.push({ query })
 }
 </script>
@@ -161,7 +176,7 @@ function onCloseDetailsPanel() {
         :graph="graph"
         :highlighted="highlightedAccounts"
         :matched="accountFilters[accountFilterKind]"
-        :selected="selectedAccount"
+        :selected="selectedEntity?.entity"
         :edge-stroke-color="edgeStrokeColor.account"
         @click-node="onClickNode"
       />
@@ -190,14 +205,14 @@ function onCloseDetailsPanel() {
     </filters-panel>
 
     <details-panel
-      :is-open="selectedAccount != null"
-      :title="selectedAccount?.label"
+      :is-open="selectedEntity != null"
+      :title="selectedEntity?.entity.label"
       @close-panel="onCloseDetailsPanel"
     >
-      <template #link>
+      <template v-if="selectedEntity?.kind === 'account'" #link>
         <a
           aria-label="Instagram"
-          :href="`https://instagram.com/${selectedAccount?.label}`"
+          :href="`https://instagram.com/${selectedEntity?.entity.label}`"
           rel="noreferrer"
           target="_blank"
           ><img alt="" class="w-h h-5" src="@/assets/images/instagram.svg"
@@ -205,7 +220,7 @@ function onCloseDetailsPanel() {
       </template>
       <details-panel-section
         label="Verknüpfte Ideen"
-        :keys="selectedAccount?.ideas"
+        :keys="selectedEntity?.entity.ideas"
         :items="ideas"
         route="ideas"
       />
