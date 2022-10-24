@@ -384,6 +384,7 @@ function onCloseDetailsPanel() {
     </filters-panel>
 
     <details-panel
+      :key="selectedEntity?.entity.key"
       :is-open="selectedEntity != null && selectedEntity.kind === 'place'"
       :title="selectedEntity?.entity.label"
       @close-panel="onCloseDetailsPanel"
