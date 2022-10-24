@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { Map as LeafletMap } from 'leaflet'
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import DetailsPanel from '@/components/details-panel.vue'
@@ -244,14 +244,56 @@ function syncFiltersWithSearchParams() {
 
     placeFilterKind.value = kind
 
-    /**
-     * Center the map on the first selected place.
-     */
-    if (map.value != null && kind === 'place' && keys.size > 0) {
-      const id = keys.values().next().value
-      const place = places.get(id)
-      if (place?.coordinates) {
-        map.value.setView(place.coordinates)
+    if (kind === 'place' && keys.size > 0) {
+      if (keys.size === 1) {
+        /**
+         * Center the map on the first selected place.
+         */
+        const id = keys.values().next().value
+        const place = places.get(id)
+        if (place?.coordinates) {
+          if (map.value != null) {
+            map.value.setView(place.coordinates)
+          } else {
+            nextTick(() => {
+              map.value?.setView(place.coordinates)
+            })
+          }
+        }
+      } else {
+        /**
+         * Fit selected places in map bounds.
+         */
+        const lat: Array<number> = []
+        const lng: Array<number> = []
+        keys.forEach((id) => {
+          const place = places.get(id)
+          if (place?.coordinates) {
+            lat.push(place.coordinates.lat)
+            lng.push(place.coordinates.lng)
+          }
+        })
+        if (lat.length !== 0 && lng.length !== 0) {
+          if (map.value != null) {
+            map.value.fitBounds(
+              [
+                [Math.min(...lat), Math.min(...lng)],
+                [Math.max(...lat), Math.max(...lng)],
+              ],
+              { paddingTopLeft: [0, 150] },
+            )
+          } else {
+            nextTick(() => {
+              map.value?.fitBounds(
+                [
+                  [Math.min(...lat), Math.min(...lng)],
+                  [Math.max(...lat), Math.max(...lng)],
+                ],
+                { paddingTopLeft: [0, 150] },
+              )
+            })
+          }
+        }
       }
     }
   }
