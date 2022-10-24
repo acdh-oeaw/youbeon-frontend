@@ -48,8 +48,12 @@ export const nodeSizes: Record<ResourceKind, number> = {
   'interview-religion': 3,
 }
 
-export const edgeStrokeColor: Record<'account' | 'highlighted' | 'idea', string> = {
+export const edgeStrokeColor: Record<'account' | 'idea', string> = {
   account: 'hsl(175.9deg 38.6% 92%)' /** brand-cyan-tint */,
   idea: 'hsl(47deg 77.8% 92%)' /** brand-yellow-tint */,
-  highlighted: '#ddd',
+}
+
+export const highlightedEdgeStrokeColor: Record<'account' | 'idea', string> = {
+  account: 'hsl(47deg 77.8% 92%)' /** brand-yellow-tint */,
+  idea: 'hsl(175.9deg 38.6% 92%)' /** brand-cyan-tint */,
 }
