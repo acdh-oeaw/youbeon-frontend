@@ -10,7 +10,11 @@ const colors = useScreenColors()
 <template>
   <header
     class="z-elevated"
-    :class="route.path === '/' && [colors.borderColor[0], 'border-b-4 shadow-lg']"
+    :class="
+      route.path === '/'
+        ? [colors.borderColor[0], 'border-b-4 shadow-lg']
+        : ['border-b border-neutral-200']
+    "
   >
     <div
       class="mx-auto grid max-w-5xl grid-cols-[3rem_1fr] items-center gap-4 px-6 py-2 xs:gap-8 xs:px-8"
