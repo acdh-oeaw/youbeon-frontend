@@ -17,7 +17,7 @@ const _props = defineProps<{
       />
     </disclosure-button>
     <disclosure-panel
-      class="grid max-w-2xl gap-2 text-sm font-medium leading-loose text-neutral-600 sm:text-base"
+      class="grid max-w-2xl gap-2 text-sm font-medium leading-loose text-neutral-600 sm:text-base sm:leading-loose"
     >
       <slot />
     </disclosure-panel>

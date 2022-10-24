@@ -21,7 +21,7 @@ import places from '@/assets/images/places.png'
         </h1>
       </div>
       <div
-        class="grid max-w-3xl gap-4 text-sm font-medium leading-relaxed text-neutral-700 xs:text-base sm:text-lg"
+        class="grid max-w-3xl gap-4 text-sm font-medium leading-relaxed text-neutral-700 xs:text-base xs:leading-relaxed sm:text-lg sm:leading-relaxed"
       >
         <p>
           Die YouBeOn Map nimmt Sie mit in die Lebenswelten von 41 religiösen, jungen Menschen von

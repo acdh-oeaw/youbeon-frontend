@@ -8,7 +8,7 @@ import PreviewCard from '@/components/preview-card.vue'
       <div class="grid gap-4">
         <h2 class="sr-only font-display text-2xl font-bold">Die YouBeOn Map</h2>
         <p
-          class="max-w-3xl text-sm font-medium leading-relaxed text-neutral-700 xs:text-base sm:text-lg"
+          class="max-w-3xl text-sm font-medium leading-relaxed text-neutral-700 xs:text-base xs:leading-relaxed sm:text-lg sm:leading-relaxed"
         >
           Die YouBeOn Map besteht aus drei Ebenen, die gemeinsam einen Einblick in die online und
           offline Lebenswelten von religiösen jungen Menschen aus Wien vermitteln sollen.
