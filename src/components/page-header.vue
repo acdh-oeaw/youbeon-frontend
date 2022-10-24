@@ -1,11 +1,17 @@
 <script lang="ts" setup>
+import { useRoute } from 'vue-router'
+
 import { useScreenColors } from '@/lib/use-screen-colors'
 
+const route = useRoute()
 const colors = useScreenColors()
 </script>
 
 <template>
-  <header :class="[colors.borderColor[0], 'z-elevated border-b-4 border-brand-cyan shadow-lg']">
+  <header
+    class="z-elevated"
+    :class="route.path === '/' && [colors.borderColor[0], 'border-b-4 shadow-lg']"
+  >
     <div class="mx-auto grid max-w-5xl grid-cols-[3rem_1fr] items-center gap-8 px-8 py-2">
       <div>
         <router-link :to="{ name: 'home' }">
