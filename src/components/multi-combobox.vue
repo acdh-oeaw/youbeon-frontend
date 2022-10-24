@@ -86,7 +86,7 @@ const nothingFoundMessage = 'Nichts gefunden.'
     multiple
     as="div"
     class="relative"
-    @update:model-value="(value) => emit('update:model-value', value)"
+    @update:model-value="(value: Array<Item['key']>) => emit('update:model-value', value)"
   >
     <div class="grid gap-y-1">
       <combobox-label class="sr-only text-xs font-medium text-neutral-600">{{
