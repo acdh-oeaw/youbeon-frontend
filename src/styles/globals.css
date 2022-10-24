@@ -17,7 +17,7 @@
 :root {
   background-color: theme(colors.background);
   color: theme(colors.text);
-  font-family: InterVariable, ui-sans-serif, system-ui, sans-serif;
+  font-family: theme(fontFamily.sans);
   overflow-wrap: break-word;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
