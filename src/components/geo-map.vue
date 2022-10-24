@@ -139,7 +139,7 @@ function onZoomOut() {
 }
 
 function onResetZoom() {
-  geomap.map?.setZoom(initialViewState.zoom)
+  geomap.map?.setView(initialViewState.center, initialViewState.zoom)
 }
 
 function onFitWorld() {
