@@ -12,7 +12,9 @@ const colors = useScreenColors()
     class="z-elevated"
     :class="route.path === '/' && [colors.borderColor[0], 'border-b-4 shadow-lg']"
   >
-    <div class="mx-auto grid max-w-5xl grid-cols-[3rem_1fr] items-center gap-8 px-8 py-2">
+    <div
+      class="mx-auto grid max-w-5xl grid-cols-[3rem_1fr] items-center gap-4 px-6 py-2 xs:gap-8 xs:px-8"
+    >
       <div>
         <router-link :to="{ name: 'home' }">
           <span class="sr-only">Startseite</span>
@@ -20,7 +22,10 @@ const colors = useScreenColors()
         </router-link>
       </div>
       <nav>
-        <ul class="flex flex-wrap justify-end gap-x-12 font-display font-semibold" role="list">
+        <ul
+          class="flex flex-wrap justify-end gap-x-6 font-display text-sm font-semibold xs:gap-x-12 sm:text-base"
+          role="list"
+        >
           <li>
             <router-link active-class="underline" :to="{ name: 'places' }">Orte</router-link>
           </li>

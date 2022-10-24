@@ -5,7 +5,7 @@ import { metadata } from '~/config/metadata.config'
 <template>
   <footer class="bg-neutral-900 text-neutral-100">
     <div class="mx-auto max-w-5xl">
-      <div class="flex justify-between px-8 py-2 font-medium">
+      <div class="flex justify-between px-6 py-2 font-medium xs:px-8">
         <small class="text-xs"
           >&copy;
           <a :href="metadata.creator.website" rel="noreferrer" target="_blank">
