@@ -31,7 +31,7 @@
   },
   "packageManager": "npm@8.11.0",
   "dependencies": {
-    "@fontsource/inter": "^4.5.14",
+    "@fontsource/noto-sans-display": "^4.5.13",
     "@headlessui/tailwindcss": "^0.1.1",
     "@headlessui/vue": "^0.0.0-insiders.ab78fbd",
     "@heroicons/vue": "^2.0.12",

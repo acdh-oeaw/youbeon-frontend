@@ -10,14 +10,14 @@ const _props = defineProps<{
 <template>
   <disclosure-root as="div" class="grid gap-4">
     <disclosure-button class="flex items-center justify-between gap-8">
-      <h3 class="text-left font-display">{{ title }}</h3>
+      <h3 class="text-left font-display text-base sm:text-lg">{{ title }}</h3>
       <chevron-down-icon
         aria-hidden="true"
         class="h-5 w-5 flex-shrink-0 transition ui-open:rotate-180"
       />
     </disclosure-button>
     <disclosure-panel
-      class="grid max-w-xl gap-2 text-sm font-medium leading-loose text-neutral-600"
+      class="grid max-w-2xl gap-2 text-sm font-medium leading-loose text-neutral-600 sm:text-base"
     >
       <slot />
     </disclosure-panel>

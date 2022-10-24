@@ -22,7 +22,14 @@ const config = {
     },
     extend: {
       fontFamily: {
-        display: ['Chicago', 'InterVariable', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: [
+          'Chicago',
+          'Noto Sans DisplayVariable',
+          'ui-sans-serif',
+          'system-ui',
+          'sans-serif',
+        ],
+        sans: ['Noto Sans DisplayVariable', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       screens: {
         xs: '480px',

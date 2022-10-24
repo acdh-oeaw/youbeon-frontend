@@ -15,12 +15,14 @@ import places from '@/assets/images/places.png'
           Mapping On- and Offline Identifications of Urban Religious Youth
         </div>
         <h1
-          class="max-w-[64rem] font-display text-4xl font-black tracking-tight text-neutral-900 sm:text-6xl xs:text-5xl"
+          class="max-w-[64rem] font-display text-4xl font-black tracking-tight text-neutral-900 xs:text-5xl sm:text-6xl"
         >
           YouBeOn Map
         </h1>
       </div>
-      <div class="grid max-w-xl gap-4 text-base font-medium leading-relaxed text-neutral-600">
+      <div
+        class="grid max-w-3xl gap-4 text-sm font-medium leading-relaxed text-neutral-700 xs:text-base sm:text-lg"
+      >
         <p>
           Die YouBeOn Map nimmt Sie mit in die Lebenswelten von 41 religiösen, jungen Menschen von
           sieben unterschiedlichen Religionstraditionen aus Wien. Sie zeigt exemplarisch wie sich
@@ -29,7 +31,7 @@ import places from '@/assets/images/places.png'
           gibt.
         </p>
       </div>
-      <div class="my-2 flex flex-col gap-4 sm:gap-8 xs:flex-row">
+      <div class="my-2 flex flex-col gap-4 xs:flex-row sm:gap-8">
         <router-link
           class="inline-flex min-w-[8rem] items-center justify-between gap-2 rounded-lg bg-neutral-900 px-4 py-3 text-sm font-semibold text-neutral-0 hover:bg-neutral-700 hover:text-neutral-0"
           :to="{ name: 'places' }"
