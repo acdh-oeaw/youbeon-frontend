@@ -206,6 +206,7 @@ function onCloseDetailsPanel() {
     </filters-panel>
 
     <details-panel
+      :key="selectedEntity?.entity.key"
       :is-open="selectedEntity != null"
       :title="selectedEntity?.entity.label"
       @close-panel="onCloseDetailsPanel"
