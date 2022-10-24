@@ -49,6 +49,10 @@ function onRemoveSelectedKey(key: Item['key']) {
 
 const searchTerm = ref('')
 
+function onChangeSelection(value: Array<Item['key']>) {
+  emit('update:model-value', value)
+}
+
 const visibleItems = computed(() => {
   const allOptions = props.items
   const searchTerms = searchTerm.value.toLowerCase().split(/\s+/).filter(Boolean)
@@ -78,6 +82,12 @@ const { list, containerProps, wrapperProps } = useVirtualList(visibleItems, {
 
 const placeholder = 'Suche nach...'
 const nothingFoundMessage = 'Nichts gefunden.'
+
+function getTagStyle(key: Item['key']) {
+  const bg = props.getTagColor?.(key)
+  if (bg == null) return {}
+  return { '--tag-color': bg, color: 'white' }
+}
 </script>
 
 <template>
@@ -86,21 +96,21 @@ const nothingFoundMessage = 'Nichts gefunden.'
     multiple
     as="div"
     class="relative"
-    @update:model-value="(value: Array<Item['key']>) => emit('update:model-value', value)"
+    @update:model-value="onChangeSelection"
   >
     <div class="grid gap-y-1">
       <combobox-label class="sr-only text-xs font-medium text-neutral-600">{{
         label
       }}</combobox-label>
       <div
-        class="relative w-full cursor-default overflow-hidden rounded-lg bg-neutral-0 text-left text-sm shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-0/75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300"
+        class="relative flex w-full cursor-default flex-wrap items-center overflow-hidden rounded-lg bg-neutral-0 text-left text-sm shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-0/75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300"
       >
-        <ul v-if="modelValue.length > 0" class="flex flex-wrap gap-2 p-2 text-xs" role="list">
+        <ul v-if="modelValue.length > 0" class="flex flex-wrap gap-2 px-2 py-1 text-xs" role="list">
           <li
             v-for="key of modelValue"
             :key="key"
-            class="relative inline-flex items-center gap-1 overflow-hidden rounded bg-primary-200 px-2 py-1 font-medium before:pointer-events-none before:absolute before:inset-0 before:opacity-25 before:[background-color:_var(--tag-color)]"
-            :style="{ '--tag-color': getTagColor?.(key) }"
+            class="relative inline-flex items-center gap-1 overflow-hidden rounded bg-primary-200 px-2 py-1 font-medium before:pointer-events-none before:absolute before:inset-0 before:[background-color:_var(--tag-color)]"
+            :style="getTagStyle(key)"
           >
             <span class="relative block truncate">{{ getDisplayLabel(key) }}</span>
             <button class="relative" @click="onRemoveSelectedKey(key)">
@@ -109,11 +119,10 @@ const nothingFoundMessage = 'Nichts gefunden.'
             </button>
           </li>
         </ul>
-        <div class="relative">
+        <div class="relative min-w-[12rem] flex-1">
           <combobox-input
             autocomplete="off"
             class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-neutral-900 focus-visible:outline-none"
-            :display-value="() => searchTerm"
             :placeholder="placeholder"
             @change="searchTerm = $event.target.value"
           />

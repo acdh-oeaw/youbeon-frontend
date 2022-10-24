@@ -164,6 +164,10 @@ function onCloseDetailsPanel() {
   const { 'details-id': _, 'details-kind': __, ...query } = route.query
   router.push({ query })
 }
+
+function getColor() {
+  return highlightedNodeColors.idea.selected
+}
 </script>
 
 <template>
@@ -191,6 +195,7 @@ function onCloseDetailsPanel() {
     >
       <multi-combobox
         name="active-places-filters"
+        :get-tag-color="getColor"
         :label="labeledIdeaFilterKinds.get(ideaFilterKind)!.label"
         :items="ideaFilterItems[ideaFilterKind]"
         :model-value="Array.from(ideaFilters[ideaFilterKind])"
