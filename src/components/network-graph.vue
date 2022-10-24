@@ -164,6 +164,10 @@ graph.nodePointerAreaPaint((node, color, ctx) => {
 graph.enableNodeDrag(false)
 
 graph.linkColor(edgeColor)
+// graph.linkWidth(function linkWidth(edge) {
+//   // @ts-expect-error Source and target should already be resolved to objects here.
+//   return props.highlighted.has(edge.source.key) || props.highlighted.has(edge.target.key) ? 2 : 1
+// })
 
 graph.nodeId('key')
 graph.graphData({
@@ -218,6 +222,34 @@ watch(
   () => {
     graph.width(props.width)
     graph.height(props.height)
+  },
+)
+
+//
+
+watch(
+  () => {
+    return props.highlighted
+  },
+  () => {
+    /**
+     * Ensure highlighted nodes and edges end up on top. Canvas has no z-index so we need to control
+     * paint order via array index, i.e. sorting highlighted nodes to the end of the array.
+     * Mutating `props.graph` should be fine in this case.
+     */
+    // eslint-disable-next-line vue/no-mutating-props
+    props.graph.edges.sort((a) => {
+      const source = typeof a.source === 'string' ? a.source : (a.source as NodeObject).key
+      const target = typeof a.target === 'string' ? a.target : (a.target as NodeObject).key
+
+      return props.highlighted.has(source) || props.highlighted.has(target) ? 1 : -1
+    })
+    // eslint-disable-next-line vue/no-mutating-props
+    props.graph.nodes.dynamic.sort((a) => {
+      const key = typeof a === 'string' ? a : (a as NodeObject).key
+
+      return props.highlighted.has(key) ? 1 : -1
+    })
   },
 )
 
