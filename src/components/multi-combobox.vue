@@ -76,7 +76,7 @@ const { list, containerProps, wrapperProps } = useVirtualList(visibleItems, {
   overscan: 10,
 })
 
-const placeholder = 'Suche...'
+const placeholder = 'Suche nach...'
 const nothingFoundMessage = 'Nichts gefunden.'
 </script>
 
