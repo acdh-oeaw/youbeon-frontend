@@ -13,7 +13,7 @@ import type { Graph } from '@/components/network-graph.vue'
 import NetworkGraph from '@/components/network-graph.vue'
 import SingleSelect from '@/components/single-select.vue'
 import VisualisationContainer from '@/components/visualisation-container.vue'
-import { edgeStrokeColor, nodeColors } from '@/config/network-graph.config'
+import { edgeStrokeColor, highlightedNodeColors } from '@/config/network-graph.config'
 import { accounts, ideas, interviewReligions, interviews, places } from '@/db'
 import type { Idea, InterviewReligion, Resource, ResourceKeyMap, ResourceMap } from '@/db/types'
 
@@ -200,16 +200,12 @@ function onCloseDetailsPanel() {
         @update:model-value="onChangeIdeaFilterKind"
       />
       <div class="text-xs">
-        Suchtreffer werden
+        Kookkurrenzen werden
         <span
           class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
-          :style="{ backgroundColor: nodeColors.selected }"
+          :style="{ backgroundColor: highlightedNodeColors.idea.highlighted }"
         />
-        markiert, Kookkurrenzen
-        <span
-          class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
-          :style="{ backgroundColor: nodeColors.highlighted }"
-        />.
+        markiert.
       </div>
     </filters-panel>
 

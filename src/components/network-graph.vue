@@ -5,7 +5,12 @@ import ForceGraph from 'force-graph'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 import ZoomControls from '@/components/zoom-controls.vue'
-import { nodeColors, nodeSizes } from '@/config/network-graph.config'
+import {
+  edgeStrokeColor,
+  highlightedNodeColors,
+  nodeColors,
+  nodeSizes,
+} from '@/config/network-graph.config'
 
 //
 
@@ -56,15 +61,15 @@ function nodeValue(node: NodeObject) {
 }
 
 function nodeColor(node: NodeObject) {
-  if (props.matched.has(node.key)) return nodeColors.selected
-  if (props.highlighted.has(node.key)) return nodeColors.highlighted
+  if (props.matched.has(node.key)) return highlightedNodeColors[node.kind].selected
+  if (props.highlighted.has(node.key)) return highlightedNodeColors[node.kind].highlighted
   return nodeColors[node.kind]
 }
 
 function edgeColor(edge: LinkObject) {
   // @ts-expect-error Source and target should already be resolved to objects here.
   if (props.matched.has(edge.source?.key) || props.matched.has(edge.target?.key)) {
-    return nodeColors.selected
+    return edgeStrokeColor.highlighted
   }
   return props.edgeStrokeColor
 }
