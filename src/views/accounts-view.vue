@@ -12,7 +12,11 @@ import type { Graph } from '@/components/network-graph.vue'
 import NetworkGraph from '@/components/network-graph.vue'
 import SingleSelect from '@/components/single-select.vue'
 import VisualisationContainer from '@/components/visualisation-container.vue'
-import { edgeStrokeColor, highlightedEdgeStrokeColor } from '@/config/network-graph.config'
+import {
+  edgeStrokeColor,
+  highlightedEdgeStrokeColor,
+  highlightedNodeColors,
+} from '@/config/network-graph.config'
 import { accounts, ideas, interviewReligions, interviews } from '@/db'
 import type { Account, InterviewReligion, Resource, ResourceKeyMap, ResourceMap } from '@/db/types'
 
@@ -163,6 +167,10 @@ function onCloseDetailsPanel() {
   const { 'details-id': _, 'details-kind': __, ...query } = route.query
   router.push({ query })
 }
+
+function getColor() {
+  return highlightedNodeColors.account.selected
+}
 </script>
 
 <template>
@@ -190,6 +198,7 @@ function onCloseDetailsPanel() {
     >
       <multi-combobox
         name="active-places-filters"
+        :get-tag-color="getColor"
         :label="labeledAccountFilterKinds.get(accountFilterKind)!.label"
         :items="accountFilterItems[accountFilterKind]"
         :model-value="Array.from(accountFilters[accountFilterKind])"
