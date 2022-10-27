@@ -374,12 +374,11 @@ function onCloseDetailsPanel() {
         @update:model-value="onChangePlaceFilterKind"
       />
       <div class="text-xs">
-        Mehrfach-Treffer werden mit
+        Gemeinsame Orte
         <span
           class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
           :style="{ backgroundColor: colors.multiple }"
         />
-        bezeichnet.
       </div>
     </filters-panel>
 
