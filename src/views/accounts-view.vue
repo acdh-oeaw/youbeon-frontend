@@ -216,6 +216,13 @@ function getColor() {
         class="min-w-[8rem] flex-1"
         @update:model-value="onChangeAccountFilterKind"
       />
+      <div class="text-xs">
+        Gemeinsame Accounts
+        <span
+          class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
+          :style="{ backgroundColor: highlightedNodeColors.account.multiple }"
+        />.
+      </div>
     </filters-panel>
 
     <details-panel
