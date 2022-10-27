@@ -68,18 +68,22 @@ const selectedEntity = ref<
 >(null)
 
 const highlightedIdeas = computed(() => {
-  const highlights = new Set<Resource['key']>()
+  const highlights = new Map<Resource['key'], number>()
+
+  function add(key: Resource['key']) {
+    highlights.set(key, (highlights.get(key) ?? 0) + 1)
+  }
 
   ideaFilters.value.idea.forEach((key) => {
-    highlights.add(key)
+    add(key)
     ideas.get(key)?.ideas.forEach((key) => {
-      highlights.add(key)
+      add(key)
     })
   })
 
   ideaFilters.value['interview-religion'].forEach((key) => {
     interviewReligions.get(key)?.ideas.forEach((key) => {
-      highlights.add(key)
+      add(key)
     })
   })
 
@@ -214,7 +218,11 @@ function getColor() {
         <span
           class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
           :style="{ backgroundColor: highlightedNodeColors.idea.highlighted }"
-        />
+        />. Gemeinsame Ideen
+        <span
+          class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
+          :style="{ backgroundColor: highlightedNodeColors.idea.multiple }"
+        />.
       </div>
     </filters-panel>
 
