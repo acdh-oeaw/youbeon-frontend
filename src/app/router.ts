@@ -1,6 +1,7 @@
 import nprogress from 'nprogress'
 import { createRouter, createWebHistory } from 'vue-router'
 
+import { trackPageView } from '@/app/matomo-analytics'
 import { metadata } from '~/config/metadata.config'
 
 nprogress.configure({ showSpinner: false })
@@ -81,9 +82,12 @@ router.beforeResolve((to, from, next) => {
   next()
 })
 
-router.afterEach(() => {
+router.afterEach((to, from) => {
   if (timer != null) {
     clearTimeout(timer)
   }
   nprogress.done()
+
+  /** Note that this will also track the initial page load. */
+  trackPageView(to, from)
 })

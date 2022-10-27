@@ -17,6 +17,8 @@ COPY --chown=node:node data ./data
 
 ARG REDMINE_ID
 ARG VITE_APP_BASE_URL
+ARG VITE_APP_MATOMO_BASE_URL
+ARG VITE_APP_MATOMO_ID
 
 RUN npm install --ci --no-audit --no-fund
 
