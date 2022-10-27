@@ -20,7 +20,7 @@ const props = defineProps<{
   width: number
   height: number
   graph: Graph
-  highlighted: Set<NodeObject['key']>
+  highlighted: Map<NodeObject['key'], number>
   matched: Set<NodeObject['key']>
   selected: NodeObject | null | undefined
   edgeStrokeColor: string
@@ -58,7 +58,13 @@ function nodeValue(node: NodeObject) {
 
 function nodeColor(node: NodeObject) {
   if (props.matched.has(node.key)) return highlightedNodeColors[node.kind].selected
-  if (props.highlighted.has(node.key)) return highlightedNodeColors[node.kind].highlighted
+  if (props.highlighted.has(node.key)) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    if (props.highlighted.get(node.key)! > 1) {
+      return highlightedNodeColors[node.kind].multiple
+    }
+    return highlightedNodeColors[node.kind].highlighted
+  }
   return nodeColors[node.kind]
 }
 

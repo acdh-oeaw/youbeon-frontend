@@ -69,18 +69,22 @@ const selectedEntity = ref<
 >(null)
 
 const highlightedAccounts = computed(() => {
-  const highlights = new Set<Resource['key']>()
+  const highlights = new Map<Resource['key'], number>()
+
+  function add(key: Resource['key']) {
+    highlights.set(key, (highlights.get(key) ?? 0) + 1)
+  }
 
   accountFilters.value.account.forEach((key) => {
-    highlights.add(key)
+    add(key)
     accounts.get(key)?.ideas.forEach((key) => {
-      highlights.add(key)
+      add(key)
     })
   })
 
   accountFilters.value['interview-religion'].forEach((key) => {
     interviewReligions.get(key)?.accounts.forEach((key) => {
-      highlights.add(key)
+      add(key)
     })
   })
 
@@ -212,6 +216,13 @@ function getColor() {
         class="min-w-[8rem] flex-1"
         @update:model-value="onChangeAccountFilterKind"
       />
+      <div class="text-xs">
+        Gemeinsame Accounts
+        <span
+          class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
+          :style="{ backgroundColor: highlightedNodeColors.account.multiple }"
+        />.
+      </div>
     </filters-panel>
 
     <details-panel

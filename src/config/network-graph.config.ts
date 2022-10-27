@@ -11,31 +11,37 @@ export const nodeColors: Record<ResourceKind, string> = {
 
 export const highlightedNodeColors: Record<
   ResourceKind,
-  { highlighted: string; selected: string }
+  { highlighted: string; selected: string; multiple: string }
 > = {
   account: {
     highlighted: 'hsl(47deg 77.8% 59.4%)' /** brand-yellow */,
     selected: 'hsl(1.8deg 71.3% 63.1%)' /** brand-red */,
+    multiple: '#425c66',
   },
   idea: {
     highlighted: 'hsl(175.9deg 38.6% 77.6%)' /** brand-cyan */,
     selected: 'hsl(1.8deg 71.3% 63.1%)' /** brand-red */,
+    multiple: '#425c66',
   },
   interview: {
     highlighted: 'hsl(47deg 77.8% 59.4%)' /** brand-yellow */,
     selected: 'hsl(1.8deg 71.3% 63.1%)' /** brand-red */,
+    multiple: '#425c66',
   },
   'interview-religion': {
     highlighted: 'hsl(47deg 77.8% 59.4%)' /** brand-yellow */,
     selected: 'hsl(1.8deg 71.3% 63.1%)' /** brand-red */,
+    multiple: '#425c66',
   },
   place: {
     highlighted: 'hsl(47deg 77.8% 59.4%)' /** brand-yellow */,
     selected: 'hsl(1.8deg 71.3% 63.1%)' /** brand-red */,
+    multiple: '#425c66',
   },
   religion: {
     highlighted: 'hsl(47deg 77.8% 59.4%)' /** brand-yellow */,
     selected: 'hsl(1.8deg 71.3% 63.1%)' /** brand-red */,
+    multiple: '#425c66',
   },
 }
 
