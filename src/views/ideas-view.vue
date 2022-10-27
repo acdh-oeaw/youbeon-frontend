@@ -210,12 +210,11 @@ function getColor() {
         @update:model-value="onChangeIdeaFilterKind"
       />
       <div class="text-xs">
-        Kookkurrenzen werden
+        Verknüpfte Ideen
         <span
           class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
           :style="{ backgroundColor: highlightedNodeColors.idea.highlighted }"
         />
-        markiert.
       </div>
     </filters-panel>
 
