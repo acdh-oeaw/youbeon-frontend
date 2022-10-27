@@ -45,6 +45,8 @@ jobs:
           build-args: |
             REDMINE_ID=19337
             VITE_APP_BASE_URL=https://app.youbeon.eu
+            VITE_APP_MATOMO_BASE_URL=https://matomo.acdh.oeaw.ac.at
+            VITE_APP_MATOMO_ID=220
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
