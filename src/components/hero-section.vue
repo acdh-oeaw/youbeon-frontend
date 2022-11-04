@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 
-import places from '@/assets/images/places.png'
+// @ts-expect-error TypeScript does not know about resource queries.
+import places from '@/assets/images/places.png?webp'
 </script>
 
 <template>
   <section class="relative border-b border-brand-cyan bg-brand-cyan-tint">
     <div class="absolute inset-0 overflow-hidden opacity-30">
-      <img alt="" class="h-full w-full object-cover" :src="places" />
+      <img alt="" class="h-full w-full object-cover" height="640" :src="places" />
     </div>
     <div class="relative mx-auto grid w-full max-w-5xl gap-8 px-8 py-16 sm:py-32">
       <div class="grid gap-4">
