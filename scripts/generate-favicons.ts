@@ -1,4 +1,4 @@
-import { copyFile } from 'node:fs/promises'
+import { copyFile, writeFile } from 'node:fs/promises'
 import { extname, join } from 'node:path'
 
 import generateFavicons, { generateSocialImage } from '@stefanprobst/favicons'
@@ -7,8 +7,9 @@ import { log } from '@stefanprobst/log'
 import { manifestFileName, metadata, openGraphImageName } from '../config/metadata.config'
 
 async function generate() {
+  const publicFolder = join(process.cwd(), 'public')
   const inputFilePath = join(process.cwd(), metadata.logo.href)
-  const outputFolder = join(process.cwd(), 'public')
+  const outputFolder = publicFolder
 
   await generateFavicons({
     inputFilePath,
@@ -28,6 +29,9 @@ async function generate() {
     join(outputFolder, openGraphImageName),
     { fit: metadata.image.fit },
   )
+
+  const robots = `User-agent: *\nAllow: /\n`
+  await writeFile(join(publicFolder, 'robots.txt'), robots, { encoding: 'utf-8' })
 }
 
 generate()
