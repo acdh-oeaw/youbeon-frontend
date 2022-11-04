@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import vue from '@vitejs/plugin-vue'
 import type { Plugin } from 'vite'
 import { defineConfig, loadEnv } from 'vite'
+import { imagetools } from 'vite-imagetools'
 
 import { metadata } from './config/metadata.config'
 import { createAnalyticsScript } from './src/app/matomo-analytics'
@@ -127,7 +128,7 @@ export default defineConfig({
   define: {
     __VUE_OPTIONS_API__: false,
   },
-  plugins: [vue(), meta(), preloadDatabase(), matomoAnalytics()],
+  plugins: [vue(), imagetools(), meta(), preloadDatabase(), matomoAnalytics()],
   resolve: {
     /** Consider using `vite-tsconfig-paths` plugin. */
     alias: {
