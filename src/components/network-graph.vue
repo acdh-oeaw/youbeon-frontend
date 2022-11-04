@@ -76,6 +76,14 @@ function edgeColor(edge: LinkObject) {
   return props.edgeStrokeColor
 }
 
+function edgeWidth(edge: LinkObject) {
+  // @ts-expect-error Source and target should already be resolved to objects here.
+  if (props.matched.has(edge.source?.key) || props.matched.has(edge.target?.key)) {
+    return 3
+  }
+  return 1
+}
+
 const element = ref<HTMLElement | null>(null)
 const graph = ForceGraph()
 
@@ -170,10 +178,7 @@ graph.nodePointerAreaPaint((node, color, ctx) => {
 graph.enableNodeDrag(false)
 
 graph.linkColor(edgeColor)
-// graph.linkWidth(function linkWidth(edge) {
-//   // @ts-expect-error Source and target should already be resolved to objects here.
-//   return props.highlighted.has(edge.source.key) || props.highlighted.has(edge.target.key) ? 2 : 1
-// })
+graph.linkWidth(edgeWidth)
 
 graph.nodeId('key')
 graph.graphData({
