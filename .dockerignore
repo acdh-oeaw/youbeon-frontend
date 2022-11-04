@@ -45,6 +45,7 @@ src/views/imprint-view.vue
 /public/apple-touch-icon.png
 /public/app.webmanifest
 /public/image.webp
+/public/robots.txt
 
 # git
 .git
