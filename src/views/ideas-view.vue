@@ -67,27 +67,48 @@ const selectedEntity = ref<
   { entity: Idea; kind: 'idea' } | { entity: InterviewReligion; kind: 'interview-religion' } | null
 >(null)
 
-const highlightedIdeas = computed(() => {
+const highlighted = computed(() => {
+  let matches = 0
+  /** Whether to display the help text for multiple matches in the legend. */
+  let hasMultiple = false
+
   const highlights = new Map<Resource['key'], number>()
 
   function add(key: Resource['key']) {
+    if (highlights.has(key)) {
+      hasMultiple = true
+    }
+
     highlights.set(key, (highlights.get(key) ?? 0) + 1)
   }
 
+  function count(key: Resource['key']) {
+    if (highlights.has(key)) {
+      hasMultiple = true
+    } else {
+      matches++
+    }
+  }
+
   ideaFilters.value.idea.forEach((key) => {
+    count(key)
     add(key)
+  })
+
+  ideaFilters.value['interview-religion'].forEach((key) => {
+    interviewReligions.get(key)?.ideas.forEach((key) => {
+      count(key)
+      add(key)
+    })
+  })
+
+  ideaFilters.value.idea.forEach((key) => {
     ideas.get(key)?.ideas.forEach((key) => {
       add(key)
     })
   })
 
-  ideaFilters.value['interview-religion'].forEach((key) => {
-    interviewReligions.get(key)?.ideas.forEach((key) => {
-      add(key)
-    })
-  })
-
-  return highlights
+  return { ideas: highlights, hasMultiple, matches }
 })
 
 //
@@ -183,7 +204,7 @@ function getColor() {
         :width="width"
         :height="height"
         :graph="graph"
-        :highlighted="highlightedIdeas"
+        :highlighted="highlighted.ideas"
         :matched="ideaFilters[ideaFilterKind]"
         :selected="selectedEntity?.entity"
         :edge-stroke-color="edgeStrokeColor.idea"
@@ -213,16 +234,22 @@ function getColor() {
         class="min-w-[8rem] flex-1"
         @update:model-value="onChangeIdeaFilterKind"
       />
-      <div class="text-xs">
-        Verknüpfte Ideen
-        <span
-          class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
-          :style="{ backgroundColor: highlightedNodeColors.idea.highlighted }"
-        />. Gemeinsame Ideen
-        <span
-          class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
-          :style="{ backgroundColor: highlightedNodeColors.idea.multiple }"
-        />.
+      <div v-if="highlighted.matches > 0" class="flex items-center gap-2 text-xs">
+        <span>{{ highlighted.matches }} Treffer.</span>
+        <span v-if="highlighted.hasMultiple">
+          Gemeinsame Ideen
+          <span
+            class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
+            :style="{ backgroundColor: highlightedNodeColors.idea.multiple }"
+          />
+        </span>
+        <span>
+          Verknüpfte Ideen
+          <span
+            class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
+            :style="{ backgroundColor: highlightedNodeColors.idea.highlighted }"
+          />
+        </span>
       </div>
     </filters-panel>
 
