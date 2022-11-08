@@ -68,6 +68,7 @@ const selectedEntity = ref<
 >(null)
 
 const highlighted = computed(() => {
+  let matches = 0
   /** Whether to display the help text for multiple matches in the legend. */
   let hasMultiple = false
 
@@ -81,20 +82,33 @@ const highlighted = computed(() => {
     highlights.set(key, (highlights.get(key) ?? 0) + 1)
   }
 
+  function count(key: Resource['key']) {
+    if (highlights.has(key)) {
+      hasMultiple = true
+    } else {
+      matches++
+    }
+  }
+
   ideaFilters.value.idea.forEach((key) => {
+    count(key)
     add(key)
+  })
+
+  ideaFilters.value['interview-religion'].forEach((key) => {
+    interviewReligions.get(key)?.ideas.forEach((key) => {
+      count(key)
+      add(key)
+    })
+  })
+
+  ideaFilters.value.idea.forEach((key) => {
     ideas.get(key)?.ideas.forEach((key) => {
       add(key)
     })
   })
 
-  ideaFilters.value['interview-religion'].forEach((key) => {
-    interviewReligions.get(key)?.ideas.forEach((key) => {
-      add(key)
-    })
-  })
-
-  return { ideas: highlights, hasMultiple }
+  return { ideas: highlights, hasMultiple, matches }
 })
 
 //
@@ -220,8 +234,8 @@ function getColor() {
         class="min-w-[8rem] flex-1"
         @update:model-value="onChangeIdeaFilterKind"
       />
-      <div v-if="highlighted.ideas.size > 0" class="flex items-center gap-2 text-xs">
-        <span>{{ highlighted.ideas.size }} Treffer.</span>
+      <div v-if="highlighted.matches > 0" class="flex items-center gap-2 text-xs">
+        <span>{{ highlighted.matches }} Treffer.</span>
         <span v-if="highlighted.hasMultiple">
           Gemeinsame Ideen
           <span

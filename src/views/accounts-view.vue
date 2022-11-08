@@ -69,33 +69,37 @@ const selectedEntity = ref<
 >(null)
 
 const highlighted = computed(() => {
+  let matches = 0
   /** Whether to display the help text for multiple matches in the legend. */
   let hasMultiple = false
 
   const highlights = new Map<Resource['key'], number>()
 
   function add(key: Resource['key']) {
-    if (highlights.has(key)) {
-      hasMultiple = true
-    }
-
     highlights.set(key, (highlights.get(key) ?? 0) + 1)
   }
 
+  function count(key: Resource['key']) {
+    if (highlights.has(key)) {
+      hasMultiple = true
+    } else {
+      matches++
+    }
+  }
+
   accountFilters.value.account.forEach((key) => {
+    count(key)
     add(key)
-    accounts.get(key)?.ideas.forEach((key) => {
-      add(key)
-    })
   })
 
   accountFilters.value['interview-religion'].forEach((key) => {
     interviewReligions.get(key)?.accounts.forEach((key) => {
+      count(key)
       add(key)
     })
   })
 
-  return { accounts: highlights, hasMultiple }
+  return { accounts: highlights, hasMultiple, matches }
 })
 
 //
@@ -223,8 +227,8 @@ function getColor() {
         class="min-w-[8rem] flex-1"
         @update:model-value="onChangeAccountFilterKind"
       />
-      <div v-if="highlighted.accounts.size > 0" class="flex items-center gap-2 text-xs">
-        <span>{{ highlighted.accounts.size }} Treffer.</span>
+      <div v-if="highlighted.matches > 0" class="flex items-center gap-2 text-xs">
+        <span>{{ highlighted.matches }} Treffer.</span>
         <span v-if="highlighted.hasMultiple">
           Gemeinsame Accounts
           <span
