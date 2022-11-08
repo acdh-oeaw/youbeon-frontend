@@ -60,7 +60,10 @@ export const routes = {
 export const router = createRouter({
   history: createWebHistory(),
   routes: Object.values(routes),
-  scrollBehavior() {
+  scrollBehavior(to) {
+    if (to.hash) {
+      return { el: to.hash }
+    }
     return { left: 0, top: 0 }
   },
 })

@@ -3,7 +3,7 @@ import FaqDisclosure from '@/components/faq-disclosure.vue'
 </script>
 
 <template>
-  <section>
+  <section id="faq">
     <div class="mx-auto grid max-w-5xl gap-12 border-t border-brand-cyan py-16 px-8">
       <h2 class="font-display text-xl font-bold sm:text-2xl">Fragen zur YouBeOn Map</h2>
       <div class="grid gap-12">

@@ -32,6 +32,7 @@ const config = {
         sans: ['Noto Sans DisplayVariable', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       screens: {
+        xxs: '360px',
         xs: '480px',
       },
       zIndex: {
