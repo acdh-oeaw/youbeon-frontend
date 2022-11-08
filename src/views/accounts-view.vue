@@ -68,10 +68,17 @@ const selectedEntity = ref<
   | null
 >(null)
 
-const highlightedAccounts = computed(() => {
+const highlighted = computed(() => {
+  /** Whether to display the help text for multiple matches in the legend. */
+  let hasMultiple = false
+
   const highlights = new Map<Resource['key'], number>()
 
   function add(key: Resource['key']) {
+    if (highlights.has(key)) {
+      hasMultiple = true
+    }
+
     highlights.set(key, (highlights.get(key) ?? 0) + 1)
   }
 
@@ -88,7 +95,7 @@ const highlightedAccounts = computed(() => {
     })
   })
 
-  return highlights
+  return { accounts: highlights, hasMultiple }
 })
 
 //
@@ -186,7 +193,7 @@ function getColor() {
         :width="width"
         :height="height"
         :graph="graph"
-        :highlighted="highlightedAccounts"
+        :highlighted="highlighted.accounts"
         :matched="accountFilters[accountFilterKind]"
         :selected="selectedEntity?.entity"
         :edge-stroke-color="edgeStrokeColor.account"
@@ -216,12 +223,15 @@ function getColor() {
         class="min-w-[8rem] flex-1"
         @update:model-value="onChangeAccountFilterKind"
       />
-      <div class="text-xs">
-        Gemeinsame Accounts
-        <span
-          class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
-          :style="{ backgroundColor: highlightedNodeColors.account.multiple }"
-        />.
+      <div v-if="highlighted.accounts.size > 0" class="flex items-center gap-2 text-xs">
+        <span>{{ highlighted.accounts.size }} Treffer.</span>
+        <span v-if="highlighted.hasMultiple">
+          Gemeinsame Accounts
+          <span
+            class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
+            :style="{ backgroundColor: highlightedNodeColors.account.multiple }"
+          />
+        </span>
       </div>
     </filters-panel>
 

@@ -96,7 +96,7 @@ function getColor(key: Resource['key'], kind: ResourceKind = placeFilterKind.val
 
 //
 
-const layers = computed(() => {
+const points = computed(() => {
   function createPoint(place: Place, options?: Partial<Point['options']>): Point {
     return {
       place,
@@ -110,6 +110,10 @@ const layers = computed(() => {
       },
     }
   }
+
+  let matches = 0
+  /** Whether to display the help text for multiple matches in the legend. */
+  let hasMultipleMatches = false
 
   const layers: PointLayers = { base: [], highlight: [], selected: [] }
 
@@ -178,6 +182,13 @@ const layers = computed(() => {
         }
       }
 
+      if (highlights.length > 0) {
+        matches++
+        if (highlights.length > 1) {
+          hasMultipleMatches = true
+        }
+      }
+
       if (selectedEntity.value?.kind === 'place' && place.key === selectedEntity.value.entity.key) {
         layers.selected.push(createPoint(place, { ...getPointOptions(), ...selectedPointOptions }))
       } else if (highlights.length === 0) {
@@ -188,7 +199,7 @@ const layers = computed(() => {
     })
   }
 
-  return layers
+  return { layers, matches, hasMultipleMatches }
 })
 
 //
@@ -350,7 +361,7 @@ function onCloseDetailsPanel() {
   <main-content class="h-full overflow-hidden">
     <h1 class="sr-only">{{ $router.currentRoute.value.meta['title'] }}</h1>
 
-    <geo-map :layers="layers" @click-place="onClickPlace" @map-ready="onMapReady" />
+    <geo-map :layers="points.layers" @click-place="onClickPlace" @map-ready="onMapReady" />
 
     <filters-panel
       id="places-filters"
@@ -373,12 +384,15 @@ function onCloseDetailsPanel() {
         class="min-w-[8rem] flex-1"
         @update:model-value="onChangePlaceFilterKind"
       />
-      <div class="text-xs">
-        Gemeinsame Orte
-        <span
-          class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
-          :style="{ backgroundColor: colors.multiple }"
-        />.
+      <div v-if="points.matches > 0" class="flex items-center gap-2 text-xs">
+        <span>{{ points.matches }} Treffer.</span>
+        <span v-if="points.hasMultipleMatches">
+          Gemeinsame Orte
+          <span
+            class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
+            :style="{ backgroundColor: colors.multiple }"
+          />
+        </span>
       </div>
     </filters-panel>
 
