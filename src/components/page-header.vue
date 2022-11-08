@@ -17,7 +17,7 @@ const colors = useScreenColors()
     "
   >
     <div
-      class="mx-auto grid max-w-5xl grid-cols-[3rem_1fr] items-center gap-4 px-6 py-2 xs:gap-8 xs:px-8"
+      class="mx-auto grid max-w-5xl grid-cols-[3rem_1fr] items-center gap-2.5 px-6 py-2 xxs:gap-4 xs:gap-8 xs:px-8"
     >
       <div>
         <router-link :to="{ name: 'home' }">
@@ -27,7 +27,7 @@ const colors = useScreenColors()
       </div>
       <nav>
         <ul
-          class="flex flex-wrap justify-end gap-x-6 font-display text-sm font-semibold xs:gap-x-12 sm:text-base"
+          class="flex flex-wrap justify-end gap-x-2.5 font-display text-sm font-semibold xxs:gap-x-4 xs:gap-x-12 sm:text-base"
           role="list"
         >
           <li>
@@ -38,6 +38,22 @@ const colors = useScreenColors()
           </li>
           <li>
             <router-link active-class="underline" :to="{ name: 'ideas' }">Ideen</router-link>
+          </li>
+          <li>
+            <router-link
+              v-slot="{ href, isExactActive, navigate, route: to }"
+              custom
+              :to="{ name: 'home', hash: '#faq' }"
+            >
+              <a
+                :aria-current="isExactActive && route.hash === to.hash ? 'page' : undefined"
+                :class="isExactActive && route.hash === to.hash ? 'underline' : undefined"
+                :href="href"
+                @click="navigate"
+              >
+                FAQ
+              </a>
+            </router-link>
           </li>
         </ul>
       </nav>
