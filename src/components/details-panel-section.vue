@@ -1,15 +1,34 @@
 <script lang="ts" setup>
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
+import { computed } from 'vue'
 
 import type { Resource } from '@/db/types'
 
-const _props = defineProps<{
+const props = defineProps<{
   keys: Set<Resource['key']> | undefined
   items: Map<Resource['key'], Resource>
   route?: string
   label: string
 }>()
+
+const sortedItems = computed(() => {
+  const sorted: Array<Resource> = []
+
+  if (props.keys == null) return sorted
+
+  for (const key of props.keys) {
+    const item = props.items.get(key)
+    if (item == null) continue
+    sorted.push(item)
+  }
+
+  sorted.sort((a, b) => {
+    return a.label.localeCompare(b.label)
+  })
+
+  return sorted
+})
 </script>
 
 <template>
@@ -31,13 +50,13 @@ const _props = defineProps<{
     >
       <disclosure-panel>
         <ul role="list" class="grid gap-0.5">
-          <li v-for="key of keys" :key="key">
+          <li v-for="item of sortedItems" :key="item.key">
             <router-link
               v-if="route != null"
-              :to="{ name: route, query: { id: [key], kind: items.get(key)?.kind } }"
-              >{{ items.get(key)?.label }}</router-link
+              :to="{ name: route, query: { id: [item.key], kind: item.kind } }"
+              >{{ item.label }}</router-link
             >
-            <span v-else>{{ items.get(key)?.label }}</span>
+            <span v-else>{{ item.label }}</span>
           </li>
         </ul>
       </disclosure-panel>
