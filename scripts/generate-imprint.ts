@@ -24,7 +24,15 @@ async function generate() {
     <template>
     <main-content>
       <div class="prose mx-auto grid max-w-3xl gap-4 px-8 py-16">
-        <h1 class="text-4xl font-extrabold">Impressum</h1>
+        <div class="relative mb-8">
+          <img alt="" class="absolute -top-8 -left-10 h-28 w-28" src="@/assets/images/bubble.svg" />
+          <h1
+            class="relative flex items-center gap-2 bg-neutral-50 pb-1 font-display text-3xl font-bold"
+          >
+            Impressum
+          </h1>
+          <div class="relative h-1 bg-brand-cyan" />
+        </div>
         ${html}
       </div>
     </main-content>
