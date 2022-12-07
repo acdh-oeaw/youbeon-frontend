@@ -63,7 +63,10 @@ const titleId = 'popover-title'
     >
       <div class="divide-neutral-200 overflow-hidden">
         <div class="flex items-start justify-between gap-4 px-4 py-2">
-          <details-panel-title :id="titleId">{{ title }}<slot name="link" /></details-panel-title>
+          <details-panel-title :id="titleId">
+            {{ title }}
+            <slot name="link" />
+          </details-panel-title>
           <button aria-label="Close details panel" @click="onClose">
             <x-mark-icon aria-hidden="true" class="h-5 w-5" />
           </button>

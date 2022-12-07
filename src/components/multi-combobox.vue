@@ -99,9 +99,9 @@ function getTagStyle(key: Item['key']) {
     @update:model-value="onChangeSelection"
   >
     <div class="grid gap-y-1">
-      <combobox-label class="sr-only text-xs font-medium text-neutral-600">{{
-        label
-      }}</combobox-label>
+      <combobox-label class="sr-only text-xs font-medium text-neutral-600">
+        {{ label }}
+      </combobox-label>
       <div
         class="relative flex w-full cursor-default flex-wrap items-center overflow-hidden rounded-lg bg-neutral-0 text-left text-sm shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-0/75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300"
       >
@@ -124,7 +124,8 @@ function getTagStyle(key: Item['key']) {
             autocomplete="off"
             class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-neutral-900 focus-visible:outline-none"
             :placeholder="placeholder"
-            @change="searchTerm = $event.target.value"
+            :value="searchTerm"
+            @input="searchTerm = $event.target.value"
           />
           <combobox-button
             class="absolute inset-y-0 right-0 flex items-center pr-2 text-neutral-400"

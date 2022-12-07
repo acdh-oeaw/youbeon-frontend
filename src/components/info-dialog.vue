@@ -72,9 +72,9 @@ const label = 'Info'
             <button aria-label="Close dialog" class="absolute right-4 top-4" @click="toggle">
               <x-mark-icon aria-hidden="true" class="h-5 w-5" />
             </button>
-            <dialog-title class="font-display text-lg font-medium leading-tight">{{
-              title
-            }}</dialog-title>
+            <dialog-title class="font-display text-lg font-medium leading-tight">
+              {{ title }}
+            </dialog-title>
             <div class="grid gap-4">
               <slot :close="toggle" />
             </div>

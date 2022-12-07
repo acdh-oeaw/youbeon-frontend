@@ -36,9 +36,10 @@ import places from '@/assets/images/places.png?webp'
         <router-link
           class="inline-flex min-w-[8rem] items-center justify-between gap-2 rounded-lg bg-neutral-900 px-4 py-3 text-sm font-semibold text-neutral-0 hover:bg-neutral-700 hover:text-neutral-0"
           :to="{ name: 'places' }"
-          >Hier gehts zur YouBeOn Map
-          <chevron-right-icon aria-hidden="true" class="h-4 w-4 text-neutral-400"
-        /></router-link>
+        >
+          Hier gehts zur YouBeOn Map
+          <chevron-right-icon aria-hidden="true" class="h-4 w-4 text-neutral-400" />
+        </router-link>
       </div>
     </div>
   </section>

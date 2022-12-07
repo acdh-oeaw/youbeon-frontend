@@ -251,8 +251,9 @@ function getColor() {
           :href="`https://instagram.com/${selectedEntity?.entity.label}`"
           rel="noreferrer"
           target="_blank"
-          ><img alt="" class="w-h h-5" src="@/assets/images/instagram.svg"
-        /></a>
+        >
+          <img alt="" class="w-h h-5" src="@/assets/images/instagram.svg" />
+        </a>
       </template>
       <details-panel-section
         label="Verknüpfte Ideen"

@@ -54,8 +54,9 @@ const sortedItems = computed(() => {
             <router-link
               v-if="route != null"
               :to="{ name: route, query: { id: [item.key], kind: item.kind } }"
-              >{{ item.label }}</router-link
             >
+              {{ item.label }}
+            </router-link>
             <span v-else>{{ item.label }}</span>
           </li>
         </ul>

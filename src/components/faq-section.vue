@@ -39,11 +39,13 @@ import FaqDisclosure from '@/components/faq-disclosure.vue'
             Orte und Ideen sichtbar werden.
           </p>
           <p>
-            Als <em>Ideen</em> bezeichnen wir Konzepte und Begriffe, die von Teilnehmer*innen
-            explizit genannt wurden (z.B. Gatka, Schabbat, beten, Familie). Darüber hinaus sind es
-            abstrakte Konzepte und Vorstellungen (z.B. Ruhe finden, kritischer Umgang mit
-            Informationsquellen, Gottesbeziehung). Diese Ideen wurden vom Forscher*innenteam im Zuge
-            der Datenanalyse entwickelt.
+            Als
+            <em>Ideen</em>
+            bezeichnen wir Konzepte und Begriffe, die von Teilnehmer*innen explizit genannt wurden
+            (z.B. Gatka, Schabbat, beten, Familie). Darüber hinaus sind es abstrakte Konzepte und
+            Vorstellungen (z.B. Ruhe finden, kritischer Umgang mit Informationsquellen,
+            Gottesbeziehung). Diese Ideen wurden vom Forscher*innenteam im Zuge der Datenanalyse
+            entwickelt.
           </p>
         </faq-disclosure>
         <faq-disclosure title="Wie sind die YouBeOn Interviews abgelaufen?">
