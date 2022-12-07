@@ -15,6 +15,7 @@ COPY --chown=node:node public ./public
 COPY --chown=node:node config ./config
 COPY --chown=node:node src ./src
 COPY --chown=node:node data ./data
+COPY --chown=node:node patches ./patches
 
 ARG REDMINE_ID=19337
 ARG VITE_APP_BASE_URL
