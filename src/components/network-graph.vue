@@ -37,11 +37,12 @@ const emit = defineEmits<{
  * Fixed nodes are positioned equally spaced on a circle.
  */
 const _angle = 360 / props.graph.nodes.fixed.length
+const rad = (Math.PI * 2) / 360
 props.graph.nodes.fixed.forEach((node, index) => {
   const radius = Math.min(props.width, props.height) * 0.75
   const angle = _angle * index
-  const x = radius * Math.sin((Math.PI * 2 * angle) / 360)
-  const y = radius * Math.cos((Math.PI * 2 * angle) / 360)
+  const x = radius * Math.sin(angle * rad)
+  const y = radius * Math.cos(angle * rad)
   node.fx = node.x = x
   node.fy = node.y = y
 })
@@ -87,7 +88,6 @@ function edgeWidth(edge: LinkObject) {
 const element = ref<HTMLElement | null>(null)
 const graph = ForceGraph()
 
-// @ts-expect-error upstream types don't allow `null`.
 graph.d3Force('center', null)
 // graph.d3Force('charge').strength(-100)
 graph.d3Force('link')?.['distance'](50)
@@ -246,21 +246,23 @@ watch(
     /**
      * Ensure highlighted nodes and edges end up on top. Canvas has no z-index so we need to control
      * paint order via array index, i.e. sorting highlighted nodes to the end of the array.
-     * Mutating `props.graph` should be fine in this case.
+     *
+     * Note that we rely on a patched `force-graph` to *not* reheat the simulation when we provide
+     * a new sorted nodes array - this is ok here since we only change the order, but the nodes
+     * themselves are constant.
      */
-    // eslint-disable-next-line vue/no-mutating-props
-    props.graph.edges.sort((a) => {
+    const edges = props.graph.edges.slice().sort((a) => {
       const source = typeof a.source === 'string' ? a.source : (a.source as NodeObject).key
       const target = typeof a.target === 'string' ? a.target : (a.target as NodeObject).key
 
       return props.highlighted.has(source) || props.highlighted.has(target) ? 1 : -1
     })
-    // eslint-disable-next-line vue/no-mutating-props
-    props.graph.nodes.dynamic.sort((a) => {
+    const dynamic = props.graph.nodes.dynamic.slice().sort((a) => {
       const key = typeof a === 'string' ? a : (a as NodeObject).key
 
       return props.highlighted.has(key) ? 1 : -1
     })
+    graph.graphData({ nodes: [...dynamic, ...props.graph.nodes.fixed], links: edges })
   },
 )
 

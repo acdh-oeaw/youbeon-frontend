@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:16-slim
+FROM node:18-slim
 
 RUN mkdir /app && chown -R node:node /app
 WORKDIR /app
@@ -15,6 +15,7 @@ COPY --chown=node:node public ./public
 COPY --chown=node:node config ./config
 COPY --chown=node:node src ./src
 COPY --chown=node:node data ./data
+COPY --chown=node:node patches ./patches
 
 ARG REDMINE_ID=19337
 ARG VITE_APP_BASE_URL
