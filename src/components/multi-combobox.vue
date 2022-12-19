@@ -125,7 +125,6 @@ function getTagStyle(key: Item["key"]) {
 						class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-neutral-900 focus-visible:outline-none"
 						:placeholder="placeholder"
 						:value="searchTerm"
-						@blur="searchTerm = ''"
 						@input="searchTerm = $event.target.value"
 					/>
 					<combobox-button
