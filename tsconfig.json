@@ -1,15 +1,12 @@
 {
-  "extends": "@stefanprobst/tsconfig",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "exactOptionalPropertyTypes": false,
-    "paths": {
-      "@/*": ["./src/*"],
-      "~/*": ["./*"]
-    },
-    "preserveValueImports": false,
-    "sourceMap": true,
-    "useDefineForClassFields": true
-  },
-  "include": ["app.d.ts", "./config/**/*.ts", "./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.vue"]
+	"extends": "@stefanprobst/tsconfig",
+	"compilerOptions": {
+		"baseUrl": ".",
+		"exactOptionalPropertyTypes": false,
+		"paths": {
+			"@/*": ["./src/*"],
+			"~/*": ["./*"]
+		}
+	},
+	"include": ["env.d.ts", "./config/**/*.ts", "./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.vue"]
 }

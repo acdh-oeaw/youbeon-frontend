@@ -14,9 +14,9 @@ import NetworkGraph from '@/components/network-graph.vue'
 import SingleSelect from '@/components/single-select.vue'
 import VisualisationContainer from '@/components/visualisation-container.vue'
 import {
-  edgeStrokeColor,
-  highlightedEdgeStrokeColor,
-  highlightedNodeColors,
+	edgeStrokeColor,
+	highlightedEdgeStrokeColor,
+	highlightedNodeColors,
 } from '@/config/network-graph.config'
 import { accounts, ideas, interviewReligions, interviews, places } from '@/db'
 import type { Idea, InterviewReligion, Resource, ResourceKeyMap, ResourceMap } from '@/db/types'
@@ -29,17 +29,17 @@ import type { Idea, InterviewReligion, Resource, ResourceKeyMap, ResourceMap } f
 const graph: Graph = { nodes: { fixed: [], dynamic: [] }, edges: [] }
 
 ideas.forEach((idea) => {
-  graph.nodes.dynamic.push({ key: idea.key, label: idea.label, kind: idea.kind })
+	graph.nodes.dynamic.push({ key: idea.key, label: idea.label, kind: idea.kind })
 
-  idea.interviews.forEach((key) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const religion = interviews.get(key)!.religion
-    graph.edges.push({ source: religion, target: idea.key })
-  })
+	idea.interviews.forEach((key) => {
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const religion = interviews.get(key)!.religion
+		graph.edges.push({ source: religion, target: idea.key })
+	})
 })
 
 interviewReligions.forEach((religion) => {
-  graph.nodes.fixed.push({ key: religion.key, label: religion.label, kind: religion.kind })
+	graph.nodes.fixed.push({ key: religion.key, label: religion.label, kind: religion.kind })
 })
 
 //
@@ -50,13 +50,13 @@ type LabeledIdeaFilterKinds = Map<IdeaFilterKind, { key: IdeaFilterKind; label: 
 type IdeaFilterItems = Pick<ResourceMap, 'idea' | 'interview-religion'>
 
 const ideaFilterItems: IdeaFilterItems = {
-  idea: ideas,
-  'interview-religion': interviewReligions,
+	idea: ideas,
+	'interview-religion': interviewReligions,
 }
 
 const labeledIdeaFilterKinds: LabeledIdeaFilterKinds = new Map([
-  ['idea', { key: 'idea', label: 'Ideen' }],
-  ['interview-religion', { key: 'interview-religion', label: 'Religionen' }],
+	['idea', { key: 'idea', label: 'Ideen' }],
+	['interview-religion', { key: 'interview-religion', label: 'Religionen' }],
 ])
 
 const ideaFilters = ref<IdeaFilters>({ idea: new Set(), 'interview-religion': new Set() })
@@ -64,51 +64,51 @@ const defaultIdeaFilterKind = 'idea'
 const ideaFilterKind = ref<IdeaFilterKind>(defaultIdeaFilterKind)
 
 const selectedEntity = ref<
-  { entity: Idea; kind: 'idea' } | { entity: InterviewReligion; kind: 'interview-religion' } | null
+	{ entity: Idea; kind: 'idea' } | { entity: InterviewReligion; kind: 'interview-religion' } | null
 >(null)
 
 const highlighted = computed(() => {
-  let matches = 0
-  /** Whether to display the help text for multiple matches in the legend. */
-  let hasMultiple = false
+	let matches = 0
+	/** Whether to display the help text for multiple matches in the legend. */
+	let hasMultiple = false
 
-  const highlights = new Map<Resource['key'], number>()
+	const highlights = new Map<Resource['key'], number>()
 
-  function add(key: Resource['key']) {
-    if (highlights.has(key)) {
-      hasMultiple = true
-    }
+	function add(key: Resource['key']) {
+		if (highlights.has(key)) {
+			hasMultiple = true
+		}
 
-    highlights.set(key, (highlights.get(key) ?? 0) + 1)
-  }
+		highlights.set(key, (highlights.get(key) ?? 0) + 1)
+	}
 
-  function count(key: Resource['key']) {
-    if (highlights.has(key)) {
-      hasMultiple = true
-    } else {
-      matches++
-    }
-  }
+	function count(key: Resource['key']) {
+		if (highlights.has(key)) {
+			hasMultiple = true
+		} else {
+			matches++
+		}
+	}
 
-  ideaFilters.value.idea.forEach((key) => {
-    count(key)
-    add(key)
-  })
+	ideaFilters.value.idea.forEach((key) => {
+		count(key)
+		add(key)
+	})
 
-  ideaFilters.value['interview-religion'].forEach((key) => {
-    interviewReligions.get(key)?.ideas.forEach((key) => {
-      count(key)
-      add(key)
-    })
-  })
+	ideaFilters.value['interview-religion'].forEach((key) => {
+		interviewReligions.get(key)?.ideas.forEach((key) => {
+			count(key)
+			add(key)
+		})
+	})
 
-  ideaFilters.value.idea.forEach((key) => {
-    ideas.get(key)?.ideas.forEach((key) => {
-      add(key)
-    })
-  })
+	ideaFilters.value.idea.forEach((key) => {
+		ideas.get(key)?.ideas.forEach((key) => {
+			add(key)
+		})
+	})
 
-  return { ideas: highlights, hasMultiple, matches }
+	return { ideas: highlights, hasMultiple, matches }
 })
 
 //
@@ -117,185 +117,185 @@ const route = useRoute()
 const router = useRouter()
 
 function isFilterKind(value: string): value is IdeaFilterKind {
-  return Object.keys(ideaFilterItems).includes(value)
+	return Object.keys(ideaFilterItems).includes(value)
 }
 
 function syncFiltersWithSearchParams() {
-  const searchParams = new URLSearchParams(window.location.search)
-  const detailsId = searchParams.get('details-id')
-  const detailsKind = searchParams.get('details-kind')
-  const ids = searchParams.getAll('id').filter(Boolean)
-  const kind = searchParams.get('kind') ?? defaultIdeaFilterKind
+	const searchParams = new URLSearchParams(window.location.search)
+	const detailsId = searchParams.get('details-id')
+	const detailsKind = searchParams.get('details-kind')
+	const ids = searchParams.getAll('id').filter(Boolean)
+	const kind = searchParams.get('kind') ?? defaultIdeaFilterKind
 
-  if (isFilterKind(kind)) {
-    const keys = new Set<Resource['key']>()
+	if (isFilterKind(kind)) {
+		const keys = new Set<Resource['key']>()
 
-    ids.forEach((key) => {
-      if (ideaFilterItems[kind].has(key)) {
-        keys.add(key)
-      }
-    })
+		ids.forEach((key) => {
+			if (ideaFilterItems[kind].has(key)) {
+				keys.add(key)
+			}
+		})
 
-    ideaFilters.value = {
-      idea: new Set(),
-      'interview-religion': new Set(),
-      [kind]: keys,
-    }
+		ideaFilters.value = {
+			idea: new Set(),
+			'interview-religion': new Set(),
+			[kind]: keys,
+		}
 
-    ideaFilterKind.value = kind
-  }
+		ideaFilterKind.value = kind
+	}
 
-  function isValidDetailsKind(value: string): value is 'idea' | 'interview-religion' {
-    return ['idea', 'interview-religion'].includes(value)
-  }
+	function isValidDetailsKind(value: string): value is 'idea' | 'interview-religion' {
+		return ['idea', 'interview-religion'].includes(value)
+	}
 
-  if (
-    detailsId != null &&
-    detailsKind != null &&
-    isValidDetailsKind(detailsKind) &&
-    ideaFilterItems[detailsKind].has(detailsId)
-  ) {
-    selectedEntity.value = {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      entity: ideaFilterItems[detailsKind].get(detailsId)!,
-      kind: detailsKind,
-    } as { entity: Idea; kind: 'idea' } | { entity: InterviewReligion; kind: 'interview-religion' }
-  } else {
-    selectedEntity.value = null
-  }
+	if (
+		detailsId != null &&
+		detailsKind != null &&
+		isValidDetailsKind(detailsKind) &&
+		ideaFilterItems[detailsKind].has(detailsId)
+	) {
+		selectedEntity.value = {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			entity: ideaFilterItems[detailsKind].get(detailsId)!,
+			kind: detailsKind,
+		} as { entity: Idea; kind: 'idea' } | { entity: InterviewReligion; kind: 'interview-religion' }
+	} else {
+		selectedEntity.value = null
+	}
 }
 
 watch(
-  () => {
-    return route.query
-  },
-  syncFiltersWithSearchParams,
-  { immediate: true },
+	() => {
+		return route.query
+	},
+	syncFiltersWithSearchParams,
+	{ immediate: true },
 )
 
 function onClickNode(key: Resource['key'], kind: Resource['kind']) {
-  router.push({ query: { ...route.query, 'details-id': key, 'details-kind': kind } })
+	router.push({ query: { ...route.query, 'details-id': key, 'details-kind': kind } })
 }
 
 function onChangeIdeaFilterKind(kind: string) {
-  router.push({ query: { ...route.query, kind: kind as IdeaFilterKind } })
+	router.push({ query: { ...route.query, kind: kind as IdeaFilterKind } })
 }
 
 function onChangeIdeaFilters(id: Array<Resource['key']>) {
-  router.push({ query: { ...route.query, id } })
+	router.push({ query: { ...route.query, id } })
 }
 
 function onCloseDetailsPanel() {
-  const { 'details-id': _, 'details-kind': __, ...query } = route.query
-  router.push({ query })
+	const { 'details-id': _, 'details-kind': __, ...query } = route.query
+	router.push({ query })
 }
 
 function getColor() {
-  return highlightedNodeColors.idea.selected
+	return highlightedNodeColors.idea.selected
 }
 </script>
 
 <template>
-  <main-content class="h-full overflow-hidden">
-    <h1 class="sr-only">{{ $router.currentRoute.value.meta['title'] }}</h1>
+	<main-content class="h-full overflow-hidden">
+		<h1 class="sr-only">{{ $router.currentRoute.value.meta['title'] }}</h1>
 
-    <visualisation-container v-slot="{ width, height }">
-      <network-graph
-        :width="width"
-        :height="height"
-        :graph="graph"
-        :highlighted="highlighted.ideas"
-        :matched="ideaFilters[ideaFilterKind]"
-        :selected="selectedEntity?.entity"
-        :edge-stroke-color="edgeStrokeColor.idea"
-        :highlighted-edge-stroke-color="highlightedEdgeStrokeColor.idea"
-        @click-node="onClickNode"
-      />
-    </visualisation-container>
+		<visualisation-container v-slot="{ width, height }">
+			<network-graph
+				:width="width"
+				:height="height"
+				:graph="graph"
+				:highlighted="highlighted.ideas"
+				:matched="ideaFilters[ideaFilterKind]"
+				:selected="selectedEntity?.entity"
+				:edge-stroke-color="edgeStrokeColor.idea"
+				:highlighted-edge-stroke-color="highlightedEdgeStrokeColor.idea"
+				@click-node="onClickNode"
+			/>
+		</visualisation-container>
 
-    <filters-panel
-      id="ideas-filters"
-      name="ideas-filters"
-      class="grid items-start gap-4 sm:grid-cols-[1fr_auto]"
-    >
-      <multi-combobox
-        name="active-places-filters"
-        :get-tag-color="getColor"
-        :label="labeledIdeaFilterKinds.get(ideaFilterKind)!.label"
-        :items="ideaFilterItems[ideaFilterKind]"
-        :model-value="Array.from(ideaFilters[ideaFilterKind])"
-        @update:model-value="onChangeIdeaFilters"
-      />
-      <single-select
-        :model-value="ideaFilterKind"
-        :items="labeledIdeaFilterKinds"
-        name="ideas-filter-kind"
-        label="Filter-Kategorie"
-        class="min-w-[8rem] flex-1"
-        @update:model-value="onChangeIdeaFilterKind"
-      />
-      <div v-if="highlighted.matches > 0" class="flex items-center gap-2 text-xs">
-        <span>{{ highlighted.matches }} Treffer.</span>
-        <span v-if="highlighted.hasMultiple">
-          Gemeinsame Ideen
-          <span
-            class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
-            :style="{ backgroundColor: highlightedNodeColors.idea.multiple }"
-          />
-        </span>
-        <span>
-          Verknüpfte Ideen
-          <span
-            class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
-            :style="{ backgroundColor: highlightedNodeColors.idea.highlighted }"
-          />
-        </span>
-      </div>
-    </filters-panel>
+		<filters-panel
+			id="ideas-filters"
+			name="ideas-filters"
+			class="grid items-start gap-4 sm:grid-cols-[1fr_auto]"
+		>
+			<multi-combobox
+				name="active-places-filters"
+				:get-tag-color="getColor"
+				:label="labeledIdeaFilterKinds.get(ideaFilterKind)!.label"
+				:items="ideaFilterItems[ideaFilterKind]"
+				:model-value="Array.from(ideaFilters[ideaFilterKind])"
+				@update:model-value="onChangeIdeaFilters"
+			/>
+			<single-select
+				:model-value="ideaFilterKind"
+				:items="labeledIdeaFilterKinds"
+				name="ideas-filter-kind"
+				label="Filter-Kategorie"
+				class="min-w-[8rem] flex-1"
+				@update:model-value="onChangeIdeaFilterKind"
+			/>
+			<div v-if="highlighted.matches > 0" class="flex items-center gap-2 text-xs">
+				<span>{{ highlighted.matches }} Treffer.</span>
+				<span v-if="highlighted.hasMultiple">
+					Gemeinsame Ideen
+					<span
+						class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
+						:style="{ backgroundColor: highlightedNodeColors.idea.multiple }"
+					/>
+				</span>
+				<span>
+					Verknüpfte Ideen
+					<span
+						class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
+						:style="{ backgroundColor: highlightedNodeColors.idea.highlighted }"
+					/>
+				</span>
+			</div>
+		</filters-panel>
 
-    <details-panel
-      :key="selectedEntity?.entity.key"
-      :is-open="selectedEntity != null"
-      :title="selectedEntity?.entity.label"
-      @close-panel="onCloseDetailsPanel"
-    >
-      <details-panel-section
-        label="Verknüpfte Accounts"
-        :keys="selectedEntity?.entity.accounts"
-        :items="accounts"
-        route="accounts"
-      />
-      <details-panel-section
-        label="Verknüpfte Orte"
-        :keys="selectedEntity?.entity.places"
-        :items="places"
-        route="places"
-      />
-      <details-panel-section
-        label="Verknüpfte Ideen"
-        :keys="selectedEntity?.entity.ideas"
-        :items="ideas"
-        route="ideas"
-      />
-      <details-panel-quotes
-        v-if="selectedEntity?.kind === 'idea'"
-        label="Zitate"
-        :items="selectedEntity?.entity.quotes"
-      />
-    </details-panel>
+		<details-panel
+			:key="selectedEntity?.entity.key"
+			:is-open="selectedEntity != null"
+			:title="selectedEntity?.entity.label"
+			@close-panel="onCloseDetailsPanel"
+		>
+			<details-panel-section
+				label="Verknüpfte Accounts"
+				:keys="selectedEntity?.entity.accounts"
+				:items="accounts"
+				route="accounts"
+			/>
+			<details-panel-section
+				label="Verknüpfte Orte"
+				:keys="selectedEntity?.entity.places"
+				:items="places"
+				route="places"
+			/>
+			<details-panel-section
+				label="Verknüpfte Ideen"
+				:keys="selectedEntity?.entity.ideas"
+				:items="ideas"
+				route="ideas"
+			/>
+			<details-panel-quotes
+				v-if="selectedEntity?.kind === 'idea'"
+				label="Zitate"
+				:items="selectedEntity?.entity.quotes"
+			/>
+		</details-panel>
 
-    <info-dialog title="Info">
-      <div>Klick auf Idee/Religionsgruppe: hebt den Knoten hervor und öffnet das Kontext-Menü</div>
-      <div>Suche nach Ideen: hebt die gesuchte Idee und damit assoziierte Ideen hervor</div>
-      <div>
-        Suche nach einer Religionsgruppen: hebt alle Accounts hervor, die mit einer Religionsgruppe
-        assoziiert sind
-      </div>
-      <div>
-        Suche nach mehreren Religionsgruppen: zeigt alle Ideen, die mit den jeweiligen Religionen
-        assoziiert sind in der Farbe der Religionen; Ideen, an denen sich mehrere der ausgewählten
-        Religionen "treffen", werden gesondert hervorgehoben
-      </div>
-    </info-dialog>
-  </main-content>
+		<info-dialog title="Info">
+			<div>Klick auf Idee/Religionsgruppe: hebt den Knoten hervor und öffnet das Kontext-Menü</div>
+			<div>Suche nach Ideen: hebt die gesuchte Idee und damit assoziierte Ideen hervor</div>
+			<div>
+				Suche nach einer Religionsgruppen: hebt alle Accounts hervor, die mit einer Religionsgruppe
+				assoziiert sind
+			</div>
+			<div>
+				Suche nach mehreren Religionsgruppen: zeigt alle Ideen, die mit den jeweiligen Religionen
+				assoziiert sind in der Farbe der Religionen; Ideen, an denen sich mehrere der ausgewählten
+				Religionen "treffen", werden gesondert hervorgehoben
+			</div>
+		</info-dialog>
+	</main-content>
 </template>

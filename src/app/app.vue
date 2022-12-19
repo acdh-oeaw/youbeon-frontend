@@ -5,19 +5,19 @@ import SkipNav from '@/components/skip-nav.vue'
 </script>
 
 <template>
-  <skip-nav />
-  <page-layout>
-    <router-view v-slot="{ Component }">
-      <template v-if="Component">
-        <keep-alive>
-          <suspense>
-            <component :is="Component" />
-            <template #fallback>
-              <loading-indicator />
-            </template>
-          </suspense>
-        </keep-alive>
-      </template>
-    </router-view>
-  </page-layout>
+	<skip-nav />
+	<page-layout>
+		<router-view v-slot="{ Component }">
+			<template v-if="Component">
+				<keep-alive>
+					<suspense>
+						<component :is="Component" />
+						<template #fallback>
+							<loading-indicator />
+						</template>
+					</suspense>
+				</keep-alive>
+			</template>
+		</router-view>
+	</page-layout>
 </template>

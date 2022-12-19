@@ -3,15 +3,11 @@
 import type { Resource } from '@/db/types'
 
 interface ImportMetaEnv {
-  readonly VITE_APP_BASE_URL: string
+	readonly VITE_APP_BASE_URL: string
 }
 
 interface ImportMeta {
-  readonly env: ImportMetaEnv
-}
-
-interface Array<T> {
-  filter(predicate: BooleanConstructor): Array<NonNullable<T>>
+	readonly env: ImportMetaEnv
 }
 
 type DistributiveOmit<T, K extends PropertyType> = T extends unknown ? Omit<T, K> : never
@@ -23,9 +19,9 @@ type OptionalKeys<T extends object, K extends keyof T = keyof T> = Omit<T, K> & 
 type RequiredKeys<T extends object, K extends keyof T = keyof T> = Omit<T, K> & Required<Pick<T, K>>
 
 declare module 'force-graph' {
-  interface NodeObject {
-    key: Resource['key']
-    label: Resource['label']
-    kind: Resource['kind']
-  }
+	interface NodeObject {
+		key: Resource['key']
+		label: Resource['label']
+		kind: Resource['kind']
+	}
 }

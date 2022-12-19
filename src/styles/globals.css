@@ -1,51 +1,51 @@
 @font-face {
-  font-family: Chicago;
-  src: url('@/assets/fonts/chicago-flf.ttf') format('truetype');
-  font-display: swap;
+	font-family: Chicago;
+	src: url('@/assets/fonts/chicago-flf.ttf') format('truetype');
+	font-display: swap;
 }
 
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
-  min-width: 0;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
+	box-sizing: border-box;
+	min-width: 0;
+	min-height: 0;
+	margin: 0;
+	padding: 0;
 }
 
 :root {
-  background-color: theme(colors.background);
-  color: theme(colors.text);
-  font-family: theme(fontFamily.sans);
-  overflow-wrap: break-word;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-size-adjust: 100%;
-  -webkit-tap-highlight-color: transparent;
+	background-color: theme(colors.background);
+	color: theme(colors.text);
+	font-family: theme(fontFamily.sans);
+	overflow-wrap: break-word;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-size-adjust: 100%;
+	-webkit-tap-highlight-color: transparent;
 }
 
 html,
 body,
 #app {
-  height: 100%;
+	height: 100%;
 }
 
 #app {
-  isolation: isolate;
+	isolation: isolate;
 }
 
 a {
-  color: currentColor;
-  text-underline-offset: 0.25em;
-  transition-timing-function: theme(transitionTimingFunction.DEFAULT);
-  transition-duration: theme(transitionDuration.DEFAULT);
-  transition-property: theme(transitionProperty.DEFAULT);
-  text-decoration-thickness: from-font;
-  text-underline-position: from-font;
+	color: currentColor;
+	text-underline-offset: 0.25em;
+	transition-timing-function: theme(transitionTimingFunction.DEFAULT);
+	transition-duration: theme(transitionDuration.DEFAULT);
+	transition-property: theme(transitionProperty.DEFAULT);
+	text-decoration-thickness: from-font;
+	text-underline-position: from-font;
 
-  &:hover {
-    color: theme(colors.primary.600);
-  }
+	&:hover {
+		color: theme(colors.primary.600);
+	}
 }

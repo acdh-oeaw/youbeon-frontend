@@ -8,7 +8,7 @@ const dimensions = useElementDimensions(element)
 </script>
 
 <template>
-  <div ref="element" class="absolute grid h-full w-full overflow-hidden">
-    <slot v-if="dimensions != null" :width="dimensions.width" :height="dimensions.height" />
-  </div>
+	<div ref="element" class="absolute grid h-full w-full overflow-hidden">
+		<slot v-if="dimensions != null" :width="dimensions.width" :height="dimensions.height" />
+	</div>
 </template>

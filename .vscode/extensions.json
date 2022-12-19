@@ -1,11 +1,11 @@
 {
-  "recommendations": [
-    "bradlc.vscode-tailwindcss",
-    "editorconfig.editorconfig",
-    "esbenp.prettier-vscode",
-    "dbaeumer.vscode-eslint",
-    "stylelint.vscode-stylelint",
-    "vue.volar",
-    "vue.vscode-typescript-vue-plugin"
-  ]
+	"recommendations": [
+		"bradlc.vscode-tailwindcss",
+		"editorconfig.editorconfig",
+		"esbenp.prettier-vscode",
+		"dbaeumer.vscode-eslint",
+		"stylelint.vscode-stylelint",
+		"vue.volar",
+		"vue.vscode-typescript-vue-plugin"
+	]
 }

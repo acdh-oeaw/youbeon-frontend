@@ -1,25 +1,25 @@
 import type { RouteLocationNormalized } from 'vue-router'
 
 export function trackPageView(to: RouteLocationNormalized, from?: RouteLocationNormalized): void {
-  const url = to.fullPath
-  const referrer = from?.fullPath
-  const title = to.meta['title'] ?? document.title
+	const url = to.fullPath
+	const referrer = from?.fullPath
+	const title = to.meta['title'] ?? document.title
 
-  window._paq?.push(['setReferrerUrl', referrer])
-  window._paq?.push(['setCustomUrl', url])
-  window._paq?.push(['setDocumentTitle', title])
-  window._paq?.push(['trackPageView'])
-  window._paq?.push(['enableLinkTracking'])
+	window._paq?.push(['setReferrerUrl', referrer])
+	window._paq?.push(['setCustomUrl', url])
+	window._paq?.push(['setDocumentTitle', title])
+	window._paq?.push(['trackPageView'])
+	window._paq?.push(['enableLinkTracking'])
 }
 
 declare global {
-  interface Window {
-    _paq?: Array<unknown>
-  }
+	interface Window {
+		_paq?: Array<unknown>
+	}
 }
 
 export function createAnalyticsScript(baseUrl: string, id: string): string {
-  return `
+	return `
   var _paq = (window._paq = window._paq || [])
   _paq.push(['disableCookies'])
   _paq.push(['enableHeartBeatTimer'])

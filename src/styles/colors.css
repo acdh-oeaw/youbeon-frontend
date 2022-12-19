@@ -1,5 +1,5 @@
 :root {
-  --color-brand-cyan: hsl(175.9deg 38.6% 77.6%);
-  --color-brand-red: hsl(1.8deg 71.3% 63.1%);
-  --color-brand-yellow: hsl(47deg 77.8% 59.4%);
+	--color-brand-cyan: hsl(175.9deg 38.6% 77.6%);
+	--color-brand-red: hsl(1.8deg 71.3% 63.1%);
+	--color-brand-yellow: hsl(47deg 77.8% 59.4%);
 }

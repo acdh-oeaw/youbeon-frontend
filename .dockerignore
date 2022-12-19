@@ -1,18 +1,14 @@
-# logs
-/logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+## .gitignore ##
 
 # dependencies
 node_modules/
+.pnpm-store/
 
 # build output
 /dist
-/dist-ssr
+
+# logs
+*.log
 
 # non-public environment variables
 .env.local
@@ -35,7 +31,7 @@ node_modules/
 /src/db/religions.ts
 
 # generated imprint
-src/views/imprint-view.vue
+/src/views/imprint-view.vue
 
 # generated assets
 /public/favicon.ico
@@ -47,11 +43,15 @@ src/views/imprint-view.vue
 /public/image.webp
 /public/robots.txt
 
+
+## .dockerignore ##
+
 # git
-.git
+.git/
+.gitignore
 
 # github
-.github
+.github/
 
 # vs code
-.vscode
+.vscode/

@@ -6,9 +6,9 @@ import PreviewSection from '@/components/preview-section.vue'
 </script>
 
 <template>
-  <main-content class="grid grid-rows-[auto_auto_1fr]">
-    <hero-section />
-    <preview-section />
-    <faq-section />
-  </main-content>
+	<main-content class="grid grid-rows-[auto_auto_1fr]">
+		<hero-section />
+		<preview-section />
+		<faq-section />
+	</main-content>
 </template>

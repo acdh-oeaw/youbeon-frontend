@@ -1,20 +1,20 @@
 .prose {
-  & h2 {
-    @apply my-2 font-display text-xl font-bold;
-  }
+	& h2 {
+		@apply my-2 font-display text-xl font-bold;
+	}
 
-  & h3 {
-    margin-block: 2.25rem 1.25rem;
-    @apply font-display font-bold;
-  }
+	& h3 {
+		margin-block: 2.25rem 1.25rem;
+		@apply font-display font-bold;
+	}
 
-  & br {
-    display: block;
-    margin-top: 0.5rem;
-  }
+	& br {
+		display: block;
+		margin-top: 0.5rem;
+	}
 
-  & a {
-    font-weight: 500;
-    text-decoration: underline;
-  }
+	& a {
+		font-weight: 500;
+		text-decoration: underline;
+	}
 }
