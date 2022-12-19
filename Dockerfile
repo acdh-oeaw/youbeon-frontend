@@ -33,18 +33,9 @@ ENV NODE_ENV=production
 RUN pnpm run build
 
 # serve
-FROM node:18-slim AS serve
+FROM caddy:2-alpine AS serve
 
-RUN mkdir /app && chown -R node:node /app
-WORKDIR /app
-
-USER node
-
-COPY --chown=node:node serve.json ./dist/
-COPY --from=build --chown=node:node /app/dist ./dist
-
-ENV NODE_ENV=production
+COPY Caddyfile /etc/caddy/Caddyfile
+COPY --from=build /app/dist /srv
 
 EXPOSE 8080
-
-CMD ["npx", "serve", "-s", "dist", "-p", "8080", "-c", "serve.json"]
