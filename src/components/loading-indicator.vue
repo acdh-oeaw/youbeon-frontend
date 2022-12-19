@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-const label = 'Laden...'
+const label = "Laden...";
 
-const size = 32
-const center = size / 2
-const strokeWidth = 4
-const r = center - strokeWidth
-const c = 2 * r * Math.PI
-const offset = c - (1 / 4) * c
+const size = 32;
+const center = size / 2;
+const strokeWidth = 4;
+const r = center - strokeWidth;
+const c = 2 * r * Math.PI;
+const offset = c - (1 / 4) * c;
 </script>
 
 <template>

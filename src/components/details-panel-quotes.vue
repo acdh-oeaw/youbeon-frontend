@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
-import { ChevronDownIcon } from '@heroicons/vue/20/solid'
+import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
+import { ChevronDownIcon } from "@heroicons/vue/20/solid";
 
 const _props = defineProps<{
-	items: Array<string> | undefined
-	label: string
-}>()
+	items: Array<string> | undefined;
+	label: string;
+}>();
 </script>
 
 <template>

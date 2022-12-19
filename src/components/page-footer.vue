@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { metadata } from '~/config/metadata.config'
+import { metadata } from "~/config/metadata.config";
 </script>
 
 <template>

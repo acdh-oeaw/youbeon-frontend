@@ -1,152 +1,152 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { computed, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
-import DetailsPanel from '@/components/details-panel.vue'
-import DetailsPanelQuotes from '@/components/details-panel-quotes.vue'
-import DetailsPanelSection from '@/components/details-panel-section.vue'
-import FiltersPanel from '@/components/filters-panel.vue'
-import InfoDialog from '@/components/info-dialog.vue'
-import MainContent from '@/components/main-content.vue'
-import MultiCombobox from '@/components/multi-combobox.vue'
-import type { Graph } from '@/components/network-graph.vue'
-import NetworkGraph from '@/components/network-graph.vue'
-import SingleSelect from '@/components/single-select.vue'
-import VisualisationContainer from '@/components/visualisation-container.vue'
+import DetailsPanel from "@/components/details-panel.vue";
+import DetailsPanelQuotes from "@/components/details-panel-quotes.vue";
+import DetailsPanelSection from "@/components/details-panel-section.vue";
+import FiltersPanel from "@/components/filters-panel.vue";
+import InfoDialog from "@/components/info-dialog.vue";
+import MainContent from "@/components/main-content.vue";
+import MultiCombobox from "@/components/multi-combobox.vue";
+import type { Graph } from "@/components/network-graph.vue";
+import NetworkGraph from "@/components/network-graph.vue";
+import SingleSelect from "@/components/single-select.vue";
+import VisualisationContainer from "@/components/visualisation-container.vue";
 import {
 	edgeStrokeColor,
 	highlightedEdgeStrokeColor,
 	highlightedNodeColors,
-} from '@/config/network-graph.config'
-import { accounts, ideas, interviewReligions, interviews, places } from '@/db'
-import type { Idea, InterviewReligion, Resource, ResourceKeyMap, ResourceMap } from '@/db/types'
+} from "@/config/network-graph.config";
+import { accounts, ideas, interviewReligions, interviews, places } from "@/db";
+import type { Idea, InterviewReligion, Resource, ResourceKeyMap, ResourceMap } from "@/db/types";
 
 //
 
 /**
  * Note that we create new objects for nodes and edges, because d3 will mutate them.
  */
-const graph: Graph = { nodes: { fixed: [], dynamic: [] }, edges: [] }
+const graph: Graph = { nodes: { fixed: [], dynamic: [] }, edges: [] };
 
 ideas.forEach((idea) => {
-	graph.nodes.dynamic.push({ key: idea.key, label: idea.label, kind: idea.kind })
+	graph.nodes.dynamic.push({ key: idea.key, label: idea.label, kind: idea.kind });
 
 	idea.interviews.forEach((key) => {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		const religion = interviews.get(key)!.religion
-		graph.edges.push({ source: religion, target: idea.key })
-	})
-})
+		const religion = interviews.get(key)!.religion;
+		graph.edges.push({ source: religion, target: idea.key });
+	});
+});
 
 interviewReligions.forEach((religion) => {
-	graph.nodes.fixed.push({ key: religion.key, label: religion.label, kind: religion.kind })
-})
+	graph.nodes.fixed.push({ key: religion.key, label: religion.label, kind: religion.kind });
+});
 
 //
 
-type IdeaFilters = Pick<ResourceKeyMap, 'idea' | 'interview-religion'>
-type IdeaFilterKind = keyof IdeaFilters
-type LabeledIdeaFilterKinds = Map<IdeaFilterKind, { key: IdeaFilterKind; label: string }>
-type IdeaFilterItems = Pick<ResourceMap, 'idea' | 'interview-religion'>
+type IdeaFilters = Pick<ResourceKeyMap, "idea" | "interview-religion">;
+type IdeaFilterKind = keyof IdeaFilters;
+type LabeledIdeaFilterKinds = Map<IdeaFilterKind, { key: IdeaFilterKind; label: string }>;
+type IdeaFilterItems = Pick<ResourceMap, "idea" | "interview-religion">;
 
 const ideaFilterItems: IdeaFilterItems = {
 	idea: ideas,
-	'interview-religion': interviewReligions,
-}
+	"interview-religion": interviewReligions,
+};
 
 const labeledIdeaFilterKinds: LabeledIdeaFilterKinds = new Map([
-	['idea', { key: 'idea', label: 'Ideen' }],
-	['interview-religion', { key: 'interview-religion', label: 'Religionen' }],
-])
+	["idea", { key: "idea", label: "Ideen" }],
+	["interview-religion", { key: "interview-religion", label: "Religionen" }],
+]);
 
-const ideaFilters = ref<IdeaFilters>({ idea: new Set(), 'interview-religion': new Set() })
-const defaultIdeaFilterKind = 'idea'
-const ideaFilterKind = ref<IdeaFilterKind>(defaultIdeaFilterKind)
+const ideaFilters = ref<IdeaFilters>({ idea: new Set(), "interview-religion": new Set() });
+const defaultIdeaFilterKind = "idea";
+const ideaFilterKind = ref<IdeaFilterKind>(defaultIdeaFilterKind);
 
 const selectedEntity = ref<
-	{ entity: Idea; kind: 'idea' } | { entity: InterviewReligion; kind: 'interview-religion' } | null
->(null)
+	{ entity: Idea; kind: "idea" } | { entity: InterviewReligion; kind: "interview-religion" } | null
+>(null);
 
 const highlighted = computed(() => {
-	let matches = 0
+	let matches = 0;
 	/** Whether to display the help text for multiple matches in the legend. */
-	let hasMultiple = false
+	let hasMultiple = false;
 
-	const highlights = new Map<Resource['key'], number>()
+	const highlights = new Map<Resource["key"], number>();
 
-	function add(key: Resource['key']) {
+	function add(key: Resource["key"]) {
 		if (highlights.has(key)) {
-			hasMultiple = true
+			hasMultiple = true;
 		}
 
-		highlights.set(key, (highlights.get(key) ?? 0) + 1)
+		highlights.set(key, (highlights.get(key) ?? 0) + 1);
 	}
 
-	function count(key: Resource['key']) {
+	function count(key: Resource["key"]) {
 		if (highlights.has(key)) {
-			hasMultiple = true
+			hasMultiple = true;
 		} else {
-			matches++
+			matches++;
 		}
 	}
 
 	ideaFilters.value.idea.forEach((key) => {
-		count(key)
-		add(key)
-	})
+		count(key);
+		add(key);
+	});
 
-	ideaFilters.value['interview-religion'].forEach((key) => {
+	ideaFilters.value["interview-religion"].forEach((key) => {
 		interviewReligions.get(key)?.ideas.forEach((key) => {
-			count(key)
-			add(key)
-		})
-	})
+			count(key);
+			add(key);
+		});
+	});
 
 	ideaFilters.value.idea.forEach((key) => {
 		ideas.get(key)?.ideas.forEach((key) => {
-			add(key)
-		})
-	})
+			add(key);
+		});
+	});
 
-	return { ideas: highlights, hasMultiple, matches }
-})
+	return { ideas: highlights, hasMultiple, matches };
+});
 
 //
 
-const route = useRoute()
-const router = useRouter()
+const route = useRoute();
+const router = useRouter();
 
 function isFilterKind(value: string): value is IdeaFilterKind {
-	return Object.keys(ideaFilterItems).includes(value)
+	return Object.keys(ideaFilterItems).includes(value);
 }
 
 function syncFiltersWithSearchParams() {
-	const searchParams = new URLSearchParams(window.location.search)
-	const detailsId = searchParams.get('details-id')
-	const detailsKind = searchParams.get('details-kind')
-	const ids = searchParams.getAll('id').filter(Boolean)
-	const kind = searchParams.get('kind') ?? defaultIdeaFilterKind
+	const searchParams = new URLSearchParams(window.location.search);
+	const detailsId = searchParams.get("details-id");
+	const detailsKind = searchParams.get("details-kind");
+	const ids = searchParams.getAll("id").filter(Boolean);
+	const kind = searchParams.get("kind") ?? defaultIdeaFilterKind;
 
 	if (isFilterKind(kind)) {
-		const keys = new Set<Resource['key']>()
+		const keys = new Set<Resource["key"]>();
 
 		ids.forEach((key) => {
 			if (ideaFilterItems[kind].has(key)) {
-				keys.add(key)
+				keys.add(key);
 			}
-		})
+		});
 
 		ideaFilters.value = {
 			idea: new Set(),
-			'interview-religion': new Set(),
+			"interview-religion": new Set(),
 			[kind]: keys,
-		}
+		};
 
-		ideaFilterKind.value = kind
+		ideaFilterKind.value = kind;
 	}
 
-	function isValidDetailsKind(value: string): value is 'idea' | 'interview-religion' {
-		return ['idea', 'interview-religion'].includes(value)
+	function isValidDetailsKind(value: string): value is "idea" | "interview-religion" {
+		return ["idea", "interview-religion"].includes(value);
 	}
 
 	if (
@@ -159,45 +159,45 @@ function syncFiltersWithSearchParams() {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			entity: ideaFilterItems[detailsKind].get(detailsId)!,
 			kind: detailsKind,
-		} as { entity: Idea; kind: 'idea' } | { entity: InterviewReligion; kind: 'interview-religion' }
+		} as { entity: Idea; kind: "idea" } | { entity: InterviewReligion; kind: "interview-religion" };
 	} else {
-		selectedEntity.value = null
+		selectedEntity.value = null;
 	}
 }
 
 watch(
 	() => {
-		return route.query
+		return route.query;
 	},
 	syncFiltersWithSearchParams,
 	{ immediate: true },
-)
+);
 
-function onClickNode(key: Resource['key'], kind: Resource['kind']) {
-	router.push({ query: { ...route.query, 'details-id': key, 'details-kind': kind } })
+function onClickNode(key: Resource["key"], kind: Resource["kind"]) {
+	router.push({ query: { ...route.query, "details-id": key, "details-kind": kind } });
 }
 
 function onChangeIdeaFilterKind(kind: string) {
-	router.push({ query: { ...route.query, kind: kind as IdeaFilterKind } })
+	router.push({ query: { ...route.query, kind: kind as IdeaFilterKind } });
 }
 
-function onChangeIdeaFilters(id: Array<Resource['key']>) {
-	router.push({ query: { ...route.query, id } })
+function onChangeIdeaFilters(id: Array<Resource["key"]>) {
+	router.push({ query: { ...route.query, id } });
 }
 
 function onCloseDetailsPanel() {
-	const { 'details-id': _, 'details-kind': __, ...query } = route.query
-	router.push({ query })
+	const { "details-id": _, "details-kind": __, ...query } = route.query;
+	router.push({ query });
 }
 
 function getColor() {
-	return highlightedNodeColors.idea.selected
+	return highlightedNodeColors.idea.selected;
 }
 </script>
 
 <template>
 	<main-content class="h-full overflow-hidden">
-		<h1 class="sr-only">{{ $router.currentRoute.value.meta['title'] }}</h1>
+		<h1 class="sr-only">{{ $router.currentRoute.value.meta["title"] }}</h1>
 
 		<visualisation-container v-slot="{ width, height }">
 			<network-graph

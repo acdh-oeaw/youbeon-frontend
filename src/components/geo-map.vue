@@ -1,73 +1,73 @@
 <script lang="ts" setup>
-import 'leaflet/dist/leaflet.css'
+import "leaflet/dist/leaflet.css";
 
-import { MapIcon } from '@heroicons/vue/24/outline'
-import { entries, keys } from '@stefanprobst/object'
-import type { FeatureGroup, Map as LeafletMap } from 'leaflet'
-import { circleMarker, featureGroup, map as createMap, tileLayer } from 'leaflet'
-import { onMounted, onUnmounted, watch } from 'vue'
+import { MapIcon } from "@heroicons/vue/24/outline";
+import { entries, keys } from "@stefanprobst/object";
+import type { FeatureGroup, Map as LeafletMap } from "leaflet";
+import { circleMarker, featureGroup, map as createMap, tileLayer } from "leaflet";
+import { onMounted, onUnmounted, watch } from "vue";
 
-import ZoomControls from '@/components/zoom-controls.vue'
-import { config, initialViewState, marker } from '@/config/geo-map.config'
-import type { Place } from '@/db/types'
+import ZoomControls from "@/components/zoom-controls.vue";
+import { config, initialViewState, marker } from "@/config/geo-map.config";
+import type { Place } from "@/db/types";
 
 //
 
 export interface Point {
-	place: Place
+	place: Place;
 	options: {
-		fillColor: string
-		fillOpacity: number
-		strokeColor: string
-		strokeOpacity: number
-		strokeWidth: number
-	}
+		fillColor: string;
+		fillOpacity: number;
+		strokeColor: string;
+		strokeOpacity: number;
+		strokeWidth: number;
+	};
 }
 
 export interface PointLayers {
-	base: Array<Point>
-	highlight: Array<Point>
-	selected: Array<Point>
+	base: Array<Point>;
+	highlight: Array<Point>;
+	selected: Array<Point>;
 }
 
 interface GeoMapState {
-	map: LeafletMap | null
-	featureGroups: { [Key in keyof PointLayers]: FeatureGroup | null }
+	map: LeafletMap | null;
+	featureGroups: { [Key in keyof PointLayers]: FeatureGroup | null };
 }
 
 //
 
 const props = defineProps<{
-	layers: PointLayers
-}>()
+	layers: PointLayers;
+}>();
 
 const emit = defineEmits<{
-	(event: 'click-place', place: Place): void
-	(event: 'map-ready', map: LeafletMap): void
-}>()
+	(event: "click-place", place: Place): void;
+	(event: "map-ready", map: LeafletMap): void;
+}>();
 
 //
 
 function onClickPlace(place: Place) {
-	emit('click-place', place)
+	emit("click-place", place);
 }
 
 const geomap: GeoMapState = {
 	map: null,
 	featureGroups: { base: null, highlight: null, selected: null },
-}
+};
 
 onMounted(() => {
 	/**
 	 * Initialize leaflet map and attach to `#map` element..
 	 */
-	const map = createMap('map', config.options).setView(
+	const map = createMap("map", config.options).setView(
 		initialViewState.center,
 		initialViewState.zoom,
-	)
+	);
 
-	geomap.map = map
-	emit('map-ready', map)
+	geomap.map = map;
+	emit("map-ready", map);
 
 	/**
 	 * Add base layer to map.
@@ -75,29 +75,29 @@ onMounted(() => {
 	tileLayer(config.tileLayer.url, {
 		attribution: config.tileLayer.attribution,
 		minZoom: 3,
-	}).addTo(map)
+	}).addTo(map);
 
 	/**
 	 * Initialize circle-marker layer groups.
 	 */
 	keys(geomap.featureGroups).forEach((key) => {
-		const group = featureGroup().addTo(map)
-		geomap.featureGroups[key] = group
-	})
+		const group = featureGroup().addTo(map);
+		geomap.featureGroups[key] = group;
+	});
 
 	/**
 	 * Draw points.
 	 */
-	updateLayers()
-})
+	updateLayers();
+});
 
 watch(() => {
-	return props.layers
-}, updateLayers)
+	return props.layers;
+}, updateLayers);
 
 onUnmounted(() => {
-	geomap.map?.remove()
-})
+	geomap.map?.remove();
+});
 
 /**
  * Clear circle-marker layer groups and redraw.
@@ -105,9 +105,9 @@ onUnmounted(() => {
 function updateLayers() {
 	entries(props.layers).forEach(([key, points]) => {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		const group = geomap.featureGroups[key]!
-		group.clearLayers()
-		group.bringToFront()
+		const group = geomap.featureGroups[key]!;
+		group.clearLayers();
+		group.bringToFront();
 
 		points.forEach((point) => {
 			group.addLayer(
@@ -119,31 +119,31 @@ function updateLayers() {
 					weight: point.options.strokeWidth,
 					radius: marker.radius,
 				})
-					.on('click', () => {
-						onClickPlace(point.place)
+					.on("click", () => {
+						onClickPlace(point.place);
 					})
 					.bindTooltip(point.place.label),
-			)
-		})
-	})
+			);
+		});
+	});
 }
 
 //
 
 function onZoomIn() {
-	geomap.map?.zoomIn()
+	geomap.map?.zoomIn();
 }
 
 function onZoomOut() {
-	geomap.map?.zoomOut()
+	geomap.map?.zoomOut();
 }
 
 function onResetZoom() {
-	geomap.map?.setView(initialViewState.center, initialViewState.zoom)
+	geomap.map?.setView(initialViewState.center, initialViewState.zoom);
 }
 
 function onFitWorld() {
-	geomap.map?.fitWorld()
+	geomap.map?.fitWorld();
 }
 </script>
 

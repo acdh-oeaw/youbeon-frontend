@@ -1,96 +1,96 @@
-import nprogress from 'nprogress'
-import { createRouter, createWebHistory } from 'vue-router'
+import nprogress from "nprogress";
+import { createRouter, createWebHistory } from "vue-router";
 
-import { trackPageView } from '@/app/matomo-analytics'
-import { metadata } from '~/config/metadata.config'
+import { trackPageView } from "@/app/matomo-analytics";
+import { metadata } from "~/config/metadata.config";
 
-nprogress.configure({ showSpinner: false })
+nprogress.configure({ showSpinner: false });
 
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 const AccountsView = () => {
-	return import('@/views/accounts-view.vue')
-}
+	return import("@/views/accounts-view.vue");
+};
 const HomeView = () => {
-	return import('@/views/home-view.vue')
-}
+	return import("@/views/home-view.vue");
+};
 const IdeasView = () => {
-	return import('@/views/ideas-view.vue')
-}
+	return import("@/views/ideas-view.vue");
+};
 const ImprintView = () => {
-	return import('@/views/imprint-view.vue')
-}
+	return import("@/views/imprint-view.vue");
+};
 const PlacesView = () => {
-	return import('@/views/places-view.vue')
-}
+	return import("@/views/places-view.vue");
+};
 /* eslint-enable @typescript-eslint/explicit-module-boundary-types */
 
 export const routes = {
 	home: {
-		path: '/',
-		name: 'home',
+		path: "/",
+		name: "home",
 		component: HomeView,
-		meta: { title: 'Startseite' },
+		meta: { title: "Startseite" },
 	},
 	accounts: {
-		path: '/accounts',
-		name: 'accounts',
+		path: "/accounts",
+		name: "accounts",
 		component: AccountsView,
-		meta: { title: 'Accounts' },
+		meta: { title: "Accounts" },
 	},
 	ideas: {
-		path: '/ideas',
-		name: 'ideas',
+		path: "/ideas",
+		name: "ideas",
 		component: IdeasView,
-		meta: { title: 'Ideen' },
+		meta: { title: "Ideen" },
 	},
 	imprint: {
-		path: '/imprint',
-		name: 'imprint',
+		path: "/imprint",
+		name: "imprint",
 		component: ImprintView,
-		meta: { title: 'Impressum' },
+		meta: { title: "Impressum" },
 	},
 	places: {
-		path: '/places',
-		name: 'places',
+		path: "/places",
+		name: "places",
 		component: PlacesView,
-		meta: { title: 'Orte' },
+		meta: { title: "Orte" },
 	},
-}
+};
 
 export const router = createRouter({
 	history: createWebHistory(),
 	routes: Object.values(routes),
 	scrollBehavior(to) {
 		if (to.hash) {
-			return { el: to.hash }
+			return { el: to.hash };
 		}
-		return { left: 0, top: 0 }
+		return { left: 0, top: 0 };
 	},
-})
+});
 
-const delay = 150
-let timer: ReturnType<typeof setTimeout> | null = null
+const delay = 150;
+let timer: ReturnType<typeof setTimeout> | null = null;
 
-const title = [metadata.shortTitle, metadata.title].join(' - ')
+const title = [metadata.shortTitle, metadata.title].join(" - ");
 
 router.beforeEach((to, from, next) => {
-	document.title = `${to.meta['title']} | ${title}`
-	next()
-})
+	document.title = `${to.meta["title"]} | ${title}`;
+	next();
+});
 
 router.beforeResolve((to, from, next) => {
 	if (to.name != null) {
-		timer = setTimeout(nprogress.start, delay)
+		timer = setTimeout(nprogress.start, delay);
 	}
-	next()
-})
+	next();
+});
 
 router.afterEach((to, from) => {
 	if (timer != null) {
-		clearTimeout(timer)
+		clearTimeout(timer);
 	}
-	nprogress.done()
+	nprogress.done();
 
 	/** Note that this will also track the initial page load. */
-	trackPageView(to, from)
-})
+	trackPageView(to, from);
+});

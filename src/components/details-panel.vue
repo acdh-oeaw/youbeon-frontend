@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import { XMarkIcon } from '@heroicons/vue/20/solid'
-import { onMounted, onUnmounted } from 'vue'
+import { XMarkIcon } from "@heroicons/vue/20/solid";
+import { onMounted, onUnmounted } from "vue";
 
-import DetailsPanelTitle from '@/components/details-panel-title.vue'
-import { useScreenColors } from '@/lib/use-screen-colors'
+import DetailsPanelTitle from "@/components/details-panel-title.vue";
+import { useScreenColors } from "@/lib/use-screen-colors";
 
 const _props = defineProps<{
-	title: string | undefined
-	isOpen: boolean
-}>()
+	title: string | undefined;
+	isOpen: boolean;
+}>();
 
 const emit = defineEmits<{
-	(event: 'close-panel'): void
-}>()
+	(event: "close-panel"): void;
+}>();
 
 /**
  * Intended behavior is similar to a popover, which must be closed intentionally:
@@ -21,25 +21,25 @@ const emit = defineEmits<{
  */
 
 function onClose() {
-	emit('close-panel')
+	emit("close-panel");
 }
 
 function onEscapeKey(event: KeyboardEvent) {
-	if (event.key === 'Escape') {
-		onClose()
+	if (event.key === "Escape") {
+		onClose();
 	}
 }
 
 onMounted(() => {
-	document.addEventListener('keyup', onEscapeKey)
-})
+	document.addEventListener("keyup", onEscapeKey);
+});
 
 onUnmounted(() => {
-	document.removeEventListener('keyup', onEscapeKey)
-})
+	document.removeEventListener("keyup", onEscapeKey);
+});
 
-const colors = useScreenColors()
-const titleId = 'popover-title'
+const colors = useScreenColors();
+const titleId = "popover-title";
 </script>
 
 <template>

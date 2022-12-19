@@ -5,28 +5,28 @@ import {
 	ListboxLabel,
 	ListboxOption,
 	ListboxOptions,
-} from '@headlessui/vue'
+} from "@headlessui/vue";
 import {
 	CheckIcon as CheckMarkIcon,
 	ChevronUpDownIcon as SelectorIcon,
-} from '@heroicons/vue/20/solid'
+} from "@heroicons/vue/20/solid";
 
 interface Item {
-	key: string
-	label: string
+	key: string;
+	label: string;
 }
 
 const props = defineProps<{
-	items: Map<Item['key'], Item>
-	modelValue: Item['key']
-	label: string
-}>()
+	items: Map<Item["key"], Item>;
+	modelValue: Item["key"];
+	label: string;
+}>();
 const emit = defineEmits<{
-	(event: 'update:model-value', selectedKey: Item['key']): void
-}>()
+	(event: "update:model-value", selectedKey: Item["key"]): void;
+}>();
 
-function getDisplayLabel(selectedKey: Item['key']) {
-	return props.items.get(selectedKey)?.label ?? ''
+function getDisplayLabel(selectedKey: Item["key"]) {
+	return props.items.get(selectedKey)?.label ?? "";
 }
 </script>
 

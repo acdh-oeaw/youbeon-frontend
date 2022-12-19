@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 const _props = defineProps<{
-	color: string
-	title: string
-}>()
+	color: string;
+	title: string;
+}>();
 </script>
 
 <template>

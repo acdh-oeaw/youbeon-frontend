@@ -3,17 +3,17 @@ import {
 	ArrowsPointingOutIcon as ZoomResetIcon,
 	MinusIcon as ZoomOutIcon,
 	PlusIcon as ZoomInIcon,
-} from '@heroicons/vue/20/solid'
+} from "@heroicons/vue/20/solid";
 
-import { useScreenColors } from '@/lib/use-screen-colors'
+import { useScreenColors } from "@/lib/use-screen-colors";
 
 defineEmits<{
-	(event: 'zoom-in'): void
-	(event: 'zoom-out'): void
-	(event: 'zoom-reset'): void
-}>()
+	(event: "zoom-in"): void;
+	(event: "zoom-out"): void;
+	(event: "zoom-reset"): void;
+}>();
 
-const colors = useScreenColors()
+const colors = useScreenColors();
 </script>
 
 <template>

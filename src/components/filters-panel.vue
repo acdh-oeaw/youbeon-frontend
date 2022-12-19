@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import { MagnifyingGlassIcon, XMarkIcon as CloseIcon } from '@heroicons/vue/20/solid'
-import { ref } from 'vue'
+import { MagnifyingGlassIcon, XMarkIcon as CloseIcon } from "@heroicons/vue/20/solid";
+import { ref } from "vue";
 
-import FilterPanelForm from '@/components/filter-panel-form.vue'
-import { useScreenColors } from '@/lib/use-screen-colors'
+import FilterPanelForm from "@/components/filter-panel-form.vue";
+import { useScreenColors } from "@/lib/use-screen-colors";
 
-const colors = useScreenColors()
+const colors = useScreenColors();
 
-const isOpen = ref(false)
-const filterPanelId = 'search-filters'
+const isOpen = ref(false);
+const filterPanelId = "search-filters";
 </script>
 
 <template>

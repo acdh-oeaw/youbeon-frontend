@@ -5,25 +5,25 @@ import {
 	DialogTitle,
 	TransitionChild,
 	TransitionRoot,
-} from '@headlessui/vue'
-import { XMarkIcon } from '@heroicons/vue/20/solid'
-import { InformationCircleIcon } from '@heroicons/vue/24/outline'
-import { ref } from 'vue'
+} from "@headlessui/vue";
+import { XMarkIcon } from "@heroicons/vue/20/solid";
+import { InformationCircleIcon } from "@heroicons/vue/24/outline";
+import { ref } from "vue";
 
-import { useScreenColors } from '@/lib/use-screen-colors'
+import { useScreenColors } from "@/lib/use-screen-colors";
 
 const _props = defineProps<{
-	title: string
-}>()
+	title: string;
+}>();
 
-const isOpen = ref(false)
+const isOpen = ref(false);
 
 function toggle() {
-	isOpen.value = !isOpen.value
+	isOpen.value = !isOpen.value;
 }
 
-const colors = useScreenColors()
-const label = 'Info'
+const colors = useScreenColors();
+const label = "Info";
 </script>
 
 <template>

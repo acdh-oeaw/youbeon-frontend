@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import FaqDisclosure from '@/components/faq-disclosure.vue'
+import FaqDisclosure from "@/components/faq-disclosure.vue";
 </script>
 
 <template>

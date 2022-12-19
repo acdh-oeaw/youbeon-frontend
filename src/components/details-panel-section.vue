@@ -1,34 +1,34 @@
 <script lang="ts" setup>
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
-import { ChevronDownIcon } from '@heroicons/vue/20/solid'
-import { computed } from 'vue'
+import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
+import { ChevronDownIcon } from "@heroicons/vue/20/solid";
+import { computed } from "vue";
 
-import type { Resource } from '@/db/types'
+import type { Resource } from "@/db/types";
 
 const props = defineProps<{
-	keys: Set<Resource['key']> | undefined
-	items: Map<Resource['key'], Resource>
-	route?: string
-	label: string
-}>()
+	keys: Set<Resource["key"]> | undefined;
+	items: Map<Resource["key"], Resource>;
+	route?: string;
+	label: string;
+}>();
 
 const sortedItems = computed(() => {
-	const sorted: Array<Resource> = []
+	const sorted: Array<Resource> = [];
 
-	if (props.keys == null) return sorted
+	if (props.keys == null) return sorted;
 
 	for (const key of props.keys) {
-		const item = props.items.get(key)
-		if (item == null) continue
-		sorted.push(item)
+		const item = props.items.get(key);
+		if (item == null) continue;
+		sorted.push(item);
 	}
 
 	sorted.sort((a, b) => {
-		return a.label.localeCompare(b.label)
-	})
+		return a.label.localeCompare(b.label);
+	});
 
-	return sorted
-})
+	return sorted;
+});
 </script>
 
 <template>

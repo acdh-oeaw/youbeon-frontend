@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { useRoute } from 'vue-router'
+import { useRoute } from "vue-router";
 
-import { useScreenColors } from '@/lib/use-screen-colors'
+import { useScreenColors } from "@/lib/use-screen-colors";
 
-const route = useRoute()
-const colors = useScreenColors()
+const route = useRoute();
+const colors = useScreenColors();
 </script>
 
 <template>

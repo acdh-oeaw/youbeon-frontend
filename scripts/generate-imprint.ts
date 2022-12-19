@@ -1,17 +1,17 @@
-import '@stefanprobst/request/fetch'
+import "@stefanprobst/request/fetch";
 
-import { writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { writeFile } from "node:fs/promises";
+import { join } from "node:path";
 
-import { log } from '@stefanprobst/log'
-import config from '@stefanprobst/prettier-config'
-import { HttpError, request } from '@stefanprobst/request'
-import { format } from 'prettier'
+import { log } from "@stefanprobst/log";
+import config from "@stefanprobst/prettier-config";
+import { HttpError, request } from "@stefanprobst/request";
+import { format } from "prettier";
 
-import { url } from '../config/imprint.config'
+import { url } from "../config/imprint.config";
 
 async function generate() {
-	const html = await request(url, { responseType: 'text' })
+	const html = await request(url, { responseType: "text" });
 
 	const view = format(
 		`
@@ -38,19 +38,19 @@ async function generate() {
     </main-content>
     </template>
   `,
-		{ ...config, parser: 'vue' },
-	)
+		{ ...config, parser: "vue" },
+	);
 
-	const outputFilePath = join(process.cwd(), 'src', 'views', 'imprint-view.vue')
+	const outputFilePath = join(process.cwd(), "src", "views", "imprint-view.vue");
 
-	await writeFile(outputFilePath, view, { encoding: 'utf-8' })
+	await writeFile(outputFilePath, view, { encoding: "utf-8" });
 }
 
 generate()
 	.then(() => {
-		log.success('Successfully generated imprint.')
+		log.success("Successfully generated imprint.");
 	})
 	.catch((error) => {
-		const message = error instanceof HttpError ? error.response.statusText : String(error)
-		log.error('Failed to generate imprint.\n', message)
-	})
+		const message = error instanceof HttpError ? error.response.statusText : String(error);
+		log.error("Failed to generate imprint.\n", message);
+	});

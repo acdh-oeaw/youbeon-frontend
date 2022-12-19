@@ -6,87 +6,87 @@ import {
 	ComboboxLabel,
 	ComboboxOption,
 	ComboboxOptions,
-} from '@headlessui/vue'
+} from "@headlessui/vue";
 import {
 	CheckIcon as CheckMarkIcon,
 	ChevronUpDownIcon as SelectorIcon,
 	XMarkIcon,
-} from '@heroicons/vue/20/solid'
-import { useVirtualList } from '@vueuse/core'
-import { computed, ref } from 'vue'
+} from "@heroicons/vue/20/solid";
+import { useVirtualList } from "@vueuse/core";
+import { computed, ref } from "vue";
 
 interface Item {
-	key: string
-	label: string
+	key: string;
+	label: string;
 }
 
 const props = defineProps<{
-	items: Map<Item['key'], Item>
-	modelValue: Array<Item['key']>
-	label: string
-	getTagColor?: (key: Item['key']) => string
-}>()
+	items: Map<Item["key"], Item>;
+	modelValue: Array<Item["key"]>;
+	label: string;
+	getTagColor?: (key: Item["key"]) => string;
+}>();
 const emit = defineEmits<{
-	(event: 'update:model-value', selectedKeys: Array<Item['key']>): void
-}>()
+	(event: "update:model-value", selectedKeys: Array<Item["key"]>): void;
+}>();
 
 function getDisplayLabel(selectedKey: unknown) {
-	return props.items.get(selectedKey as Item['key'])?.label ?? ''
+	return props.items.get(selectedKey as Item["key"])?.label ?? "";
 }
 
-function getRemoveButtonDisplayLabel(key: Item['key']) {
-	return `Remove ${getDisplayLabel(key)}`
+function getRemoveButtonDisplayLabel(key: Item["key"]) {
+	return `Remove ${getDisplayLabel(key)}`;
 }
 
-function onRemoveSelectedKey(key: Item['key']) {
+function onRemoveSelectedKey(key: Item["key"]) {
 	emit(
-		'update:model-value',
+		"update:model-value",
 		props.modelValue.filter((value) => {
-			return value !== key
+			return value !== key;
 		}),
-	)
+	);
 }
 
-const searchTerm = ref('')
+const searchTerm = ref("");
 
-function onChangeSelection(value: Array<Item['key']>) {
-	emit('update:model-value', value)
+function onChangeSelection(value: Array<Item["key"]>) {
+	emit("update:model-value", value);
 }
 
 const visibleItems = computed(() => {
-	const allOptions = props.items
-	const searchTerms = searchTerm.value.toLowerCase().split(/\s+/).filter(Boolean)
+	const allOptions = props.items;
+	const searchTerms = searchTerm.value.toLowerCase().split(/\s+/).filter(Boolean);
 
-	if (searchTerms.length === 0) return Array.from(allOptions.values())
+	if (searchTerms.length === 0) return Array.from(allOptions.values());
 
-	const visibleItems: Array<Item> = []
+	const visibleItems: Array<Item> = [];
 
 	allOptions.forEach((option) => {
-		const label = option.label.toLowerCase()
+		const label = option.label.toLowerCase();
 		if (
 			searchTerms.some((searchTerm) => {
-				return label.includes(searchTerm)
+				return label.includes(searchTerm);
 			})
 		) {
-			visibleItems.push(option)
+			visibleItems.push(option);
 		}
-	})
+	});
 
-	return visibleItems
-})
+	return visibleItems;
+});
 
 const { list, containerProps, wrapperProps } = useVirtualList(visibleItems, {
 	itemHeight: 36,
 	overscan: 10,
-})
+});
 
-const placeholder = 'Suche nach...'
-const nothingFoundMessage = 'Nichts gefunden.'
+const placeholder = "Suche nach...";
+const nothingFoundMessage = "Nichts gefunden.";
 
-function getTagStyle(key: Item['key']) {
-	const bg = props.getTagColor?.(key)
-	if (bg == null) return {}
-	return { '--tag-color': bg, color: 'white' }
+function getTagStyle(key: Item["key"]) {
+	const bg = props.getTagColor?.(key);
+	if (bg == null) return {};
+	return { "--tag-color": bg, color: "white" };
 }
 </script>
 

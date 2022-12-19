@@ -1,6 +1,6 @@
 @font-face {
 	font-family: Chicago;
-	src: url('@/assets/fonts/chicago-flf.ttf') format('truetype');
+	src: url("@/assets/fonts/chicago-flf.ttf") format("truetype");
 	font-display: swap;
 }
 

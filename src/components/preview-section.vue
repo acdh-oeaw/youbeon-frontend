@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import PreviewCard from '@/components/preview-card.vue'
+import PreviewCard from "@/components/preview-card.vue";
 </script>
 
 <template>

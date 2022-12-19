@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import FaqSection from '@/components/faq-section.vue'
-import HeroSection from '@/components/hero-section.vue'
-import MainContent from '@/components/main-content.vue'
-import PreviewSection from '@/components/preview-section.vue'
+import FaqSection from "@/components/faq-section.vue";
+import HeroSection from "@/components/hero-section.vue";
+import MainContent from "@/components/main-content.vue";
+import PreviewSection from "@/components/preview-section.vue";
 </script>
 
 <template>

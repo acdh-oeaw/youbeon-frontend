@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
-import { useElementDimensions } from '@/lib/use-element-dimensions'
+import { useElementDimensions } from "@/lib/use-element-dimensions";
 
-const element = ref<HTMLElement | null>(null)
-const dimensions = useElementDimensions(element)
+const element = ref<HTMLElement | null>(null);
+const dimensions = useElementDimensions(element);
 </script>
 
 <template>

@@ -38,8 +38,12 @@ FROM node:18-slim AS serve
 RUN mkdir /app && chown -R node:node /app
 WORKDIR /app
 
-COPY --chown=node:node serve.json ./dist
+USER node
+
+COPY --chown=node:node serve.json ./dist/
 COPY --from=build --chown=node:node /app/dist ./dist
+
+ENV NODE_ENV=production
 
 EXPOSE 8080
 
