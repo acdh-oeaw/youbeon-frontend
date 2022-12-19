@@ -10,9 +10,6 @@
 	"eslint.validate": ["javascript", "typescript", "typescriptreact", "vue"],
 	"less.validate": false,
 	"scss.validate": false,
-	"search.exclude": {
-		"package-lock.json": true
-	},
 	"stylelint.enable": true,
 	"stylelint.snippet": ["css", "postcss", "vue"],
 	"stylelint.validate": ["css", "postcss", "vue"],
