@@ -75,9 +75,7 @@ import FaqDisclosure from "@/components/faq-disclosure.vue";
 						"Landkarte der Religionen".
 					</p>
 				</faq-disclosure>
-				<faq-disclosure
-					title="Aber wenn alles so subjektiv ist, was kann man dann aus der Karte erfahren?"
-				>
+				<faq-disclosure title="Was kann ich aus der Karte erfahren?">
 					<p>
 						Die YouBeOn Map zeigt, wo sich – bereits nach der Befragung von wenigen Personen –
 						Gemeinsamkeiten zwischen Personen unterschiedlicher Religionen abbilden, und zeigt Ideen
