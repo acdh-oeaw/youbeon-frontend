@@ -418,6 +418,7 @@ function inferResourceKind(prefix: string): ResourceKind | "ignored" | "unknown"
 		case "Insta":
 		case "RELIGIÖSE PRAXIS":
 		case "USE":
+		case "X":
 			return "ignored";
 		default:
 			return "unknown";
