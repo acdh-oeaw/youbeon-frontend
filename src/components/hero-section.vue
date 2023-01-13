@@ -2,7 +2,7 @@
 import { ChevronRightIcon } from "@heroicons/vue/20/solid";
 
 // @ts-expect-error TypeScript does not know about resource queries.
-import places from "@/assets/images/places.png?webp";
+import places from "@/assets/images/places.jpg?webp";
 </script>
 
 <template>
