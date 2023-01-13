@@ -34,7 +34,7 @@ import places from "@/assets/images/places.jpg?webp";
 			</div>
 			<div class="my-2 flex flex-col gap-4 xs:flex-row sm:gap-8">
 				<router-link
-					class="inline-flex min-w-[8rem] items-center justify-between gap-2 rounded-lg bg-neutral-900 px-4 py-3 text-sm font-semibold text-neutral-0 hover:bg-neutral-700 hover:text-neutral-0"
+					class="inline-flex min-w-[8rem] items-center justify-between gap-2 rounded-lg bg-[#424C55] px-4 py-3 text-sm font-semibold text-neutral-0 hover:bg-neutral-700 hover:text-neutral-0"
 					:to="{ name: 'places' }"
 				>
 					Hier gehts zur YouBeOn Map
