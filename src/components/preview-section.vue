@@ -4,9 +4,8 @@ import PreviewCard from "@/components/preview-card.vue";
 
 <template>
 	<section>
-		<div class="mx-auto grid max-w-5xl gap-16 py-16 px-8">
+		<div class="mx-auto grid max-w-5xl gap-16 py-8 px-8">
 			<div class="grid gap-4">
-				<h2 class="sr-only font-display text-2xl font-bold">Die YouBeOn Map</h2>
 				<p
 					class="max-w-3xl text-sm font-medium leading-relaxed text-neutral-700 xs:text-base xs:leading-relaxed sm:text-lg sm:leading-relaxed"
 				>
