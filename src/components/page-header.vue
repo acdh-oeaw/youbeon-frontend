@@ -9,7 +9,7 @@ const colors = useScreenColors();
 
 <template>
 	<header
-		class="z-elevated"
+		class="fixed inset-x-0 z-elevated bg-neutral-0"
 		:class="
 			route.path === '/'
 				? [colors.borderColor[0], 'border-b-4 shadow-lg']
