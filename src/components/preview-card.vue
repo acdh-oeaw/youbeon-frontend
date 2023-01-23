@@ -20,7 +20,7 @@ const _props = defineProps<{
 			</h3>
 			<div :class="[color, 'relative h-1']" />
 		</div>
-		<p class="text-sm leading-loose text-neutral-600 sm:text-base sm:leading-loose">
+		<p class="text-sm font-light leading-relaxed text-neutral-600 sm:text-base sm:leading-relaxed">
 			<slot />
 		</p>
 	</div>

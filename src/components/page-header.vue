@@ -27,7 +27,7 @@ const colors = useScreenColors();
 			</div>
 			<nav>
 				<ul
-					class="flex flex-wrap justify-end gap-x-2.5 font-display text-sm font-semibold xxs:gap-x-4 xs:gap-x-12 sm:text-base"
+					class="flex flex-wrap justify-end gap-x-2.5 font-display text-sm font-semibold xxs:gap-x-4 xs:gap-x-12 sm:text-base md:text-lg"
 					role="list"
 				>
 					<li>
