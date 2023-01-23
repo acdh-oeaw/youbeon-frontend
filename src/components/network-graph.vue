@@ -170,7 +170,6 @@ graph.nodePointerAreaPaint((node, color, ctx) => {
 	/**
 	 * Increase clickable area for `interview-religion` nodes to include the text label.
 	 */
-	// @ts-expect-error Passed from `nodeCanvasObject`.
 	const dimensions = node.__dimensions as [number, number];
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	ctx.fillRect(node.x! - dimensions[0] / 2, node.y! - dimensions[1] / 2, ...dimensions);
