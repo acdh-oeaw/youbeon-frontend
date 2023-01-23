@@ -237,6 +237,12 @@ function syncFiltersWithSearchParams() {
 	const ids = searchParams.getAll("id").filter(Boolean);
 	const kind = searchParams.get("kind") ?? defaultPlaceFilterKind;
 
+	const isPlaceDetailsVisible =
+		detailsId != null &&
+		detailsKind != null &&
+		isValidDetailsKind(detailsKind) &&
+		placeFilterItems[detailsKind].has(detailsId);
+
 	if (isFilterKind(kind)) {
 		const keys = new Set<Resource["key"]>();
 
@@ -255,7 +261,7 @@ function syncFiltersWithSearchParams() {
 
 		placeFilterKind.value = kind;
 
-		if (kind === "place" && keys.size > 0) {
+		if (kind === "place" && keys.size > 0 && !isPlaceDetailsVisible) {
 			if (keys.size === 1) {
 				/**
 				 * Center the map on the first selected place.
@@ -313,12 +319,7 @@ function syncFiltersWithSearchParams() {
 		return ["place", "interview-religion"].includes(value);
 	}
 
-	if (
-		detailsId != null &&
-		detailsKind != null &&
-		isValidDetailsKind(detailsKind) &&
-		placeFilterItems[detailsKind].has(detailsId)
-	) {
+	if (isPlaceDetailsVisible) {
 		selectedEntity.value = {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			entity: placeFilterItems[detailsKind].get(detailsId)!,
@@ -326,6 +327,21 @@ function syncFiltersWithSearchParams() {
 		} as
 			| { entity: InterviewReligion; kind: "interview-religion" }
 			| { entity: Place; kind: "place" };
+
+		/**
+		 * Center the map on the place selected in the details panel.
+		 */
+		const id = detailsId;
+		const place = places.get(id);
+		if (place?.coordinates) {
+			if (map.value != null) {
+				map.value.setView(place.coordinates);
+			} else {
+				nextTick(() => {
+					map.value?.setView(place.coordinates);
+				});
+			}
+		}
 	} else {
 		selectedEntity.value = null;
 	}
