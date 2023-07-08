@@ -1,4 +1,4 @@
-import type { ResourceKind } from "@/db/types";
+import { type ResourceKind } from "@/db/types";
 
 export const nodeColors: Record<ResourceKind, string> = {
 	account: "hsl(175.9deg 38.6% 77.6%)" /** brand-cyan */,

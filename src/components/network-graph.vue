@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { forceCollide } from "d3";
-import type { LinkObject, NodeObject } from "force-graph";
+import { type LinkObject, type NodeObject } from "force-graph";
 import ForceGraph from "force-graph";
 import { onMounted, onUnmounted, ref, watch } from "vue";
 
@@ -86,6 +86,7 @@ function edgeWidth(edge: LinkObject) {
 }
 
 const element = ref<HTMLElement | null>(null);
+// eslint-disable-next-line vue/no-dupe-keys
 const graph = ForceGraph();
 
 graph.d3Force("center", null);

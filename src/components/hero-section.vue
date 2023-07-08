@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 // @ts-expect-error TypeScript does not know about resource queries.
-import hero from "@/assets/images/hero.jpg?webp";
+import hero from "@/assets/images/hero.jpg?format=webp";
 </script>
 
 <template>
@@ -16,7 +16,7 @@ import hero from "@/assets/images/hero.jpg?webp";
 				/>
 			</router-link>
 		</div>
-		<div class="relative mx-auto grid w-full max-w-5xl gap-8 px-8 py-8 sm:py-16">
+		<div class="relative mx-auto grid w-full max-w-5xl gap-8 p-8 sm:py-16">
 			<div class="grid gap-4">
 				<h1 class="sr-only">YouBeOn Map</h1>
 				<h2

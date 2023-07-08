@@ -9,7 +9,7 @@ import FiltersPanel from "@/components/filters-panel.vue";
 import InfoDialog from "@/components/info-dialog.vue";
 import MainContent from "@/components/main-content.vue";
 import MultiCombobox from "@/components/multi-combobox.vue";
-import type { Graph } from "@/components/network-graph.vue";
+import { type Graph } from "@/components/network-graph.vue";
 import NetworkGraph from "@/components/network-graph.vue";
 import SingleSelect from "@/components/single-select.vue";
 import VisualisationContainer from "@/components/visualisation-container.vue";
@@ -19,7 +19,13 @@ import {
 	highlightedNodeColors,
 } from "@/config/network-graph.config";
 import { accounts, ideas, interviewReligions, interviews, places } from "@/db";
-import type { Idea, InterviewReligion, Resource, ResourceKeyMap, ResourceMap } from "@/db/types";
+import {
+	type Idea,
+	type InterviewReligion,
+	type Resource,
+	type ResourceKeyMap,
+	type ResourceMap,
+} from "@/db/types";
 
 //
 

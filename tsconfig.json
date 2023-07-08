@@ -1,8 +1,11 @@
 {
-	"extends": "@stefanprobst/tsconfig",
+	"extends": "@acdh-oeaw/tsconfig",
 	"compilerOptions": {
 		"baseUrl": ".",
-		"exactOptionalPropertyTypes": false,
+		/**
+		 * @see https://github.com/microsoft/TypeScript/issues/54057
+		 */
+		"incremental": false,
 		"paths": {
 			"@/*": ["./src/*"],
 			"~/*": ["./*"]

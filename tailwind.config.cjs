@@ -24,12 +24,12 @@ const config = {
 			fontFamily: {
 				display: [
 					"Chicago",
-					"Noto Sans DisplayVariable",
+					"Noto Sans Display Variable",
 					"ui-sans-serif",
 					"system-ui",
 					"sans-serif",
 				],
-				sans: ["Noto Sans DisplayVariable", "ui-sans-serif", "system-ui", "sans-serif"],
+				sans: ["Noto Sans Display Variable", "ui-sans-serif", "system-ui", "sans-serif"],
 			},
 			screens: {
 				xxs: "360px",

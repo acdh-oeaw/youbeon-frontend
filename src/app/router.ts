@@ -6,7 +6,6 @@ import { metadata } from "~/config/metadata.config";
 
 nprogress.configure({ showSpinner: false });
 
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 const AccountsView = () => {
 	return import("@/views/accounts-view.vue");
 };

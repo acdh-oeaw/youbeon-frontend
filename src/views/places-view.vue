@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import type { Map as LeafletMap } from "leaflet";
+import { type Map as LeafletMap } from "leaflet";
 import { computed, nextTick, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import DetailsPanel from "@/components/details-panel.vue";
 import DetailsPanelSection from "@/components/details-panel-section.vue";
 import FiltersPanel from "@/components/filters-panel.vue";
-import type { Point, PointLayers } from "@/components/geo-map.vue";
+import { type Point, type PointLayers } from "@/components/geo-map.vue";
 import GeoMap from "@/components/geo-map.vue";
 import InfoDialog from "@/components/info-dialog.vue";
 import MainContent from "@/components/main-content.vue";
@@ -14,14 +14,14 @@ import MultiCombobox from "@/components/multi-combobox.vue";
 import SingleSelect from "@/components/single-select.vue";
 import { colors, marker, strokes } from "@/config/geo-map.config";
 import { accounts, ideas, interviewReligions, interviews, places } from "@/db";
-import type {
-	Interview,
-	InterviewReligion,
-	Place,
-	Resource,
-	ResourceKeyMap,
-	ResourceKind,
-	ResourceMap,
+import {
+	type Interview,
+	type InterviewReligion,
+	type Place,
+	type Resource,
+	type ResourceKeyMap,
+	type ResourceKind,
+	type ResourceMap,
 } from "@/db/types";
 
 //

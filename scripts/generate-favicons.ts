@@ -1,8 +1,8 @@
 import { copyFile, writeFile } from "node:fs/promises";
 import { extname, join } from "node:path";
 
+import { log } from "@acdh-oeaw/lib";
 import generateFavicons, { generateSocialImage } from "@stefanprobst/favicons";
-import { log } from "@stefanprobst/log";
 
 import { manifestFileName, metadata, openGraphImageName } from "../config/metadata.config";
 

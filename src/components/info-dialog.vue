@@ -33,7 +33,7 @@ const label = "Info";
 			colors.borderColor[0],
 			colors.backgroundColor[1],
 			colors.hover.backgroundColor[0],
-			'absolute left-4 bottom-4 z-overlay hidden h-12 w-12 place-items-center rounded-full border-2 shadow-lg transition xs:grid',
+			'absolute bottom-4 left-4 z-overlay hidden h-12 w-12 place-items-center rounded-full border-2 shadow-lg transition xs:grid',
 		]"
 		@click="toggle"
 	>
@@ -66,7 +66,7 @@ const label = "Info";
 					<dialog-panel
 						:class="[
 							colors.borderColor[0],
-							'grid w-full max-w-sm transform gap-4 rounded-lg border-4 bg-neutral-0 p-8 shadow-lg transition',
+							'grid w-full max-w-sm gap-4 rounded-lg border-4 bg-neutral-0 p-8 shadow-lg transition',
 						]"
 					>
 						<button aria-label="Close dialog" class="absolute right-4 top-4" @click="toggle">

@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-import type { Resource } from "@/db/types";
+import { type Resource } from "@/db/types";
 
 interface ImportMetaEnv {
 	readonly VITE_APP_BASE_URL: string;

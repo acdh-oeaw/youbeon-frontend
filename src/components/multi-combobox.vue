@@ -145,7 +145,7 @@ function getTagStyle(key: Item["key"]) {
 			>
 				<div
 					v-if="searchTerm !== '' && visibleItems.length === 0"
-					class="relative cursor-default select-none py-2 px-4 text-neutral-700"
+					class="relative cursor-default select-none px-4 py-2 text-neutral-700"
 				>
 					{{ nothingFoundMessage }}
 				</div>

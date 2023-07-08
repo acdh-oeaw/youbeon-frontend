@@ -13,7 +13,7 @@ const _props = defineProps<{
 			<h3 class="text-left font-display text-base sm:text-lg">{{ title }}</h3>
 			<chevron-down-icon
 				aria-hidden="true"
-				class="h-5 w-5 flex-shrink-0 transition ui-open:rotate-180"
+				class="h-5 w-5 shrink-0 transition ui-open:rotate-180"
 			/>
 		</disclosure-button>
 		<disclosure-panel

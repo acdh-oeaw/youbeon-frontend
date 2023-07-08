@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized } from "vue-router";
+import { type RouteLocationNormalized } from "vue-router";
 
 export function trackPageView(to: RouteLocationNormalized, from?: RouteLocationNormalized): void {
 	const url = to.fullPath;

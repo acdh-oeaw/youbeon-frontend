@@ -3,13 +3,13 @@ import "leaflet/dist/leaflet.css";
 
 import { MapIcon } from "@heroicons/vue/24/outline";
 import { entries, keys } from "@stefanprobst/object";
-import type { FeatureGroup, Map as LeafletMap } from "leaflet";
+import { type FeatureGroup, type Map as LeafletMap } from "leaflet";
 import { circleMarker, featureGroup, map as createMap, tileLayer } from "leaflet";
 import { onMounted, onUnmounted, watch } from "vue";
 
 import ZoomControls from "@/components/zoom-controls.vue";
 import { config, initialViewState, marker } from "@/config/geo-map.config";
-import type { Place } from "@/db/types";
+import { type Place } from "@/db/types";
 
 //
 

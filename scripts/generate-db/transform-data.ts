@@ -1,16 +1,16 @@
-import { log } from "@stefanprobst/log";
+import { log } from "@acdh-oeaw/lib";
 
-import type {
-	Account,
-	Idea,
-	Interview,
-	InterviewReligion,
-	Place,
-	Religion,
-	Resource,
-	ResourceKind,
+import {
+	type Account,
+	type Idea,
+	type Interview,
+	type InterviewReligion,
+	type Place,
+	type Religion,
+	type Resource,
+	type ResourceKind,
 } from "../../src/db/types";
-import type { InputData } from "./read-xlsx-files";
+import { type InputData } from "./read-xlsx-files";
 
 export interface TransformedData {
 	accounts: Map<Account["key"], Account>;

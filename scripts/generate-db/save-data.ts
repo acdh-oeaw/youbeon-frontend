@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { format } from "prettier";
 import serialize from "serialize-javascript";
 
-import type { TransformedData } from "./transform-data";
+import { type TransformedData } from "./transform-data";
 
 export async function saveData(data: TransformedData): Promise<void> {
 	for (const [key, value] of Object.entries(data)) {
@@ -22,7 +22,7 @@ export async function saveData(data: TransformedData): Promise<void> {
 		 */
 		await writeFile(
 			filePath,
-			format(`export const ${key} = ${serialize(sorted)}`, { parser: "typescript" }),
+			await format(`export const ${key} = ${serialize(sorted)}`, { parser: "typescript" }),
 		);
 	}
 }

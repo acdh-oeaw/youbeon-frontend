@@ -8,7 +8,7 @@ import FiltersPanel from "@/components/filters-panel.vue";
 import InfoDialog from "@/components/info-dialog.vue";
 import MainContent from "@/components/main-content.vue";
 import MultiCombobox from "@/components/multi-combobox.vue";
-import type { Graph } from "@/components/network-graph.vue";
+import { type Graph } from "@/components/network-graph.vue";
 import NetworkGraph from "@/components/network-graph.vue";
 import SingleSelect from "@/components/single-select.vue";
 import VisualisationContainer from "@/components/visualisation-container.vue";
@@ -18,7 +18,13 @@ import {
 	highlightedNodeColors,
 } from "@/config/network-graph.config";
 import { accounts, ideas, interviewReligions, interviews } from "@/db";
-import type { Account, InterviewReligion, Resource, ResourceKeyMap, ResourceMap } from "@/db/types";
+import {
+	type Account,
+	type InterviewReligion,
+	type Resource,
+	type ResourceKeyMap,
+	type ResourceMap,
+} from "@/db/types";
 
 //
 
@@ -252,7 +258,7 @@ function getColor() {
 					rel="noreferrer"
 					target="_blank"
 				>
-					<img alt="" class="w-h h-5" src="@/assets/images/instagram.svg" />
+					<img alt="" class="h-5 w-5" src="@/assets/images/instagram.svg" />
 				</a>
 			</template>
 			<details-panel-section

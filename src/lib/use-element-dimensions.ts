@@ -1,4 +1,4 @@
-import type { Ref } from "vue";
+import { type Ref } from "vue";
 import { onMounted, onUnmounted, ref } from "vue";
 
 export function useElementDimensions(element: Ref<HTMLElement | null>): Ref<DOMRect | null> {

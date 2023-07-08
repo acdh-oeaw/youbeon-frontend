@@ -12,10 +12,7 @@ const _props = defineProps<{
 	<disclosure v-if="items != null && items.length > 0" as="div" class="grid gap-2">
 		<disclosure-button class="flex items-center justify-between">
 			<h3 class="font-display text-sm font-medium text-neutral-600">{{ label }}</h3>
-			<chevron-down-icon
-				aria-hidden="true"
-				class="h-5 w-5 transform transition ui-open:rotate-180"
-			/>
+			<chevron-down-icon aria-hidden="true" class="h-5 w-5 transition ui-open:rotate-180" />
 		</disclosure-button>
 		<transition
 			enter-active-class="transition duration-100 ease-out"

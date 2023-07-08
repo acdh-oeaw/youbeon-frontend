@@ -1,11 +1,8 @@
-import "@stefanprobst/request/fetch";
-
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { log } from "@stefanprobst/log";
-import config from "@stefanprobst/prettier-config";
-import { HttpError, request } from "@stefanprobst/request";
+import { HttpError, log, request } from "@acdh-oeaw/lib";
+import config from "@acdh-oeaw/prettier-config";
 import { format } from "prettier";
 
 import { url } from "../config/imprint.config";
@@ -13,7 +10,7 @@ import { url } from "../config/imprint.config";
 async function generate() {
 	const html = await request(url, { responseType: "text" });
 
-	const view = format(
+	const view = await format(
 		`
     <script lang="ts" setup>
     import '@/styles/prose.css'
