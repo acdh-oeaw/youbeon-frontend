@@ -10,9 +10,7 @@ envFileNames.forEach((envFileName) => {
 	config({ path: join(process.cwd(), envFileName) });
 });
 
-const baseUrl = "https://shared.acdh.oeaw.ac.at";
-const pathname = "/acdh-common-assets/api/imprint.php";
-const redmineId = process.env.REDMINE_ID;
+const redmineId = process.env["REDMINE_ID"];
 const locale = metadata.locale;
 
 assert(
@@ -21,7 +19,7 @@ assert(
 );
 
 export const url = createUrl({
-	baseUrl,
-	pathname,
-	searchParams: createUrlSearchParams({ serviceID: redmineId, outputLang: locale }),
+	baseUrl: "https://imprint.acdh.oeaw.ac.at",
+	pathname: `/${redmineId}`,
+	searchParams: createUrlSearchParams({ locale }),
 });
