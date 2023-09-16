@@ -10,9 +10,7 @@ const _props = defineProps<{
 	isOpen: boolean;
 }>();
 
-const emit = defineEmits<{
-	(event: "close-panel"): void;
-}>();
+const emit = defineEmits<(event: "close-panel") => void>();
 
 /**
  * Intended behavior is similar to a popover, which must be closed intentionally:
@@ -45,11 +43,10 @@ const titleId = "popover-title";
 <template>
 	<transition
 		appear
-		class="transition"
-		enter-active-class="duration-300 ease-out"
+		enter-active-class="transition duration-300 ease-out"
 		enter-from-class="opacity-0 scale-95"
 		enter-to-class="opacity-100 scale-100"
-		leave-active-class="duration-200 ease-in"
+		leave-active-class="transition duration-200 ease-in"
 		leave-from-class="opacity-100 scale-100"
 		leave-to-class="opacity-0 scale-95"
 	>
@@ -71,7 +68,7 @@ const titleId = "popover-title";
 						<x-mark-icon aria-hidden="true" class="h-5 w-5" />
 					</button>
 				</div>
-				<div class="grid max-h-96 gap-4 overflow-auto py-4 px-4 text-sm">
+				<div class="grid max-h-96 gap-4 overflow-auto p-4 text-sm">
 					<slot />
 				</div>
 			</div>

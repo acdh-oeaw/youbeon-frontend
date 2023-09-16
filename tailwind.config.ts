@@ -1,6 +1,6 @@
-const colors = require("tailwindcss/colors");
+import type { Config } from "tailwindcss";
+import colors from "tailwindcss/colors";
 
-/** @type {import('tailwindcss').Config} */
 const config = {
 	content: ["./index.html", "./src/**/*.@(css|ts|vue)"],
 	theme: {
@@ -24,12 +24,12 @@ const config = {
 			fontFamily: {
 				display: [
 					"Chicago",
-					"Noto Sans DisplayVariable",
+					"Noto Sans Display Variable",
 					"ui-sans-serif",
 					"system-ui",
 					"sans-serif",
 				],
-				sans: ["Noto Sans DisplayVariable", "ui-sans-serif", "system-ui", "sans-serif"],
+				sans: ["Noto Sans Display Variable", "ui-sans-serif", "system-ui", "sans-serif"],
 			},
 			screens: {
 				xxs: "360px",
@@ -44,6 +44,6 @@ const config = {
 		},
 	},
 	plugins: [require("@headlessui/tailwindcss")],
-};
+} satisfies Config;
 
-module.exports = config;
+export default config;

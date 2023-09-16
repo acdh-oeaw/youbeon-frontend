@@ -6,7 +6,6 @@ import { metadata } from "~/config/metadata.config";
 
 nprogress.configure({ showSpinner: false });
 
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 const AccountsView = () => {
 	return import("@/views/accounts-view.vue");
 };
@@ -22,7 +21,12 @@ const ImprintView = () => {
 const PlacesView = () => {
 	return import("@/views/places-view.vue");
 };
-/* eslint-enable @typescript-eslint/explicit-module-boundary-types */
+
+declare module "vue-router" {
+	interface RouteMeta {
+		title: string;
+	}
+}
 
 export const routes = {
 	home: {
@@ -74,12 +78,13 @@ let timer: ReturnType<typeof setTimeout> | null = null;
 const title = [metadata.shortTitle, metadata.title].join(" - ");
 
 router.beforeEach((to, from, next) => {
-	document.title = `${to.meta["title"]} | ${title}`;
+	document.title = `${to.meta.title} | ${title}`;
 	next();
 });
 
 router.beforeResolve((to, from, next) => {
 	if (to.name != null) {
+		// eslint-disable-next-line @typescript-eslint/unbound-method
 		timer = setTimeout(nprogress.start, delay);
 	}
 	next();

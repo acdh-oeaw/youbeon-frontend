@@ -3,7 +3,7 @@ import type { RouteLocationNormalized } from "vue-router";
 export function trackPageView(to: RouteLocationNormalized, from?: RouteLocationNormalized): void {
 	const url = to.fullPath;
 	const referrer = from?.fullPath;
-	const title = to.meta["title"] ?? document.title;
+	const title = to.meta.title;
 
 	window._paq?.push(["setReferrerUrl", referrer]);
 	window._paq?.push(["setCustomUrl", url]);

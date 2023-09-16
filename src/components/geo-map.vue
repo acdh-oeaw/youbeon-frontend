@@ -3,8 +3,14 @@ import "leaflet/dist/leaflet.css";
 
 import { MapIcon } from "@heroicons/vue/24/outline";
 import { entries, keys } from "@stefanprobst/object";
-import type { FeatureGroup, Map as LeafletMap } from "leaflet";
-import { circleMarker, featureGroup, map as createMap, tileLayer } from "leaflet";
+import {
+	circleMarker,
+	type FeatureGroup,
+	featureGroup,
+	type Map as LeafletMap,
+	map as createMap,
+	tileLayer,
+} from "leaflet";
 import { onMounted, onUnmounted, watch } from "vue";
 
 import ZoomControls from "@/components/zoom-controls.vue";
@@ -104,7 +110,6 @@ onUnmounted(() => {
  */
 function updateLayers() {
 	entries(props.layers).forEach(([key, points]) => {
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const group = geomap.featureGroups[key]!;
 		group.clearLayers();
 		group.bringToFront();

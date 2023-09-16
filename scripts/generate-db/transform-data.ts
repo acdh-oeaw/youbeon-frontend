@@ -1,4 +1,4 @@
-import { log } from "@stefanprobst/log";
+import { log } from "@acdh-oeaw/lib";
 
 import type {
 	Account,
@@ -241,11 +241,9 @@ export function transformData(input: InputData): TransformedData {
 				}
 			}
 
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			keysByKind.get(kind)!.add(key);
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		for (const key of keysByKind.get("idea")!) {
 			const idea = ideasByKey.get(key);
 			// assert(idea != null, `Missing idea with key ${key}.`)
@@ -254,7 +252,7 @@ export function transformData(input: InputData): TransformedData {
 				continue; // FIXME:
 			}
 			idea.interviews.add(interview);
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 			for (const key of keysByKind.get("idea")!) {
 				if (key !== idea.key) {
 					// assert(ideasByKey.has(key), `Missing idea with key ${key}.`)
@@ -265,7 +263,7 @@ export function transformData(input: InputData): TransformedData {
 					idea.ideas.add(key);
 				}
 			}
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 			for (const key of keysByKind.get("place")!) {
 				// assert(placesByKey.has(key), `Missing place with key ${key}.`)
 				if (!placesByKey.has(key)) {
@@ -274,7 +272,7 @@ export function transformData(input: InputData): TransformedData {
 				}
 				idea.places.add(key);
 			}
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 			for (const key of keysByKind.get("account")!) {
 				// assert(accountsByKey.has(key), `Missing account with key ${key}.`)
 				if (!accountsByKey.has(key)) {
@@ -285,7 +283,6 @@ export function transformData(input: InputData): TransformedData {
 			}
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		for (const key of keysByKind.get("account")!) {
 			const account = accountsByKey.get(key);
 			// assert(account != null, `Missing account with key ${key}.`)
@@ -295,7 +292,7 @@ export function transformData(input: InputData): TransformedData {
 			}
 			account.mentions++;
 			account.interviews.add(interview);
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 			for (const key of keysByKind.get("idea")!) {
 				// assert(ideasByKey.has(key), `Missing idea with key ${key}.`)
 				if (!ideasByKey.has(key)) {
@@ -304,7 +301,7 @@ export function transformData(input: InputData): TransformedData {
 				}
 				account.ideas.add(key);
 			}
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 			for (const key of keysByKind.get("religion")!) {
 				// assert(religionsByKey.has(key), `Missing religion with key ${key}.`)
 				if (!religionsByKey.has(key)) {
@@ -315,7 +312,6 @@ export function transformData(input: InputData): TransformedData {
 			}
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		for (const key of keysByKind.get("place")!) {
 			const place = placesByKey.get(key);
 			// assert(place != null, `Missing place with key ${key}.`)
@@ -324,7 +320,7 @@ export function transformData(input: InputData): TransformedData {
 				continue; // FIXME:
 			}
 			place.interviews.add(interview);
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 			for (const key of keysByKind.get("idea")!) {
 				// assert(ideasByKey.has(key), `Missing idea with key ${key}.`)
 				if (!ideasByKey.has(key)) {
@@ -333,7 +329,7 @@ export function transformData(input: InputData): TransformedData {
 				}
 				place.ideas.add(key);
 			}
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 			for (const key of keysByKind.get("religion")!) {
 				// assert(religionsByKey.has(key), `Missing religion with key ${key}.`)
 				if (!religionsByKey.has(key)) {
@@ -342,7 +338,7 @@ export function transformData(input: InputData): TransformedData {
 				}
 				place.religions.add(key);
 			}
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 			for (const key of keysByKind.get("account")!) {
 				// assert(accountsByKey.has(key), `Missing account with key ${key}.`)
 				if (!accountsByKey.has(key)) {

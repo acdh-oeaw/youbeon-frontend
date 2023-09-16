@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { format } from "prettier";
 import serialize from "serialize-javascript";
 
+import type { ResourceBase } from "../../src/db/types";
 import type { TransformedData } from "./transform-data";
 
 export async function saveData(data: TransformedData): Promise<void> {
@@ -11,7 +12,7 @@ export async function saveData(data: TransformedData): Promise<void> {
 		const filePath = join(process.cwd(), "src", "db", key + ".ts");
 
 		const sorted = new Map(
-			[...value].sort(([, a], [, z]) => {
+			[...(value as Map<string, ResourceBase>)].sort(([, a], [, z]) => {
 				return a.label.localeCompare(z.label);
 			}),
 		);
@@ -22,7 +23,7 @@ export async function saveData(data: TransformedData): Promise<void> {
 		 */
 		await writeFile(
 			filePath,
-			format(`export const ${key} = ${serialize(sorted)}`, { parser: "typescript" }),
+			await format(`export const ${key} = ${serialize(sorted)}`, { parser: "typescript" }),
 		);
 	}
 }

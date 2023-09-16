@@ -1,12 +1,16 @@
 {
-	"extends": "@stefanprobst/tsconfig",
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"extends": "@acdh-oeaw/tsconfig",
 	"compilerOptions": {
 		"baseUrl": ".",
-		"exactOptionalPropertyTypes": false,
+		/**
+		 * @see https://github.com/microsoft/TypeScript/issues/54057
+		 */
+		"incremental": false,
 		"paths": {
 			"@/*": ["./src/*"],
 			"~/*": ["./*"]
 		}
 	},
-	"include": ["env.d.ts", "./config/**/*.ts", "./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.vue"]
+	"exclude": ["dist", "node_modules"]
 }

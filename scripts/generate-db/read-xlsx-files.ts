@@ -1,6 +1,6 @@
 import { join } from "node:path";
 
-import { assert } from "@stefanprobst/assert";
+import { assert } from "@acdh-oeaw/lib";
 import xlsx from "xlsx";
 
 interface InputRow {

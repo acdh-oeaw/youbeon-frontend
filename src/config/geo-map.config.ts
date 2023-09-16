@@ -51,7 +51,6 @@ function generateIdeaColors() {
 	let index = 0;
 	const colors: Record<string, string> = {};
 	for (const key of ideas.keys()) {
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		colors[key] = palette[index++]!;
 	}
 

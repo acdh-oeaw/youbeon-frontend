@@ -6,8 +6,7 @@ import { useRoute, useRouter } from "vue-router";
 import DetailsPanel from "@/components/details-panel.vue";
 import DetailsPanelSection from "@/components/details-panel-section.vue";
 import FiltersPanel from "@/components/filters-panel.vue";
-import type { Point, PointLayers } from "@/components/geo-map.vue";
-import GeoMap from "@/components/geo-map.vue";
+import GeoMap, { type Point, type PointLayers } from "@/components/geo-map.vue";
 import InfoDialog from "@/components/info-dialog.vue";
 import MainContent from "@/components/main-content.vue";
 import MultiCombobox from "@/components/multi-combobox.vue";
@@ -75,7 +74,6 @@ function getInterviewReligions(keys: Set<Interview["key"]> | undefined) {
 	const religions = new Set<InterviewReligion["key"]>();
 	if (keys == null) return religions;
 	keys.forEach((key) => {
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		religions.add(interviews.get(key)!.religion);
 	});
 	return religions;
@@ -87,7 +85,6 @@ function getColor(key: Resource["key"], kind: ResourceKind = placeFilterKind.val
 			return colors[kind];
 		case "idea":
 		case "interview-religion":
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			return colors[kind][key]!;
 		default:
 			return colors.default;
@@ -175,7 +172,6 @@ const points = computed(() => {
 				} else if (highlights.length > 1) {
 					return { fillColor: colors.multiple };
 				} else {
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const highlight = highlights[0]!;
 					const fillColor = getColor(highlight.key, highlight.kind);
 					return { fillColor };
@@ -272,7 +268,7 @@ function syncFiltersWithSearchParams() {
 					if (map.value != null) {
 						map.value.setView(place.coordinates);
 					} else {
-						nextTick(() => {
+						void nextTick(() => {
 							map.value?.setView(place.coordinates);
 						});
 					}
@@ -300,7 +296,7 @@ function syncFiltersWithSearchParams() {
 							{ paddingTopLeft: [0, 150] },
 						);
 					} else {
-						nextTick(() => {
+						void nextTick(() => {
 							map.value?.fitBounds(
 								[
 									[Math.min(...lat), Math.min(...lng)],
@@ -321,7 +317,6 @@ function syncFiltersWithSearchParams() {
 
 	if (isPlaceDetailsVisible) {
 		selectedEntity.value = {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			entity: placeFilterItems[detailsKind].get(detailsId)!,
 			kind: detailsKind,
 		} as
@@ -337,7 +332,7 @@ function syncFiltersWithSearchParams() {
 			if (map.value != null) {
 				map.value.setView(place.coordinates);
 			} else {
-				nextTick(() => {
+				void nextTick(() => {
 					map.value?.setView(place.coordinates);
 				});
 			}
@@ -356,20 +351,20 @@ watch(
 );
 
 function onClickPlace(place: Place) {
-	router.push({ query: { ...route.query, "details-id": place.key, "details-kind": "place" } });
+	void router.push({ query: { ...route.query, "details-id": place.key, "details-kind": "place" } });
 }
 
 function onChangePlaceFilterKind(kind: string) {
-	router.push({ query: { ...route.query, kind: kind as PlaceFilterKind } });
+	void router.push({ query: { ...route.query, kind: kind as PlaceFilterKind } });
 }
 
 function onChangePlaceFilters(id: Array<Resource["key"]>) {
-	router.push({ query: { ...route.query, id } });
+	void router.push({ query: { ...route.query, id } });
 }
 
 function onCloseDetailsPanel() {
 	const { "details-id": _, "details-kind": __, ...query } = route.query;
-	router.push({ query });
+	void router.push({ query });
 }
 </script>
 

@@ -4,8 +4,9 @@
 	}
 
 	& h3 {
-		margin-block: 2.25rem 1.25rem;
 		@apply font-display font-bold;
+
+		margin-block: 2.25rem 1.25rem;
 	}
 
 	& br {

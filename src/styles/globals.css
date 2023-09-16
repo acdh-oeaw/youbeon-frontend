@@ -38,10 +38,10 @@ body,
 
 a {
 	color: currentColor;
-	text-underline-offset: 0.25em;
 	transition-timing-function: theme(transitionTimingFunction.DEFAULT);
 	transition-duration: theme(transitionDuration.DEFAULT);
 	transition-property: theme(transitionProperty.DEFAULT);
+	text-underline-offset: 0.25em;
 	text-decoration-thickness: from-font;
 	text-underline-position: from-font;
 

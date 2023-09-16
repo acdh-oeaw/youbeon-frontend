@@ -4,7 +4,7 @@ import PreviewCard from "@/components/preview-card.vue";
 
 <template>
 	<section>
-		<div class="mx-auto grid max-w-5xl gap-16 py-8 px-8">
+		<div class="mx-auto grid max-w-5xl gap-16 p-8">
 			<div class="grid gap-4">
 				<p
 					class="max-w-3xl text-sm font-medium leading-relaxed text-neutral-700 xs:text-base xs:leading-relaxed sm:text-lg sm:leading-relaxed"

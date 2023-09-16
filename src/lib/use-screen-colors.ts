@@ -1,5 +1,4 @@
-import type { Ref } from "vue";
-import { ref, watch } from "vue";
+import { type Ref, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import { routes } from "@/app/router";

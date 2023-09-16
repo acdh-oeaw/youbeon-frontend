@@ -1,4 +1,4 @@
-import { log } from "@stefanprobst/log";
+import { log } from "@acdh-oeaw/lib";
 
 import { readXlsxFiles } from "./read-xlsx-files";
 import { saveData } from "./save-data";

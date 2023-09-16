@@ -1,92 +1,89 @@
 {
 	"name": "@acdh-oeaw/youbeon-frontend",
 	"private": true,
-	"version": "1.0.0",
 	"license": "MIT",
 	"type": "module",
+	"engines": {
+		"node": "18.x",
+		"pnpm": "8.x"
+	},
+	"packageManager": "pnpm@8.7.5",
 	"scripts": {
 		"build": "vite build",
 		"dev": "vite --port 3000",
-		"format:check": "prettier . --cache --check --ignore-path .gitignore --plugin prettier-plugin-tailwindcss",
+		"format:check": "prettier . --cache --check --ignore-path ./.gitignore",
 		"format:fix": "pnpm run format:check --write",
-		"generate:db": "ts-node --project ./tsconfig.node.json ./scripts/generate-db/index.ts",
-		"generate:favicons": "ts-node --project ./tsconfig.node.json ./scripts/generate-favicons.ts",
-		"generate:imprint": "ts-node --project ./tsconfig.node.json ./scripts/generate-imprint.ts",
-		"lint:check": "run-p 'lint:*:check'",
-		"lint:fix": "run-p 'lint:*:fix'",
-		"lint:code:check": "eslint . --cache --ext cjs,js,mjs,ts,tsx,vue --ignore-path .gitignore",
+		"generate:db": "tsx ./scripts/generate-db/index.ts",
+		"generate:favicons": "tsx ./scripts/generate-favicons.ts",
+		"generate:imprint": "tsx ./scripts/generate-imprint.ts",
+		"lint:check": "run-p \"lint:*:check\"",
+		"lint:fix": "run-p \"lint:*:fix\"",
+		"lint:code:check": "eslint . --cache --ext cjs,js,mjs,ts,tsx,vue --ignore-path ./.gitignore",
 		"lint:code:fix": "pnpm run lint:code:check --fix",
-		"lint:styles:check": "stylelint \"**/*.@(css|html|vue)\" --cache --ignore-path .gitignore",
+		"lint:styles:check": "stylelint \"**/*.@(css|html|vue)\" --cache --ignore-path ./.gitignore",
 		"lint:styles:fix": "pnpm run lint:styles:check --fix",
-		"postinstall": "patch-package",
-		"prepare": "run-s setup 'generate:*'",
+		"prepare": "run-s setup \"generate:*\"",
 		"preview": "vite preview --port 3000",
-		"setup": "simple-git-hooks || exit 0",
+		"setup": "is-ci || simple-git-hooks",
 		"test": "exit 0",
 		"types:check": "vue-tsc",
 		"validate": "run-s format:check lint:check types:check test"
 	},
-	"engines": {
-		"node": ">=18",
-		"pnpm": ">=7"
-	},
-	"packageManager": "pnpm@7.18.1",
 	"dependencies": {
-		"@fontsource/noto-sans-display": "^4.5.13",
-		"@headlessui/tailwindcss": "^0.1.2",
-		"@headlessui/vue": "^1.7.7",
-		"@heroicons/vue": "^2.0.13",
+		"@acdh-oeaw/lib": "^0.1.6",
+		"@fontsource-variable/noto-sans-display": "^5.0.9",
+		"@headlessui/tailwindcss": "^0.2.0",
+		"@headlessui/vue": "insiders",
+		"@heroicons/vue": "^2.0.18",
 		"@stefanprobst/object": "^1.2.0",
-		"@vueuse/core": "^9.7.0",
-		"d3": "^7.7.0",
-		"force-graph": "^1.42.16",
-		"leaflet": "^1.8.0",
+		"d3": "^7.8.5",
+		"force-graph": "^1.43.4",
+		"leaflet": "^1.9.4",
 		"nprogress": "^0.2.0",
-		"vue": "^3.2.45",
-		"vue-router": "^4.1.6"
+		"vue": "^3.3.4",
+		"vue-router": "^4.2.4"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^17.3.0",
-		"@stefanprobst/assert": "^1.0.3",
-		"@stefanprobst/commitlint-config": "^1.0.3",
-		"@stefanprobst/eslint-config": "^1.0.10",
-		"@stefanprobst/eslint-config-vue": "^1.0.2",
-		"@stefanprobst/favicons": "^2.1.1",
-		"@stefanprobst/log": "^1.0.3",
-		"@stefanprobst/prettier-config": "^3.0.0",
-		"@stefanprobst/request": "^0.2.1",
-		"@stefanprobst/stylelint-config": "^2.5.1",
-		"@stefanprobst/tsconfig": "^2.2.2",
+		"@acdh-oeaw/commitlint-config": "^1.0.0",
+		"@acdh-oeaw/eslint-config": "^1.0.2",
+		"@acdh-oeaw/eslint-config-vue": "^1.0.3",
+		"@acdh-oeaw/prettier-config": "^1.0.1",
+		"@acdh-oeaw/stylelint-config": "^1.0.5",
+		"@acdh-oeaw/tsconfig": "^1.0.1",
+		"@commitlint/cli": "^17.7.1",
+		"@stefanprobst/favicons": "^2.2.2",
 		"@types/d3": "^7.4.0",
-		"@types/leaflet": "^1.8.0",
-		"@types/node": "^18.11.17",
+		"@types/leaflet": "^1.9.4",
+		"@types/node": "^18.17.14",
 		"@types/nprogress": "^0.2.0",
-		"@types/prettier": "^2.7.1",
 		"@types/serialize-javascript": "^5.0.2",
-		"@vitejs/plugin-vue": "^4.0.0",
-		"autoprefixer": "^10.4.13",
-		"dotenv": "^16.0.3",
-		"eslint": "^8.30.0",
-		"lint-staged": "^13.1.0",
+		"@vitejs/plugin-vue": "^4.3.4",
+		"autoprefixer": "^10.4.15",
+		"dotenv": "^16.3.1",
+		"eslint": "^8.48.0",
+		"eslint-plugin-tailwindcss": "^3.13.0",
+		"is-ci": "^3.0.1",
+		"lint-staged": "^14.0.1",
 		"npm-run-all": "^4.1.5",
-		"patch-package": "^6.5.0",
-		"postcss": "^8.4.20",
-		"postcss-custom-media": "^9.0.1",
-		"postcss-html": "^1.5.0",
-		"postcss-nesting": "^10.2.0",
-		"prettier": "^2.8.1",
-		"prettier-plugin-tailwindcss": "^0.2.1",
-		"serialize-javascript": "^6.0.0",
-		"simple-git-hooks": "^2.8.1",
-		"stylelint": "^14.16.0",
-		"stylelint-config-html": "^1.1.0",
-		"tailwindcss": "^3.2.4",
-		"ts-node": "^10.9.1",
-		"typescript": "^4.9.4",
-		"vite": "^4.0.2",
-		"vite-imagetools": "^4.0.11",
-		"vue-tsc": "1.0.24",
+		"postcss": "^8.4.29",
+		"postcss-custom-media": "^10.0.0",
+		"postcss-nesting": "^12.0.1",
+		"prettier": "^3.0.3",
+		"serialize-javascript": "^6.0.1",
+		"simple-git-hooks": "^2.9.0",
+		"stylelint": "^15.10.3",
+		"tailwindcss": "^3.3.3",
+		"tsx": "^3.12.10",
+		"typescript": "^5.2.2",
+		"vite": "^4.4.9",
+		"vite-imagetools": "^5.0.8",
+		"vue-tsc": "1.8.11",
 		"xlsx": "^0.18.5"
+	},
+	"pnpm": {
+		"patchedDependencies": {
+			"force-graph@1.43.4": "patches/force-graph@1.43.2.patch"
+		}
 	},
 	"browserslist": {
 		"development": [
@@ -101,50 +98,46 @@
 		]
 	},
 	"commitlint": {
-		"extends": "@stefanprobst/commitlint-config"
+		"extends": "@acdh-oeaw/commitlint-config"
 	},
 	"eslintConfig": {
 		"extends": [
-			"@stefanprobst/eslint-config",
-			"@stefanprobst/eslint-config-vue"
+			"@acdh-oeaw/eslint-config",
+			"@acdh-oeaw/eslint-config-vue",
+			"plugin:eslint-plugin-tailwindcss/recommended"
 		]
 	},
 	"lint-staged": {
 		"*.@(cjs|js|mjs|ts|tsx)": [
 			"eslint --cache --fix",
-			"prettier --cache --plugin prettier-plugin-tailwindcss --write"
+			"prettier --cache --write"
 		],
 		"*.@(css|html)": [
 			"stylelint --cache --fix",
-			"prettier --cache --plugin prettier-plugin-tailwindcss --write"
+			"prettier --cache --write"
 		],
 		"*.vue": [
 			"eslint --cache --fix",
 			"stylelint --cache --fix",
-			"prettier --cache --plugin prettier-plugin-tailwindcss --write"
+			"prettier --cache --write"
 		],
-		"*.!(cjs|css|html|js|mjs|ts|tsx|vue)": "prettier --cache --ignore-unknown --plugin prettier-plugin-tailwindcss --write"
+		"*.!(cjs|css|html|js|mjs|ts|tsx|vue)": "prettier --cache --ignore-unknown --write"
 	},
 	"postcss": {
 		"plugins": {
-			"postcss-html": {},
 			"postcss-custom-media": {},
 			"tailwindcss/nesting": {},
 			"tailwindcss": {},
 			"autoprefixer": {}
 		}
 	},
-	"prettier": "@stefanprobst/prettier-config",
+	"prettier": "@acdh-oeaw/prettier-config",
 	"simple-git-hooks": {
 		"commit-msg": "pnpm exec commitlint --edit",
 		"pre-commit": "pnpm exec lint-staged",
 		"pre-push": "pnpm run validate"
 	},
 	"stylelint": {
-		"extends": [
-			"stylelint-config-html/html",
-			"stylelint-config-html/vue",
-			"@stefanprobst/stylelint-config"
-		]
+		"extends": "@acdh-oeaw/stylelint-config"
 	}
 }
