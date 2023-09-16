@@ -20,8 +20,8 @@ dependencies:
     specifier: ^0.2.0
     version: 0.2.0(tailwindcss@3.3.3)
   '@headlessui/vue':
-    specifier: ^1.7.16
-    version: 1.7.16(vue@3.3.4)
+    specifier: insiders
+    version: 0.0.0-insiders.f016dc5(vue@3.3.4)
   '@heroicons/vue':
     specifier: ^2.0.18
     version: 2.0.18(vue@3.3.4)
@@ -1000,12 +1000,13 @@ packages:
       tailwindcss: 3.3.3(ts-node@10.9.1)
     dev: false
 
-  /@headlessui/vue@1.7.16(vue@3.3.4):
-    resolution: {integrity: sha512-nKT+nf/q6x198SsyK54mSszaQl/z+QxtASmgMEJtpxSX2Q0OPJX0upS/9daDyiECpeAsvjkoOrm2O/6PyBQ+Qg==}
+  /@headlessui/vue@0.0.0-insiders.f016dc5(vue@3.3.4):
+    resolution: {integrity: sha512-ZjPHywu5cz5QTIyTImLK7JU0Yk6tPLA+yvp6GEVTwbPJ1g5r1bC6Ae2W/9Mj1eqcyk6QFgVI/IWZuBIAyC8vxA==}
     engines: {node: '>=10'}
     peerDependencies:
       vue: ^3.2.0
     dependencies:
+      '@tanstack/vue-virtual': 3.0.0-beta.60(vue@3.3.4)
       vue: 3.3.4
     dev: false
 
@@ -1113,6 +1114,19 @@ packages:
 
   /@stefanprobst/object@1.2.0:
     resolution: {integrity: sha512-m/hU0nrTfExMu+ZjGHmd5m7p8Ttj9PRL8F9QwWP4V45vmjlZ0Gij+ZIHCVJ3d6QIw8usjf97BFfOQ5NwCbvreA==}
+    dev: false
+
+  /@tanstack/virtual-core@3.0.0-beta.60:
+    resolution: {integrity: sha512-QlCdhsV1+JIf0c0U6ge6SQmpwsyAT0oQaOSZk50AtEeAyQl9tQrd6qCHAslxQpgphrfe945abvKG8uYvw3hIGA==}
+    dev: false
+
+  /@tanstack/vue-virtual@3.0.0-beta.60(vue@3.3.4):
+    resolution: {integrity: sha512-sJdNB4IAHzM8a4rEozQlp7RjXJ/0nFf9tIaJNfJ1mCygORCmoJBBoepvkVSgzPLxJROQNNNm2sSlp+2d+R15rw==}
+    peerDependencies:
+      vue: ^2.7.0 || ^3.0.0
+    dependencies:
+      '@tanstack/virtual-core': 3.0.0-beta.60
+      vue: 3.3.4
     dev: false
 
   /@tsconfig/node10@1.0.9:
@@ -2861,7 +2875,7 @@ packages:
       eslint: 8.49.0
       eslint-import-resolver-node: 0.3.7
       eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.7.0)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.6.0)(eslint@8.49.0)
-      get-tsconfig: 4.6.2
+      get-tsconfig: 4.7.0
       is-glob: 4.0.3
       minimatch: 3.1.2
       resolve: 1.22.3

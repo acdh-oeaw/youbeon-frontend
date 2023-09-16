@@ -12,7 +12,6 @@ import {
 	ChevronUpDownIcon as SelectorIcon,
 	XMarkIcon,
 } from "@heroicons/vue/20/solid";
-import { useVirtualList } from "@vueuse/core";
 import { computed, ref } from "vue";
 
 interface Item {
@@ -73,11 +72,6 @@ const visibleItems = computed(() => {
 	return visibleItems;
 });
 
-const { list, containerProps, wrapperProps } = useVirtualList(visibleItems, {
-	itemHeight: 36,
-	overscan: 10,
-});
-
 const placeholder = "Suche nach...";
 const nothingFoundMessage = "Nichts gefunden.";
 
@@ -94,6 +88,7 @@ function getTagStyle(key: Item["key"]) {
 		multiple
 		as="div"
 		class="relative"
+		:virtual="true"
 		@update:model-value="onChangeSelection"
 	>
 		<div class="grid gap-y-1">
@@ -139,7 +134,7 @@ function getTagStyle(key: Item["key"]) {
 			leave-to-class="opacity-0"
 		>
 			<combobox-options
-				class="absolute z-overlay mt-1 w-full rounded-md bg-neutral-0 py-1 text-sm shadow-lg ring-1 ring-neutral-1000/5 focus:outline-none"
+				class="absolute z-overlay mt-1 max-h-80 min-h-[40px] w-full overflow-auto rounded-md bg-neutral-0 py-1 text-sm shadow-lg ring-1 ring-neutral-1000/5 focus:outline-none"
 			>
 				<div
 					v-if="searchTerm !== '' && visibleItems.length === 0"
@@ -147,26 +142,29 @@ function getTagStyle(key: Item["key"]) {
 				>
 					{{ nothingFoundMessage }}
 				</div>
-				<div v-bind="containerProps" style="height: 100%" class="max-h-80 overflow-auto">
-					<div v-bind="wrapperProps">
-						<combobox-option
-							v-for="{ data: item } of list"
-							v-slot="{ selected }"
-							:key="item.key"
-							:value="item.key"
-							class="relative cursor-default select-none py-2 pl-10 pr-4 ui-active:bg-primary-100 ui-active:text-primary-900"
-							style="height: 36px"
+				<combobox-option
+					v-for="(item, index) of visibleItems"
+					v-slot="{ selected, active }"
+					:key="item.key"
+					as="template"
+					:value="item.key"
+					:order="index"
+				>
+					<li
+						class="relative w-full cursor-default select-none py-2 pl-10 pr-4"
+						:class="{ 'bg-primary-100 text-primary-900': active }"
+					>
+						<span class="block truncate" :class="{ 'font-medium': selected }">
+							{{ item.label }}
+						</span>
+						<span
+							v-if="selected"
+							class="absolute inset-y-0 left-0 grid place-items-center pl-3 text-primary-600"
 						>
-							<span class="block truncate ui-selected:font-medium">{{ item.label }}</span>
-							<span
-								v-if="selected"
-								class="absolute inset-y-0 left-0 grid place-items-center pl-3 text-primary-600"
-							>
-								<check-mark-icon aria-hidden="true" class="h-5 w-5" />
-							</span>
-						</combobox-option>
-					</div>
-				</div>
+							<check-mark-icon aria-hidden="true" class="h-5 w-5" />
+						</span>
+					</li>
+				</combobox-option>
 			</combobox-options>
 		</transition>
 	</combobox>
