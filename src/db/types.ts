@@ -1,4 +1,4 @@
-interface ResourceBase {
+export interface ResourceBase {
 	key: string;
 	label: string;
 }

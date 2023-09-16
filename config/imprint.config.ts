@@ -10,7 +10,7 @@ envFileNames.forEach((envFileName) => {
 	config({ path: join(process.cwd(), envFileName) });
 });
 
-const redmineId = process.env["REDMINE_ID"];
+const redmineId = process.env.REDMINE_ID;
 const locale = metadata.locale;
 
 assert(

@@ -10,9 +10,7 @@ const _props = defineProps<{
 	isOpen: boolean;
 }>();
 
-const emit = defineEmits<{
-	(event: "close-panel"): void;
-}>();
+const emit = defineEmits<(event: "close-panel") => void>();
 
 /**
  * Intended behavior is similar to a popover, which must be closed intentionally:

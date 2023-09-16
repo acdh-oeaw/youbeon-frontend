@@ -21,9 +21,7 @@ const props = defineProps<{
 	modelValue: Item["key"];
 	label: string;
 }>();
-const emit = defineEmits<{
-	(event: "update:model-value", selectedKey: Item["key"]): void;
-}>();
+const emit = defineEmits<(event: "update:model-value", selectedKey: Item["key"]) => void>();
 
 function getDisplayLabel(selectedKey: Item["key"]) {
 	return props.items.get(selectedKey)?.label ?? "";

@@ -3,7 +3,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { ChevronDownIcon } from "@heroicons/vue/20/solid";
 import { computed } from "vue";
 
-import { type Resource } from "@/db/types";
+import type { Resource } from "@/db/types";
 
 const props = defineProps<{
 	keys: Set<Resource["key"]> | undefined;

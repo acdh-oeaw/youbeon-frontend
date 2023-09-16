@@ -26,9 +26,7 @@ const props = defineProps<{
 	label: string;
 	getTagColor?: (key: Item["key"]) => string;
 }>();
-const emit = defineEmits<{
-	(event: "update:model-value", selectedKeys: Array<Item["key"]>): void;
-}>();
+const emit = defineEmits<(event: "update:model-value", selectedKeys: Array<Item["key"]>) => void>();
 
 function getDisplayLabel(selectedKey: unknown) {
 	return props.items.get(selectedKey as Item["key"])?.label ?? "";

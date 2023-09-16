@@ -9,8 +9,7 @@ import FiltersPanel from "@/components/filters-panel.vue";
 import InfoDialog from "@/components/info-dialog.vue";
 import MainContent from "@/components/main-content.vue";
 import MultiCombobox from "@/components/multi-combobox.vue";
-import { type Graph } from "@/components/network-graph.vue";
-import NetworkGraph from "@/components/network-graph.vue";
+import NetworkGraph, { type Graph } from "@/components/network-graph.vue";
 import SingleSelect from "@/components/single-select.vue";
 import VisualisationContainer from "@/components/visualisation-container.vue";
 import {
@@ -19,13 +18,7 @@ import {
 	highlightedNodeColors,
 } from "@/config/network-graph.config";
 import { accounts, ideas, interviewReligions, interviews, places } from "@/db";
-import {
-	type Idea,
-	type InterviewReligion,
-	type Resource,
-	type ResourceKeyMap,
-	type ResourceMap,
-} from "@/db/types";
+import type { Idea, InterviewReligion, Resource, ResourceKeyMap, ResourceMap } from "@/db/types";
 
 //
 
@@ -38,7 +31,6 @@ ideas.forEach((idea) => {
 	graph.nodes.dynamic.push({ key: idea.key, label: idea.label, kind: idea.kind });
 
 	idea.interviews.forEach((key) => {
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const religion = interviews.get(key)!.religion;
 		graph.edges.push({ source: religion, target: idea.key });
 	});
@@ -162,7 +154,6 @@ function syncFiltersWithSearchParams() {
 		ideaFilterItems[detailsKind].has(detailsId)
 	) {
 		selectedEntity.value = {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			entity: ideaFilterItems[detailsKind].get(detailsId)!,
 			kind: detailsKind,
 		} as { entity: Idea; kind: "idea" } | { entity: InterviewReligion; kind: "interview-religion" };
@@ -180,20 +171,20 @@ watch(
 );
 
 function onClickNode(key: Resource["key"], kind: Resource["kind"]) {
-	router.push({ query: { ...route.query, "details-id": key, "details-kind": kind } });
+	void router.push({ query: { ...route.query, "details-id": key, "details-kind": kind } });
 }
 
 function onChangeIdeaFilterKind(kind: string) {
-	router.push({ query: { ...route.query, kind: kind as IdeaFilterKind } });
+	void router.push({ query: { ...route.query, kind: kind as IdeaFilterKind } });
 }
 
 function onChangeIdeaFilters(id: Array<Resource["key"]>) {
-	router.push({ query: { ...route.query, id } });
+	void router.push({ query: { ...route.query, id } });
 }
 
 function onCloseDetailsPanel() {
 	const { "details-id": _, "details-kind": __, ...query } = route.query;
-	router.push({ query });
+	void router.push({ query });
 }
 
 function getColor() {

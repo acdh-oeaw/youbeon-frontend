@@ -8,7 +8,7 @@ import { format } from "prettier";
 import { url } from "../config/imprint.config";
 
 async function generate() {
-	const html = await request(url, { responseType: "text" });
+	const html = (await request(url, { responseType: "text" })) as string;
 
 	const view = await format(
 		`

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { forceCollide } from "d3";
-import { type LinkObject, type NodeObject } from "force-graph";
-import ForceGraph from "force-graph";
+import ForceGraph, { type LinkObject, type NodeObject } from "force-graph";
 import { onMounted, onUnmounted, ref, watch } from "vue";
 
 import ZoomControls from "@/components/zoom-controls.vue";
@@ -27,9 +26,8 @@ const props = defineProps<{
 	highlightedEdgeStrokeColor: string;
 }>();
 
-const emit = defineEmits<{
-	(event: "click-node", node: NodeObject["key"], kind: NodeObject["kind"]): void;
-}>();
+const emit =
+	defineEmits<(event: "click-node", node: NodeObject["key"], kind: NodeObject["kind"]) => void>();
 
 //
 
@@ -60,7 +58,6 @@ function nodeValue(node: NodeObject) {
 function nodeColor(node: NodeObject) {
 	if (props.matched.has(node.key)) return highlightedNodeColors[node.kind].selected;
 	if (props.highlighted.has(node.key)) {
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		if (props.highlighted.get(node.key)! > 1) {
 			return highlightedNodeColors[node.kind].multiple;
 		}
@@ -91,7 +88,7 @@ const graph = ForceGraph();
 
 graph.d3Force("center", null);
 // graph.d3Force('charge').strength(-100)
-graph.d3Force("link")?.["distance"](50);
+graph.d3Force("link")?.distance(50);
 graph.d3Force(
 	"collision",
 	forceCollide<NodeObject>().radius((node) => {
@@ -120,7 +117,7 @@ graph.nodeCanvasObject((node, ctx, globalScale) => {
 	 */
 	if (node.key === props.selected?.key) {
 		ctx.beginPath();
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 		ctx.arc(node.x!, node.y!, nodeValue(node) * nodeRelativeSize + 2, 0, 360);
 		ctx.strokeStyle = "black";
 		ctx.lineWidth = 2;
@@ -142,9 +139,8 @@ graph.nodeCanvasObject((node, ctx, globalScale) => {
 		return n + fontSize * 0.25; /** padding */
 	}) as [number, number];
 
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const x = node.x!;
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 	const y = node.y!;
 
 	ctx.fillStyle = "#ffffff7f"; // nodeColor(node)
@@ -162,7 +158,7 @@ graph.nodePointerAreaPaint((node, color, ctx) => {
 	ctx.fillStyle = color;
 
 	ctx.beginPath();
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 	ctx.arc(node.x!, node.y!, nodeValue(node) * nodeRelativeSize + 2, 0, 360);
 	ctx.fill();
 
@@ -172,7 +168,7 @@ graph.nodePointerAreaPaint((node, color, ctx) => {
 	 * Increase clickable area for `interview-religion` nodes to include the text label.
 	 */
 	const dimensions = node.__dimensions as [number, number];
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 	ctx.fillRect(node.x! - dimensions[0] / 2, node.y! - dimensions[1] / 2, ...dimensions);
 });
 graph.enableNodeDrag(false);
@@ -258,7 +254,7 @@ watch(
 			return props.highlighted.has(source) || props.highlighted.has(target) ? 1 : -1;
 		});
 		const dynamic = props.graph.nodes.dynamic.slice().sort((a) => {
-			const key = typeof a === "string" ? a : (a as NodeObject).key;
+			const key = typeof a === "string" ? a : a.key;
 
 			return props.highlighted.has(key) ? 1 : -1;
 		});
@@ -269,7 +265,6 @@ watch(
 //
 
 onMounted(() => {
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	graph(element.value!);
 });
 

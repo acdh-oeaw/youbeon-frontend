@@ -4,14 +4,7 @@ import { interviewReligions as _interviewReligions } from "@/db/interviewReligio
 import { interviews as _interviews } from "@/db/interviews";
 import { places as _places } from "@/db/places";
 import { religions as _religions } from "@/db/religions";
-import {
-	type Account,
-	type Idea,
-	type Interview,
-	type InterviewReligion,
-	type Place,
-	type Religion,
-} from "@/db/types";
+import type { Account, Idea, Interview, InterviewReligion, Place, Religion } from "@/db/types";
 
 export const accounts = _accounts as Map<Account["key"], Account>;
 export const ideas = _ideas as Map<Idea["key"], Idea>;
