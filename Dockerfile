@@ -13,7 +13,7 @@ COPY --chown=node:node .npmrc package.json pnpm-lock.yaml ./
 
 RUN pnpm fetch
 
-COPY --chown=node:node env.d.ts index.html tailwind.config.cjs tsconfig.json tsconfig.node.json vite.config.ts ./
+COPY --chown=node:node env.d.ts index.html tailwind.config.ts tsconfig.json vite.config.ts ./
 COPY --chown=node:node scripts ./scripts
 COPY --chown=node:node public ./public
 COPY --chown=node:node config ./config
