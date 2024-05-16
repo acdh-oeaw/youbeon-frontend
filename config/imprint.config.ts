@@ -10,12 +10,12 @@ envFileNames.forEach((envFileName) => {
 	config({ path: join(process.cwd(), envFileName) });
 });
 
-const redmineId = process.env.REDMINE_ID;
+const redmineId = process.env.VITE_APP_REDMINE_ID;
 const locale = metadata.locale;
 
 assert(
 	redmineId != null,
-	"Please set the REDMINE_ID environment variable to the redmine service issue id.",
+	"Please set the VITE_APP_REDMINE_ID environment variable to the redmine service issue id.",
 );
 
 export const url = createUrl({

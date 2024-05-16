@@ -21,10 +21,10 @@ COPY --chown=node:node src ./src
 COPY --chown=node:node data ./data
 COPY --chown=node:node patches ./patches
 
-ARG REDMINE_ID
 ARG VITE_APP_BASE_URL
 ARG VITE_APP_MATOMO_BASE_URL
 ARG VITE_APP_MATOMO_ID
+ARG VITE_APP_REDMINE_ID
 
 RUN pnpm install --frozen-lockfile --offline
 
