@@ -10,6 +10,7 @@ WORKDIR /app
 USER node
 
 COPY --chown=node:node .npmrc package.json pnpm-lock.yaml ./
+COPY --chown=node:node patches ./patches
 
 RUN pnpm fetch
 
@@ -19,7 +20,6 @@ COPY --chown=node:node public ./public
 COPY --chown=node:node config ./config
 COPY --chown=node:node src ./src
 COPY --chown=node:node data ./data
-COPY --chown=node:node patches ./patches
 
 ARG VITE_APP_BASE_URL
 ARG VITE_APP_MATOMO_BASE_URL
