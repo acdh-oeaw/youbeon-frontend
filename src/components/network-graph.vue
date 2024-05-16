@@ -265,6 +265,7 @@ watch(
 //
 
 onMounted(() => {
+	// @ts-expect-error It's fine.
 	graph(element.value!);
 });
 

@@ -80,6 +80,10 @@ function getTagStyle(key: Item["key"]) {
 	if (bg == null) return {};
 	return { "--tag-color": bg, color: "white" };
 }
+
+const virtual = computed(() => {
+	return { options: visibleItems.value };
+});
 </script>
 
 <template>
@@ -88,7 +92,7 @@ function getTagStyle(key: Item["key"]) {
 		multiple
 		as="div"
 		class="relative"
-		:virtual="true"
+		:virtual="virtual"
 		@update:model-value="onChangeSelection"
 	>
 		<div class="grid gap-y-1">
@@ -134,6 +138,7 @@ function getTagStyle(key: Item["key"]) {
 			leave-to-class="opacity-0"
 		>
 			<combobox-options
+				v-slot="{ option: item }"
 				class="absolute z-overlay mt-1 max-h-80 min-h-[40px] w-full overflow-auto rounded-md bg-neutral-0 py-1 text-sm shadow-lg ring-1 ring-neutral-1000/5 focus:outline-none"
 			>
 				<div
@@ -142,14 +147,7 @@ function getTagStyle(key: Item["key"]) {
 				>
 					{{ nothingFoundMessage }}
 				</div>
-				<combobox-option
-					v-for="(item, index) of visibleItems"
-					v-slot="{ selected, active }"
-					:key="item.key"
-					as="template"
-					:value="item.key"
-					:order="index"
-				>
+				<combobox-option v-slot="{ selected, active }" as="template" :value="item">
 					<li
 						class="relative w-full cursor-default select-none py-2 pl-10 pr-4"
 						:class="{ 'bg-primary-100 text-primary-900': active }"

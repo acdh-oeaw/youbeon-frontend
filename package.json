@@ -4,10 +4,10 @@
 	"license": "MIT",
 	"type": "module",
 	"engines": {
-		"node": "18.x",
+		"node": "20.x",
 		"pnpm": "8.x"
 	},
-	"packageManager": "pnpm@8.7.5",
+	"packageManager": "pnpm@8.15.5",
 	"scripts": {
 		"build": "vite build",
 		"dev": "vite --port 3000",
@@ -33,15 +33,15 @@
 		"@acdh-oeaw/lib": "^0.1.6",
 		"@fontsource-variable/noto-sans-display": "^5.0.9",
 		"@headlessui/tailwindcss": "^0.2.0",
-		"@headlessui/vue": "insiders",
+		"@headlessui/vue": "^1.7.22",
 		"@heroicons/vue": "^2.0.18",
 		"@stefanprobst/object": "^1.2.0",
 		"d3": "^7.8.5",
 		"force-graph": "^1.43.4",
 		"leaflet": "^1.9.4",
 		"nprogress": "^0.2.0",
-		"vue": "^3.3.4",
-		"vue-router": "^4.2.4"
+		"vue": "^3.4.27",
+		"vue-router": "^4.3.2"
 	},
 	"devDependencies": {
 		"@acdh-oeaw/commitlint-config": "^1.0.0",
