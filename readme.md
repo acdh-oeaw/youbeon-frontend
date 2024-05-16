@@ -4,6 +4,9 @@ Web frontend for the [YouBeOn - Young Believers Online](https://youbeon.eu) proj
 
 Deployed at <https://app.youbeon.eu>.
 
+Temporarily deployed to <https://youbeon-frontend.acdh-ch-dev.oeaw.ac.at>, because the `youbeon.eu`
+domain has expired.
+
 Made with [`Vue`](https://vuejs.org/), built with [`Vite`](https://vitejs.dev/).
 
 ## Prerequisites
