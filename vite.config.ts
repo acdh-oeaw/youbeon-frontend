@@ -134,4 +134,7 @@ export default defineConfig({
 			"~": process.cwd(),
 		},
 	},
+	server: {
+		port: 3000,
+	},
 });
