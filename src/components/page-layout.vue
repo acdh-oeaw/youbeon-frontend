@@ -5,10 +5,10 @@ import PageHeader from "@/components/page-header.vue";
 
 <template>
 	<div class="grid min-h-full grid-rows-[1fr_auto]">
-		<page-header />
+		<PageHeader />
 		<div class="pt-[64px]">
 			<slot />
 		</div>
-		<page-footer />
+		<PageFooter />
 	</div>
 </template>

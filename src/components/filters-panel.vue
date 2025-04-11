@@ -16,24 +16,24 @@ const filterPanelId = "search-filters";
 		class="absolute inset-x-0 top-0 z-dialog hidden border-b-4 bg-background p-4 shadow-lg sm:flex"
 		:class="colors.borderColor[0]"
 	>
-		<filter-panel-form v-bind="$attrs">
+		<FilterPanelForm v-bind="$attrs">
 			<slot />
-		</filter-panel-form>
+		</FilterPanelForm>
 	</div>
 
 	<div class="sm:hidden">
 		<button
-			:aria-expanded="isOpen"
 			:aria-controls="filterPanelId"
+			:aria-expanded="isOpen"
 			aria-label="Suchfilter anzeigen"
-			class="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full text-neutral-0 shadow-xl"
+			class="absolute right-4 top-4 grid size-10 place-items-center rounded-full text-neutral-0 shadow-xl"
 			:class="colors.backgroundColor[0]"
 			@click="isOpen = true"
 		>
-			<magnifying-glass-icon aria-hidden="true" class="h-5 w-5" />
+			<MagnifyingGlassIcon aria-hidden="true" class="size-5" />
 		</button>
 		<div v-if="isOpen">
-			<transition
+			<Transition
 				appear
 				enter-active-class="transition duration-300 ease-out"
 				enter-from-class="opacity-0 scale-95"
@@ -49,16 +49,16 @@ const filterPanelId = "search-filters";
 				>
 					<button
 						aria-label="Suchfilter verbergen"
-						class="absolute right-0 top-0 z-10 grid h-10 w-10 place-items-center"
+						class="absolute right-0 top-0 z-10 grid size-10 place-items-center"
 						@click="isOpen = false"
 					>
-						<close-icon aria-hidden="true" class="h-5 w-5" />
+						<CloseIcon aria-hidden="true" class="size-5" />
 					</button>
-					<filter-panel-form v-bind="$attrs">
+					<FilterPanelForm v-bind="$attrs">
 						<slot />
-					</filter-panel-form>
+					</FilterPanelForm>
 				</div>
-			</transition>
+			</Transition>
 		</div>
 	</div>
 </template>

@@ -12,8 +12,8 @@ const offset = c - (1 / 4) * c;
 <template>
 	<svg
 		:aria-label="label"
-		:aria-valuemin="0"
 		:aria-valuemax="100"
+		:aria-valuemin="0"
 		class="grid place-items-center"
 		fill="none"
 		:height="size"

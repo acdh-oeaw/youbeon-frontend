@@ -14,7 +14,7 @@ import PreviewCard from "@/components/preview-card.vue";
 				</p>
 			</div>
 			<div class="grid items-start gap-12 md:grid-cols-3">
-				<preview-card title="Orte" color="bg-brand-red">
+				<PreviewCard color="bg-brand-red" title="Orte">
 					Die Ebene der Orte zeigt Orte der Religionsausübung sowie nicht-religiöse Orte, die
 					unseren Interviewteilnehmer*innen wichtig waren. Außerdem kann man hier die mit den Orten
 					assoziierte Ideen erkunden, sehen welche Religionsgruppen welche Orte genannt haben und wo
@@ -22,15 +22,15 @@ import PreviewCard from "@/components/preview-card.vue";
 					spezifischen Punkt auf der Landkarte verortet ist, können dabei Gebiete unterschiedlicher
 					Größe angezeigt werden, z.B. Bezirke (Innere Stadt, 1.Bezirk) oder Dörfer (Hacibektas,
 					Neveshir, Türkei)
-				</preview-card>
-				<preview-card title="Accounts" color="bg-brand-cyan">
+				</PreviewCard>
+				<PreviewCard color="bg-brand-cyan" title="Accounts">
 					Die Ebene der Accounts zeigt die wichtigsten Accounts, denen unsere
 					Interviewteilnehmer*innen auf der Plattform Instagram folgen. Die Accounts sind nach
 					Religionsgruppen geclustert. In der Mitte befinden sich Accounts, die bei mehr als einer
 					Religion vorkommen. Die Verbindung von einem Account zu einer Religion bedeutet, dass
 					mindestens eine Person aus dieser Religionstradition diesem Account folgt.
-				</preview-card>
-				<preview-card title="Ideen" color="bg-brand-yellow">
+				</PreviewCard>
+				<PreviewCard color="bg-brand-yellow" title="Ideen">
 					Die Ebene der Ideen zeigt die Begriffe und Konzepte, die den Teilnehmenden wichtig sind.
 					Dazu hat das YouBeOn-Team Aussagen aus den Interviews systematisch aufgearbeitet und zu
 					"Ideen" verdichtet. Die Ideen sind nach Religionsgruppen geclustert. In der Mitte befinden
@@ -38,7 +38,7 @@ import PreviewCard from "@/components/preview-card.vue";
 					einer Religion bedeutet, dass mindestens ein*e Teilnehmer*in dieser Religionstradition
 					etwas zu dieser Idee geäußert hat. Bei Auswahl einer Idee werden damit assoziierte Ideen
 					und die Verbindungen zu den verknüpften Religionsgruppen gehighlightet.
-				</preview-card>
+				</PreviewCard>
 			</div>
 		</div>
 	</section>

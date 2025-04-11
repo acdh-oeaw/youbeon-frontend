@@ -7,7 +7,7 @@ import FaqDisclosure from "@/components/faq-disclosure.vue";
 		<div class="mx-auto grid max-w-5xl gap-12 px-8 py-16">
 			<h2 class="font-display text-xl font-bold sm:text-2xl">Fragen zur YouBeOn Map</h2>
 			<div class="grid gap-12">
-				<faq-disclosure title="Was ist die YouBeOn Map genau?">
+				<FaqDisclosure title="Was ist die YouBeOn Map genau?">
 					<p>
 						Die YouBeOn Map basiert auf qualitativen Interviews mit 41 jungen, religiösen Menschen
 						aus sieben verschiedenen Religionstraditionen. Diese Religionstraditionen sind
@@ -17,7 +17,7 @@ import FaqDisclosure from "@/components/faq-disclosure.vue";
 						ist ein Versuch die Lebenswelten der jungen Menschen durch das Zusammenspiel von drei
 						Ebenen abzubilden. Diese Ebenen sind
 					</p>
-					<ul role="list" class="list-disc pl-4">
+					<ul class="list-disc pl-4" role="list">
 						<li>
 							eine geographische Ebene. Diese zeigt Orte, die die Befragten genannt haben und zu
 							denen sie einen Bezug haben.
@@ -47,8 +47,8 @@ import FaqDisclosure from "@/components/faq-disclosure.vue";
 						Gottesbeziehung). Diese Ideen wurden vom Forscher*innenteam im Zuge der Datenanalyse
 						entwickelt.
 					</p>
-				</faq-disclosure>
-				<faq-disclosure title="Wie sind die YouBeOn Interviews abgelaufen?">
+				</FaqDisclosure>
+				<FaqDisclosure title="Wie sind die YouBeOn Interviews abgelaufen?">
 					<p>
 						Die Interviews wurden zwischen März und September 2021 geführt und waren in drei Teile
 						gegliedert. Der erste Teil war ein biographisch-narratives Interview, in welchem wir
@@ -59,8 +59,8 @@ import FaqDisclosure from "@/components/faq-disclosure.vue";
 						Orten gefragt (in Wien, aber auch weltweit), die für die Teilnehmer*innen eine besondere
 						Bedeutung haben oder in ihrem Alltag eine wichtige Rolle spielen.
 					</p>
-				</faq-disclosure>
-				<faq-disclosure title='Ist die YouBeOn Map eine "Landkarte der Religionen"?'>
+				</FaqDisclosure>
+				<FaqDisclosure title='Ist die YouBeOn Map eine "Landkarte der Religionen"?'>
 					<p>
 						Die YouBeOn Map gibt einen Einblick in vielfältige, individuelle Lebens- und
 						Glaubenswelten von jungen Wiener*innen. Durch unseren Fokus auf sieben
@@ -74,8 +74,8 @@ import FaqDisclosure from "@/components/faq-disclosure.vue";
 						Teilnehmer*innen zum Zeitpunkt des Interviews. Daher ist die YouBeOn Map keine
 						"Landkarte der Religionen".
 					</p>
-				</faq-disclosure>
-				<faq-disclosure title="Was kann ich aus der Karte erfahren?">
+				</FaqDisclosure>
+				<FaqDisclosure title="Was kann ich aus der Karte erfahren?">
 					<p>
 						Die YouBeOn Map zeigt, wo sich – bereits nach der Befragung von wenigen Personen –
 						Gemeinsamkeiten zwischen Personen unterschiedlicher Religionen abbilden, und zeigt Ideen
@@ -88,16 +88,16 @@ import FaqDisclosure from "@/components/faq-disclosure.vue";
 						Daten, die verwendet wurden, keinen Anspruch auf Vollständigkeit oder Repräsentativität
 						für die einzelnen Religionsgruppen.
 					</p>
-				</faq-disclosure>
-				<faq-disclosure title="Wird sich die YouBeOn Map im Laufe der Zeit verändern?">
+				</FaqDisclosure>
+				<FaqDisclosure title="Wird sich die YouBeOn Map im Laufe der Zeit verändern?">
 					<p>
 						Die YouBeOn Map veranschaulicht die on- und offline Lebenswelt der Teilnehmer*innen zum
 						Zeitpunkt der Interviews. Das heißt, auch wenn sich die Lebenswelt der Teilnehmer*innen
 						verändern, werden diese hier weiterhin unverändert abgebildet. Die YouBeOn Map ist somit
 						ein Snapshot eines bestimmten Zeitpunktes im Leben der Teilnehmer*innen.
 					</p>
-				</faq-disclosure>
-				<faq-disclosure title="Wie kann ich die YouBeOn Map durchsuchen?">
+				</FaqDisclosure>
+				<FaqDisclosure title="Wie kann ich die YouBeOn Map durchsuchen?">
 					<p>
 						Die YouBeOn Map kann auf unterschiedliche Weise navigiert werden. Zum Erforschen sind
 						vor allem das Suchfeld und das Pop-Up Menü wichtig. Zwischen den Ebenen kann außerdem
@@ -109,8 +109,8 @@ import FaqDisclosure from "@/components/faq-disclosure.vue";
 						entweder einzelne Orte, Ideen, oder Accounts zu suchen, oder alle Orte, Ideen, Accounts
 						einer Religionsgruppe anzuzeigen.
 					</p>
-				</faq-disclosure>
-				<faq-disclosure title="Was sehe ich im Pop-Up Menü?">
+				</FaqDisclosure>
+				<FaqDisclosure title="Was sehe ich im Pop-Up Menü?">
 					<p>
 						Das Pop-Up Menü zeigt Informationen zur eigenen Auswahl. Auf der Ebene der Ideen zeigt
 						es zu jeder Idee auch noch Zitate aus den Interviews, um die (teilweise abstrakten)
@@ -118,7 +118,7 @@ import FaqDisclosure from "@/components/faq-disclosure.vue";
 						einer Ebene auf eine andere Ebene zu springen, indem zB. ein verknüpfter Account
 						angeklickt wird.
 					</p>
-				</faq-disclosure>
+				</FaqDisclosure>
 			</div>
 		</div>
 	</section>

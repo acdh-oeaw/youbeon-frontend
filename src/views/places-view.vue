@@ -209,7 +209,7 @@ function onMapReady(leaflet: LeafletMap) {
 	 * Center the map when an initial place filter was set via search params.
 	 */
 	if (placeFilterKind.value === "place" && placeFilters.value.place.size > 0) {
-		const id = placeFilters.value.place.values().next().value;
+		const id = placeFilters.value.place.values().next().value!;
 		const place = places.get(id);
 		if (place?.coordinates) {
 			map.value.setView(place.coordinates);
@@ -262,7 +262,7 @@ function syncFiltersWithSearchParams() {
 				/**
 				 * Center the map on the first selected place.
 				 */
-				const id = keys.values().next().value;
+				const id = keys.values().next().value!;
 				const place = places.get(id);
 				if (place?.coordinates) {
 					if (map.value != null) {
@@ -369,30 +369,30 @@ function onCloseDetailsPanel() {
 </script>
 
 <template>
-	<main-content class="h-full overflow-hidden">
+	<MainContent class="h-full overflow-hidden">
 		<h1 class="sr-only">{{ $router.currentRoute.value.meta["title"] }}</h1>
 
-		<geo-map :layers="points.layers" @click-place="onClickPlace" @map-ready="onMapReady" />
+		<GeoMap :layers="points.layers" @click-place="onClickPlace" @map-ready="onMapReady" />
 
-		<filters-panel
+		<FiltersPanel
 			id="places-filters"
-			name="places-filters"
 			class="grid items-start gap-4 sm:grid-cols-[1fr_auto]"
+			name="places-filters"
 		>
-			<multi-combobox
-				name="active-places-filters"
-				:label="labeledPlaceFilterKinds.get(placeFilterKind)!.label"
+			<MultiCombobox
 				:get-tag-color="getColor"
 				:items="placeFilterItems[placeFilterKind]"
+				:label="labeledPlaceFilterKinds.get(placeFilterKind)!.label"
 				:model-value="Array.from(placeFilters[placeFilterKind])"
+				name="active-places-filters"
 				@update:model-value="onChangePlaceFilters"
 			/>
-			<single-select
-				:model-value="placeFilterKind"
+			<SingleSelect
+				class="min-w-32 flex-1"
 				:items="labeledPlaceFilterKinds"
-				name="places-filter-kind"
 				label="Filter-Kategorie"
-				class="min-w-[8rem] flex-1"
+				:model-value="placeFilterKind"
+				name="places-filter-kind"
 				@update:model-value="onChangePlaceFilterKind"
 			/>
 			<div v-if="points.matches > 0" class="flex items-center gap-2 text-xs">
@@ -400,39 +400,39 @@ function onCloseDetailsPanel() {
 				<span v-if="points.hasMultipleMatches">
 					Gemeinsame Orte
 					<span
-						class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
+						class="mx-1 inline-block size-2.5 rounded-full"
 						:style="{ backgroundColor: colors.multiple }"
 					/>
 				</span>
 			</div>
-		</filters-panel>
+		</FiltersPanel>
 
-		<details-panel
+		<DetailsPanel
 			:key="selectedEntity?.entity.key"
 			:is-open="selectedEntity != null && selectedEntity.kind === 'place'"
 			:title="selectedEntity?.entity.label"
 			@close-panel="onCloseDetailsPanel"
 		>
-			<details-panel-section
-				label="Verknüpfte Ideen"
-				:keys="selectedEntity?.entity.ideas"
+			<DetailsPanelSection
 				:items="ideas"
+				:keys="selectedEntity?.entity.ideas"
+				label="Verknüpfte Ideen"
 				route="ideas"
 			/>
-			<details-panel-section
-				label="Verknüpfte Religionsgruppen"
-				:keys="getInterviewReligions(selectedEntity?.entity.interviews)"
+			<DetailsPanelSection
 				:items="interviewReligions"
+				:keys="getInterviewReligions(selectedEntity?.entity.interviews)"
+				label="Verknüpfte Religionsgruppen"
 			/>
-			<details-panel-section
-				label="Verknüpfte Accounts"
-				:keys="selectedEntity?.entity.accounts"
+			<DetailsPanelSection
 				:items="accounts"
+				:keys="selectedEntity?.entity.accounts"
+				label="Verknüpfte Accounts"
 				route="accounts"
 			/>
-		</details-panel>
+		</DetailsPanel>
 
-		<info-dialog title="Info">
+		<InfoDialog title="Info">
 			<div>Klick auf Ort: hebt den Ort hervor und öffnet das Kontext-Menü</div>
 			<div>Suche nach Orten: hebt den gesuchten Ort hervor</div>
 			<div>
@@ -447,6 +447,6 @@ function onCloseDetailsPanel() {
 				Religionen assoziiert sind in der Farbe der Religionen; Orte, an denen sich mehrere der
 				ausgewählten Religionen "treffen", werden gesondert hervorgehoben
 			</div>
-		</info-dialog>
-	</main-content>
+		</InfoDialog>
+	</MainContent>
 </template>

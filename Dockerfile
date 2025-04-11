@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:20-slim AS build
+FROM node:22-slim AS build
 
 RUN corepack enable
 

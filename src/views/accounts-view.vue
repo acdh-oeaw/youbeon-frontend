@@ -186,42 +186,42 @@ function getColor() {
 </script>
 
 <template>
-	<main-content class="h-full overflow-hidden">
+	<MainContent class="h-full overflow-hidden">
 		<h1 class="sr-only">{{ $router.currentRoute.value.meta["title"] }}</h1>
 
-		<visualisation-container v-slot="{ width, height }">
-			<network-graph
-				:width="width"
-				:height="height"
+		<VisualisationContainer v-slot="{ width, height }">
+			<NetworkGraph
+				:edge-stroke-color="edgeStrokeColor.account"
 				:graph="graph"
+				:height="height"
 				:highlighted="highlighted.accounts"
+				:highlighted-edge-stroke-color="highlightedEdgeStrokeColor.account"
 				:matched="accountFilters[accountFilterKind]"
 				:selected="selectedEntity?.entity"
-				:edge-stroke-color="edgeStrokeColor.account"
-				:highlighted-edge-stroke-color="highlightedEdgeStrokeColor.account"
+				:width="width"
 				@click-node="onClickNode"
 			/>
-		</visualisation-container>
+		</VisualisationContainer>
 
-		<filters-panel
+		<FiltersPanel
 			id="accounts-filters"
-			name="accounts-filters"
 			class="grid items-start gap-4 sm:grid-cols-[1fr_auto]"
+			name="accounts-filters"
 		>
-			<multi-combobox
-				name="active-places-filters"
+			<MultiCombobox
 				:get-tag-color="getColor"
-				:label="labeledAccountFilterKinds.get(accountFilterKind)!.label"
 				:items="accountFilterItems[accountFilterKind]"
+				:label="labeledAccountFilterKinds.get(accountFilterKind)!.label"
 				:model-value="Array.from(accountFilters[accountFilterKind])"
+				name="active-places-filters"
 				@update:model-value="onChangeAccountFilters"
 			/>
-			<single-select
-				:model-value="accountFilterKind"
+			<SingleSelect
+				class="min-w-32 flex-1"
 				:items="labeledAccountFilterKinds"
-				name="accounts-filter-kind"
 				label="Filter-Kategorie"
-				class="min-w-[8rem] flex-1"
+				:model-value="accountFilterKind"
+				name="accounts-filter-kind"
 				@update:model-value="onChangeAccountFilterKind"
 			/>
 			<div v-if="highlighted.matches > 0" class="flex items-center gap-2 text-xs">
@@ -229,14 +229,14 @@ function getColor() {
 				<span v-if="highlighted.hasMultiple">
 					Gemeinsame Accounts
 					<span
-						class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
+						class="mx-1 inline-block size-2.5 rounded-full"
 						:style="{ backgroundColor: highlightedNodeColors.account.multiple }"
 					/>
 				</span>
 			</div>
-		</filters-panel>
+		</FiltersPanel>
 
-		<details-panel
+		<DetailsPanel
 			:key="selectedEntity?.entity.key"
 			:is-open="selectedEntity != null"
 			:title="selectedEntity?.entity.label"
@@ -249,18 +249,18 @@ function getColor() {
 					rel="noreferrer"
 					target="_blank"
 				>
-					<img alt="" class="h-5 w-5" src="@/assets/images/instagram.svg" />
+					<img alt="" class="size-5" src="@/assets/images/instagram.svg" />
 				</a>
 			</template>
-			<details-panel-section
-				label="Verknüpfte Ideen"
-				:keys="selectedEntity?.entity.ideas"
+			<DetailsPanelSection
 				:items="ideas"
+				:keys="selectedEntity?.entity.ideas"
+				label="Verknüpfte Ideen"
 				route="ideas"
 			/>
-		</details-panel>
+		</DetailsPanel>
 
-		<info-dialog title="Info">
+		<InfoDialog title="Info">
 			<div>Klick auf Account: hebt den Account hervor und öffnet das Kontext-Menü</div>
 			<div>Suche nach Accounts: hebt den gesuchten Account hervor</div>
 			<div>
@@ -272,6 +272,6 @@ function getColor() {
 				Religionen assoziiert sind; Accounts, die von mehreren der ausgewählten Religionen "geteilt"
 				werden, werden gesondert hervorgehoben
 			</div>
-		</info-dialog>
-	</main-content>
+		</InfoDialog>
+	</MainContent>
 </template>

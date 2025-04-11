@@ -20,10 +20,10 @@ const colors = useScreenColors();
 			class="mx-auto grid max-w-5xl grid-cols-[3rem_1fr] items-center gap-2.5 px-6 py-2 xxs:gap-4 xs:gap-8 xs:px-8"
 		>
 			<div>
-				<router-link :to="{ name: 'home' }">
+				<RouterLink :to="{ name: 'home' }">
 					<span class="sr-only">Startseite</span>
-					<img alt="" src="@/assets/images/logo.png" :width="48" :height="48" />
-				</router-link>
+					<img alt="" :height="48" src="@/assets/images/logo.png" :width="48" />
+				</RouterLink>
 			</div>
 			<nav>
 				<ul
@@ -31,16 +31,16 @@ const colors = useScreenColors();
 					role="list"
 				>
 					<li>
-						<router-link active-class="underline" :to="{ name: 'places' }">Orte</router-link>
+						<RouterLink active-class="underline" :to="{ name: 'places' }">Orte</RouterLink>
 					</li>
 					<li>
-						<router-link active-class="underline" :to="{ name: 'accounts' }">Accounts</router-link>
+						<RouterLink active-class="underline" :to="{ name: 'accounts' }">Accounts</RouterLink>
 					</li>
 					<li>
-						<router-link active-class="underline" :to="{ name: 'ideas' }">Ideen</router-link>
+						<RouterLink active-class="underline" :to="{ name: 'ideas' }">Ideen</RouterLink>
 					</li>
 					<li>
-						<router-link
+						<RouterLink
 							v-slot="{ href, isExactActive, navigate, route: to }"
 							custom
 							:to="{ name: 'home', hash: '#faq' }"
@@ -53,7 +53,7 @@ const colors = useScreenColors();
 							>
 								FAQ
 							</a>
-						</router-link>
+						</RouterLink>
 					</li>
 				</ul>
 			</nav>

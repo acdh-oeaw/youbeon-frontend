@@ -8,9 +8,8 @@ import {
 import { useScreenColors } from "@/lib/use-screen-colors";
 
 defineEmits<{
-	(event: "zoom-in"): void;
-	(event: "zoom-out"): void;
-	(event: "zoom-reset"): void;
+	// eslint-disable-next-line @typescript-eslint/prefer-function-type
+	(event: "zoom-in" | "zoom-out" | "zoom-reset"): void;
 }>();
 
 const colors = useScreenColors();
@@ -24,11 +23,11 @@ const colors = useScreenColors();
 				colors.borderColor[0],
 				colors.backgroundColor[1],
 				colors.hover.backgroundColor[0],
-				'grid h-8 w-8 place-items-center rounded-full border-2 shadow-lg transition',
+				'grid size-8 place-items-center rounded-full border-2 shadow-lg transition',
 			]"
 			@click="$emit('zoom-in')"
 		>
-			<zoom-in-icon aria-hidden="true" class="h-4 w-4" />
+			<ZoomInIcon aria-hidden="true" class="size-4" />
 		</button>
 		<button
 			aria-label="Zoom out"
@@ -36,11 +35,11 @@ const colors = useScreenColors();
 				colors.borderColor[0],
 				colors.backgroundColor[1],
 				colors.hover.backgroundColor[0],
-				'grid h-8 w-8 place-items-center rounded-full border-2 shadow-lg transition',
+				'grid size-8 place-items-center rounded-full border-2 shadow-lg transition',
 			]"
 			@click="$emit('zoom-out')"
 		>
-			<zoom-out-icon aria-hidden="true" class="h-4 w-4" />
+			<ZoomOutIcon aria-hidden="true" class="size-4" />
 		</button>
 		<button
 			aria-label="Reset zoom"
@@ -48,11 +47,11 @@ const colors = useScreenColors();
 				colors.borderColor[0],
 				colors.backgroundColor[1],
 				colors.hover.backgroundColor[0],
-				'grid h-8 w-8 place-items-center rounded-full border-2 shadow-lg transition',
+				'grid size-8 place-items-center rounded-full border-2 shadow-lg transition',
 			]"
 			@click="$emit('zoom-reset')"
 		>
-			<zoom-reset-icon aria-hidden="true" class="h-4 w-4" />
+			<ZoomResetIcon aria-hidden="true" class="size-4" />
 		</button>
 		<slot />
 	</aside>

@@ -33,15 +33,15 @@ const label = "Info";
 			colors.borderColor[0],
 			colors.backgroundColor[1],
 			colors.hover.backgroundColor[0],
-			'absolute bottom-4 left-4 z-overlay hidden h-12 w-12 place-items-center rounded-full border-2 shadow-lg transition xs:grid',
+			'absolute bottom-4 left-4 z-overlay hidden size-12 place-items-center rounded-full border-2 shadow-lg transition xs:grid',
 		]"
 		@click="toggle"
 	>
-		<information-circle-icon aria-hidden="true" class="h-6 w-6" />
+		<InformationCircleIcon aria-hidden="true" class="size-6" />
 	</button>
-	<transition-root appear :show="isOpen" as="template">
-		<dialog-root class="relative z-dialog" @close="toggle">
-			<transition-child
+	<TransitionRoot appear as="template" :show="isOpen">
+		<DialogRoot class="relative z-dialog" @close="toggle">
+			<TransitionChild
 				as="template"
 				enter="duration-300 ease-out"
 				enter-from="opacity-0"
@@ -51,10 +51,10 @@ const label = "Info";
 				leave-to="opacity-0"
 			>
 				<div class="fixed inset-0 bg-neutral-1000/30 transition" />
-			</transition-child>
+			</TransitionChild>
 
 			<div class="fixed inset-0 flex items-center justify-center p-4">
-				<transition-child
+				<TransitionChild
 					as="template"
 					enter="duration-300 ease-out"
 					enter-from="opacity-0 scale-95"
@@ -63,24 +63,24 @@ const label = "Info";
 					leave-from="opacity-100 scale-100"
 					leave-to="opacity-0 scale-95"
 				>
-					<dialog-panel
+					<DialogPanel
 						:class="[
 							colors.borderColor[0],
 							'grid w-full max-w-sm gap-4 rounded-lg border-4 bg-neutral-0 p-8 shadow-lg transition',
 						]"
 					>
 						<button aria-label="Close dialog" class="absolute right-4 top-4" @click="toggle">
-							<x-mark-icon aria-hidden="true" class="h-5 w-5" />
+							<XMarkIcon aria-hidden="true" class="size-5" />
 						</button>
-						<dialog-title class="font-display text-lg font-medium leading-tight">
+						<DialogTitle class="font-display text-lg font-medium leading-tight">
 							{{ title }}
-						</dialog-title>
+						</DialogTitle>
 						<div class="grid gap-4">
 							<slot :close="toggle" />
 						</div>
-					</dialog-panel>
-				</transition-child>
+					</DialogPanel>
+				</TransitionChild>
 			</div>
-		</dialog-root>
-	</transition-root>
+		</DialogRoot>
+	</TransitionRoot>
 </template>

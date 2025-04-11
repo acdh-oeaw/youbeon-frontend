@@ -57,6 +57,7 @@ export function useScreenColors(): Ref<Colors> {
 					break;
 				}
 
+				case undefined:
 				default:
 					colors.value = defaultColors;
 			}

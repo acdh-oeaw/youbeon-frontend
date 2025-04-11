@@ -9,7 +9,7 @@ import type { TransformedData } from "./transform-data";
 
 export async function saveData(data: TransformedData): Promise<void> {
 	for (const [key, value] of Object.entries(data)) {
-		const filePath = join(process.cwd(), "src", "db", key + ".ts");
+		const filePath = join(process.cwd(), "src", "db", `${key}.ts`);
 
 		const sorted = new Map(
 			[...(value as Map<string, ResourceBase>)].sort(([, a], [, z]) => {

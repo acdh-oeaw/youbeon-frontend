@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+
 import { log } from "@acdh-oeaw/lib";
 
 import type {

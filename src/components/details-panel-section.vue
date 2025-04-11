@@ -32,12 +32,12 @@ const sortedItems = computed(() => {
 </script>
 
 <template>
-	<disclosure v-if="keys != null && keys.size > 0" as="div" class="grid gap-2">
-		<disclosure-button class="flex items-center justify-between">
+	<Disclosure v-if="keys != null && keys.size > 0" as="div" class="grid gap-2">
+		<DisclosureButton class="flex items-center justify-between">
 			<h3 class="font-display text-sm font-medium text-neutral-600">{{ label }}</h3>
-			<chevron-down-icon aria-hidden="true" class="h-5 w-5 transition ui-open:rotate-180" />
-		</disclosure-button>
-		<transition
+			<ChevronDownIcon aria-hidden="true" class="size-5 transition ui-open:rotate-180" />
+		</DisclosureButton>
+		<Transition
 			enter-active-class="transition duration-100 ease-out"
 			enter-from-class="opacity-0"
 			enter-to-class="opacity-100"
@@ -45,19 +45,19 @@ const sortedItems = computed(() => {
 			leave-from-class="opacity-100"
 			leave-to-class="opacity-0"
 		>
-			<disclosure-panel>
-				<ul role="list" class="grid gap-0.5">
+			<DisclosurePanel>
+				<ul class="grid gap-0.5" role="list">
 					<li v-for="item of sortedItems" :key="item.key">
-						<router-link
+						<RouterLink
 							v-if="route != null"
 							:to="{ name: route, query: { id: [item.key], kind: item.kind } }"
 						>
 							{{ item.label }}
-						</router-link>
+						</RouterLink>
 						<span v-else>{{ item.label }}</span>
 					</li>
 				</ul>
-			</disclosure-panel>
-		</transition>
-	</disclosure>
+			</DisclosurePanel>
+		</Transition>
+	</Disclosure>
 </template>

@@ -1,3 +1,4 @@
+import headlessUiPlugin from "@headlessui/tailwindcss";
 import type { Config } from "tailwindcss";
 import colors from "tailwindcss/colors";
 
@@ -43,7 +44,7 @@ const config = {
 			},
 		},
 	},
-	plugins: [require("@headlessui/tailwindcss")],
+	plugins: [headlessUiPlugin],
 } satisfies Config;
 
 export default config;

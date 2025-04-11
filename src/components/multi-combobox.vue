@@ -17,6 +17,8 @@ import { computed, ref } from "vue";
 interface Item {
 	key: string;
 	label: string;
+	disabled?: boolean;
+	empty?: boolean;
 }
 
 const props = defineProps<{
@@ -46,8 +48,17 @@ function onRemoveSelectedKey(key: Item["key"]) {
 
 const searchTerm = ref("");
 
-function onChangeSelection(value: Array<Item["key"]>) {
-	emit("update:model-value", value);
+const selectedValues = computed<Array<Item>>(() => {
+	return props.modelValue.map((key) => {
+		return props.items.get(key)!;
+	});
+});
+
+function onChangeSelection(value: Array<Item>) {
+	emit(
+		"update:model-value",
+		value.map((item) => item.key),
+	);
 }
 
 const visibleItems = computed(() => {
@@ -81,24 +92,34 @@ function getTagStyle(key: Item["key"]) {
 	return { "--tag-color": bg, color: "white" };
 }
 
-const virtual = computed(() => {
-	return { options: visibleItems.value };
+const virtual = computed<{ options: Array<Item>; disabled: (item: unknown) => boolean }>(() => {
+	return {
+		options:
+			visibleItems.value.length > 0
+				? visibleItems.value
+				: [{ key: "_empty_", label: nothingFoundMessage, empty: true }],
+		disabled(item) {
+			const _item = item as Item;
+			return Boolean(_item.disabled || _item.empty);
+		},
+	};
 });
 </script>
 
 <template>
-	<combobox
-		:model-value="modelValue"
-		multiple
+	<Combobox
 		as="div"
+		by="key"
 		class="relative"
+		:model-value="selectedValues"
+		multiple
 		:virtual="virtual"
 		@update:model-value="onChangeSelection"
 	>
 		<div class="grid gap-y-1">
-			<combobox-label class="sr-only text-xs font-medium text-neutral-600">
+			<ComboboxLabel class="sr-only text-xs font-medium text-neutral-600">
 				{{ label }}
-			</combobox-label>
+			</ComboboxLabel>
 			<div
 				class="relative flex w-full cursor-default flex-wrap items-center overflow-hidden rounded-lg bg-neutral-0 text-left text-sm shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-0/75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300"
 			>
@@ -112,58 +133,68 @@ const virtual = computed(() => {
 						<span class="relative block truncate">{{ getDisplayLabel(key) }}</span>
 						<button class="relative" @click="onRemoveSelectedKey(key)">
 							<span class="sr-only">{{ getRemoveButtonDisplayLabel(key) }}</span>
-							<x-mark-icon aria-hidden="true" class="h-3 w-3" />
+							<XMarkIcon aria-hidden="true" class="size-3" />
 						</button>
 					</li>
 				</ul>
-				<div class="relative min-w-[12rem] flex-1">
-					<combobox-input
+				<div class="relative min-w-48 flex-1">
+					<ComboboxInput
 						autocomplete="off"
 						class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-neutral-900 focus-visible:outline-none"
 						:placeholder="placeholder"
 						:value="searchTerm"
 						@input="searchTerm = $event.target.value"
 					/>
-					<combobox-button
+					<ComboboxButton
 						class="absolute inset-y-0 right-0 flex items-center pr-2 text-neutral-400"
 					>
-						<selector-icon class="h-5 w-5" aria-hidden="true" />
-					</combobox-button>
+						<SelectorIcon aria-hidden="true" class="size-5" />
+					</ComboboxButton>
 				</div>
 			</div>
 		</div>
-		<transition
+		<Transition
 			leave-active-class="transition duration-100 ease-in"
 			leave-from-class="opacity-100"
 			leave-to-class="opacity-0"
 		>
-			<combobox-options
+			<ComboboxOptions
 				v-slot="{ option: item }"
 				class="absolute z-overlay mt-1 max-h-80 min-h-[40px] w-full overflow-auto rounded-md bg-neutral-0 py-1 text-sm shadow-lg ring-1 ring-neutral-1000/5 focus:outline-none"
 			>
-				<div
-					v-if="searchTerm !== '' && visibleItems.length === 0"
-					class="relative cursor-default select-none px-4 py-2 text-neutral-700"
-				>
-					{{ nothingFoundMessage }}
-				</div>
-				<combobox-option v-slot="{ selected, active }" as="template" :value="item">
-					<li
-						class="relative w-full cursor-default select-none py-2 pl-10 pr-4"
-						:class="{ 'bg-primary-100 text-primary-900': active }"
-					>
-						<span class="block truncate" :class="{ 'font-medium': selected }">
-							{{ item.label }}
-						</span>
-						<span
-							v-if="selected"
-							class="absolute inset-y-0 left-0 grid place-items-center pl-3 text-primary-600"
+				<template v-if="item.empty">
+					<ComboboxOption as="template" disabled :value="item">
+						<div
+							class="relative w-full cursor-default select-none py-2 pl-10 pr-4 italic text-neutral-700"
 						>
-							<check-mark-icon aria-hidden="true" class="h-5 w-5" />
-						</span>
-					</li>
-				</combobox-option>
-			</combobox-options>
-		</transition>
-	</combobox>
+							{{ item.label }}
+						</div>
+					</ComboboxOption>
+				</template>
+				<template v-else>
+					<ComboboxOption
+						v-slot="{ selected, active }"
+						as="template"
+						:disabled="item.disabled"
+						:value="item"
+					>
+						<li
+							class="relative w-full cursor-default select-none py-2 pl-10 pr-4"
+							:class="{ 'bg-primary-100 text-primary-900': active }"
+						>
+							<span class="block truncate" :class="{ 'font-medium': selected }">
+								{{ item.label }}
+							</span>
+							<span
+								v-if="selected"
+								class="absolute inset-y-0 left-0 grid place-items-center pl-3 text-primary-600"
+							>
+								<CheckMarkIcon aria-hidden="true" class="size-5" />
+							</span>
+						</li>
+					</ComboboxOption>
+				</template>
+			</ComboboxOptions>
+		</Transition>
+	</Combobox>
 </template>

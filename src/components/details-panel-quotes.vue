@@ -9,12 +9,12 @@ const _props = defineProps<{
 </script>
 
 <template>
-	<disclosure v-if="items != null && items.length > 0" as="div" class="grid gap-2">
-		<disclosure-button class="flex items-center justify-between">
+	<Disclosure v-if="items != null && items.length > 0" as="div" class="grid gap-2">
+		<DisclosureButton class="flex items-center justify-between">
 			<h3 class="font-display text-sm font-medium text-neutral-600">{{ label }}</h3>
-			<chevron-down-icon aria-hidden="true" class="h-5 w-5 transition ui-open:rotate-180" />
-		</disclosure-button>
-		<transition
+			<ChevronDownIcon aria-hidden="true" class="size-5 transition ui-open:rotate-180" />
+		</DisclosureButton>
+		<Transition
 			enter-active-class="transition duration-100 ease-out"
 			enter-from-class="opacity-0"
 			enter-to-class="opacity-100"
@@ -22,13 +22,13 @@ const _props = defineProps<{
 			leave-from-class="opacity-100"
 			leave-to-class="opacity-0"
 		>
-			<disclosure-panel>
-				<ul role="list" class="grid gap-2 leading-relaxed">
+			<DisclosurePanel>
+				<ul class="grid gap-2 leading-relaxed" role="list">
 					<li v-for="(item, index) of items" :key="index">
 						<span>{{ item }}</span>
 					</li>
 				</ul>
-			</disclosure-panel>
-		</transition>
-	</disclosure>
+			</DisclosurePanel>
+		</Transition>
+	</Disclosure>
 </template>
