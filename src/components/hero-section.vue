@@ -6,15 +6,15 @@ import hero from "@/assets/images/hero.jpg?format=webp";
 <template>
 	<section class="relative">
 		<div class="mx-auto max-w-6xl">
-			<router-link aria-label="Hier gehts zur YouBeOn Map" class="block" :to="{ name: 'places' }">
+			<RouterLink aria-label="Hier gehts zur YouBeOn Map" class="block" :to="{ name: 'places' }">
 				<img
 					alt=""
-					class="h-full w-full border border-brand-cyan object-cover"
-					:src="hero"
+					class="size-full border border-brand-cyan object-cover"
 					height="598"
+					:src="hero"
 					width="1152"
 				/>
-			</router-link>
+			</RouterLink>
 		</div>
 		<div class="relative mx-auto grid w-full max-w-5xl gap-8 p-8 sm:py-16">
 			<div class="grid gap-4">
@@ -29,7 +29,7 @@ import hero from "@/assets/images/hero.jpg?format=webp";
 				</h2>
 			</div>
 			<div
-				class="grid max-w-[56rem] gap-4 text-sm font-medium leading-relaxed text-neutral-700 xs:text-base xs:leading-relaxed sm:text-lg sm:leading-relaxed"
+				class="grid max-w-4xl gap-4 text-sm font-medium leading-relaxed text-neutral-700 xs:text-base xs:leading-relaxed sm:text-lg sm:leading-relaxed"
 			>
 				<p>
 					Die YouBeOn Map nimmt Sie mit in die Lebenswelten von 41 religiösen, jungen Menschen aus
@@ -41,12 +41,12 @@ import hero from "@/assets/images/hero.jpg?format=webp";
 			</div>
 			<div>
 				<iframe
-					class="aspect-video w-full"
-					src="https://www.youtube-nocookie.com/embed/xmTcc6694-E?rel=0"
-					title="Die YouBeOn Map"
-					frameborder="0"
 					allow="autoplay; encrypted-media; gyroscope; picture-in-picture"
 					allowfullscreen
+					class="aspect-video w-full"
+					frameborder="0"
+					src="https://www.youtube-nocookie.com/embed/xmTcc6694-E?rel=0"
+					title="Die YouBeOn Map"
 				/>
 			</div>
 		</div>

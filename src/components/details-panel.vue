@@ -41,7 +41,7 @@ const titleId = "popover-title";
 </script>
 
 <template>
-	<transition
+	<Transition
 		appear
 		enter-active-class="transition duration-300 ease-out"
 		enter-from-class="opacity-0 scale-95"
@@ -60,12 +60,12 @@ const titleId = "popover-title";
 		>
 			<div class="divide-neutral-200 overflow-hidden">
 				<div class="flex items-start justify-between gap-4 px-4 py-2">
-					<details-panel-title :id="titleId">
+					<DetailsPanelTitle :id="titleId">
 						{{ title }}
 						<slot name="link" />
-					</details-panel-title>
+					</DetailsPanelTitle>
 					<button aria-label="Close details panel" @click="onClose">
-						<x-mark-icon aria-hidden="true" class="h-5 w-5" />
+						<XMarkIcon aria-hidden="true" class="size-5" />
 					</button>
 				</div>
 				<div class="grid max-h-96 gap-4 overflow-auto p-4 text-sm">
@@ -73,5 +73,5 @@ const titleId = "popover-title";
 				</div>
 			</div>
 		</aside>
-	</transition>
+	</Transition>
 </template>

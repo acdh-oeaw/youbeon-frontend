@@ -38,7 +38,7 @@ generate()
 	.then(() => {
 		log.success("Successfully generated favicons.");
 	})
-	.catch((error) => {
+	.catch((error: unknown) => {
 		const message = String(error);
 		log.error("Failed to generate favicons.\n", message);
 	});

@@ -1,5 +1,5 @@
 <template>
-	<form novalidate role="search" class="mx-auto w-full max-w-4xl" @submit.prevent="">
+	<form class="mx-auto w-full max-w-4xl" novalidate role="search" @submit.prevent="">
 		<slot />
 	</form>
 </template>

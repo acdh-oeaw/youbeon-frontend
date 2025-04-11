@@ -78,7 +78,7 @@ function preloadDatabase(): Plugin {
 				return key.startsWith("assets/db.");
 			});
 			if (key == null) return undefined;
-			return [{ tag: "link", attrs: { rel: "modulepreload", href: "/" + key }, injectTo: "head" }];
+			return [{ tag: "link", attrs: { rel: "modulepreload", href: `/${key}` }, injectTo: "head" }];
 		},
 	};
 }

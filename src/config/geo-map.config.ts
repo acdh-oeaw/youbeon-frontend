@@ -44,7 +44,7 @@ function generateIdeaColors() {
 	const step = 360 / ideas.size;
 	const palette = shuffle(
 		range(ideas.size).map((index) => {
-			return `hsl(${Math.floor(step * index)}deg 50% 50%)`;
+			return `hsl(${String(Math.floor(step * index))}deg 50% 50%)`;
 		}),
 	);
 

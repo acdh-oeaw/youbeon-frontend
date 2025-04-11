@@ -153,16 +153,16 @@ function onFitWorld() {
 </script>
 
 <template>
-	<div id="map" class="h-full w-full"></div>
-	<zoom-controls @zoom-in="onZoomIn" @zoom-out="onZoomOut" @zoom-reset="onResetZoom">
+	<div id="map" class="size-full"></div>
+	<ZoomControls @zoom-in="onZoomIn" @zoom-out="onZoomOut" @zoom-reset="onResetZoom">
 		<button
 			aria-label="Fit to world"
-			class="grid h-8 w-8 place-items-center rounded-full border-2 border-brand-red bg-brand-red-tint shadow-lg transition hover:bg-brand-red"
+			class="grid size-8 place-items-center rounded-full border-2 border-brand-red bg-brand-red-tint shadow-lg transition hover:bg-brand-red"
 			@click="onFitWorld"
 		>
-			<map-icon aria-hidden="true" class="h-4 w-4" />
+			<MapIcon aria-hidden="true" class="size-4" />
 		</button>
-	</zoom-controls>
+	</ZoomControls>
 </template>
 
 <style>

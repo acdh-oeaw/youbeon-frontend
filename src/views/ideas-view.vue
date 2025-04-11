@@ -193,42 +193,42 @@ function getColor() {
 </script>
 
 <template>
-	<main-content class="h-full overflow-hidden">
+	<MainContent class="h-full overflow-hidden">
 		<h1 class="sr-only">{{ $router.currentRoute.value.meta["title"] }}</h1>
 
-		<visualisation-container v-slot="{ width, height }">
-			<network-graph
-				:width="width"
-				:height="height"
+		<VisualisationContainer v-slot="{ width, height }">
+			<NetworkGraph
+				:edge-stroke-color="edgeStrokeColor.idea"
 				:graph="graph"
+				:height="height"
 				:highlighted="highlighted.ideas"
+				:highlighted-edge-stroke-color="highlightedEdgeStrokeColor.idea"
 				:matched="ideaFilters[ideaFilterKind]"
 				:selected="selectedEntity?.entity"
-				:edge-stroke-color="edgeStrokeColor.idea"
-				:highlighted-edge-stroke-color="highlightedEdgeStrokeColor.idea"
+				:width="width"
 				@click-node="onClickNode"
 			/>
-		</visualisation-container>
+		</VisualisationContainer>
 
-		<filters-panel
+		<FiltersPanel
 			id="ideas-filters"
-			name="ideas-filters"
 			class="grid items-start gap-4 sm:grid-cols-[1fr_auto]"
+			name="ideas-filters"
 		>
-			<multi-combobox
-				name="active-places-filters"
+			<MultiCombobox
 				:get-tag-color="getColor"
-				:label="labeledIdeaFilterKinds.get(ideaFilterKind)!.label"
 				:items="ideaFilterItems[ideaFilterKind]"
+				:label="labeledIdeaFilterKinds.get(ideaFilterKind)!.label"
 				:model-value="Array.from(ideaFilters[ideaFilterKind])"
+				name="active-places-filters"
 				@update:model-value="onChangeIdeaFilters"
 			/>
-			<single-select
-				:model-value="ideaFilterKind"
+			<SingleSelect
+				class="min-w-32 flex-1"
 				:items="labeledIdeaFilterKinds"
-				name="ideas-filter-kind"
 				label="Filter-Kategorie"
-				class="min-w-[8rem] flex-1"
+				:model-value="ideaFilterKind"
+				name="ideas-filter-kind"
 				@update:model-value="onChangeIdeaFilterKind"
 			/>
 			<div v-if="highlighted.matches > 0" class="flex items-center gap-2 text-xs">
@@ -236,52 +236,52 @@ function getColor() {
 				<span v-if="highlighted.hasMultiple">
 					Gemeinsame Ideen
 					<span
-						class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
+						class="mx-1 inline-block size-2.5 rounded-full"
 						:style="{ backgroundColor: highlightedNodeColors.idea.multiple }"
 					/>
 				</span>
 				<span>
 					Verknüpfte Ideen
 					<span
-						class="mx-1 inline-block h-2.5 w-2.5 rounded-full"
+						class="mx-1 inline-block size-2.5 rounded-full"
 						:style="{ backgroundColor: highlightedNodeColors.idea.highlighted }"
 					/>
 				</span>
 			</div>
-		</filters-panel>
+		</FiltersPanel>
 
-		<details-panel
+		<DetailsPanel
 			:key="selectedEntity?.entity.key"
 			:is-open="selectedEntity != null"
 			:title="selectedEntity?.entity.label"
 			@close-panel="onCloseDetailsPanel"
 		>
-			<details-panel-section
-				label="Verknüpfte Accounts"
-				:keys="selectedEntity?.entity.accounts"
+			<DetailsPanelSection
 				:items="accounts"
+				:keys="selectedEntity?.entity.accounts"
+				label="Verknüpfte Accounts"
 				route="accounts"
 			/>
-			<details-panel-section
-				label="Verknüpfte Orte"
-				:keys="selectedEntity?.entity.places"
+			<DetailsPanelSection
 				:items="places"
+				:keys="selectedEntity?.entity.places"
+				label="Verknüpfte Orte"
 				route="places"
 			/>
-			<details-panel-section
-				label="Verknüpfte Ideen"
-				:keys="selectedEntity?.entity.ideas"
+			<DetailsPanelSection
 				:items="ideas"
+				:keys="selectedEntity?.entity.ideas"
+				label="Verknüpfte Ideen"
 				route="ideas"
 			/>
-			<details-panel-quotes
+			<DetailsPanelQuotes
 				v-if="selectedEntity?.kind === 'idea'"
-				label="Zitate"
 				:items="selectedEntity?.entity.quotes"
+				label="Zitate"
 			/>
-		</details-panel>
+		</DetailsPanel>
 
-		<info-dialog title="Info">
+		<InfoDialog title="Info">
 			<div>Klick auf Idee/Religionsgruppe: hebt den Knoten hervor und öffnet das Kontext-Menü</div>
 			<div>Suche nach Ideen: hebt die gesuchte Idee und damit assoziierte Ideen hervor</div>
 			<div>
@@ -293,6 +293,6 @@ function getColor() {
 				assoziiert sind in der Farbe der Religionen; Ideen, an denen sich mehrere der ausgewählten
 				Religionen "treffen", werden gesondert hervorgehoben
 			</div>
-		</info-dialog>
-	</main-content>
+		</InfoDialog>
+	</MainContent>
 </template>

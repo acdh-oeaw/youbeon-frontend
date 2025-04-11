@@ -1,8 +1,8 @@
 diff --git a/dist/force-graph.js b/dist/force-graph.js
-index fdc8e609384fc4c991073f1fc43b4cf322f88b3b..254128c3f41793e0914131bbf23c21153bfa54ca 100644
+index 88f1a19838b474a66d3398d3ad89637f5776cffa..d13254aee21288b7ac1b85ba0eb9ab13d4075a5a 100644
 --- a/dist/force-graph.js
 +++ b/dist/force-graph.js
-@@ -10845,10 +10845,7 @@
+@@ -11301,10 +11301,7 @@
            nodes: [],
            links: []
          },
@@ -10,15 +10,15 @@ index fdc8e609384fc4c991073f1fc43b4cf322f88b3b..254128c3f41793e0914131bbf23c2115
 -          state.engineRunning = false; // Pause simulation
 -          updDataPhotons(_, state);
 -        }
-+        triggerUpdate: false
++				triggerUpdate: false
        },
        dagMode: {
          onChange: function onChange(dagMode, state) {
 diff --git a/dist/force-graph.mjs b/dist/force-graph.mjs
-index 0fa712a82483ed98b0b9a65a7896ce66adeb8680..f00589f411d7aea8dfccaa1b8b931a1e0a4905f0 100644
+index 2691ecd053729500badf278f9d98a5ad301f291e..7313a04c12e7525212345a5c19b158e7c3eba98b 100644
 --- a/dist/force-graph.mjs
 +++ b/dist/force-graph.mjs
-@@ -320,10 +320,7 @@ var CanvasForceGraph = Kapsule({
+@@ -292,10 +292,7 @@ var CanvasForceGraph = Kapsule({
          nodes: [],
          links: []
        },
@@ -26,12 +26,12 @@ index 0fa712a82483ed98b0b9a65a7896ce66adeb8680..f00589f411d7aea8dfccaa1b8b931a1e
 -        state.engineRunning = false; // Pause simulation
 -        updDataPhotons(_, state);
 -      }
-+      triggerUpdate: false
++			triggerUpdate: false
      },
      dagMode: {
        onChange: function onChange(dagMode, state) {
 diff --git a/src/canvas-force-graph.js b/src/canvas-force-graph.js
-index 0ef79176726eebe3aa58a5d2af14fd8b1c5a31fb..d4576a2d27eaf778afccfdf62a6c3c41cdfdb2a9 100644
+index d7d1ac5b2fc628d135c1a8f38413e847043ffa93..fcf04781083ea1099b1551f9f2cfef4ef2e06b8f 100644
 --- a/src/canvas-force-graph.js
 +++ b/src/canvas-force-graph.js
 @@ -44,10 +44,7 @@ export default Kapsule({
@@ -46,3 +46,18 @@ index 0ef79176726eebe3aa58a5d2af14fd8b1c5a31fb..d4576a2d27eaf778afccfdf62a6c3c41
      },
      dagMode: { onChange(dagMode, state) { // td, bu, lr, rl, radialin, radialout
        !dagMode && (state.graphData.nodes || []).forEach(n => n.fx = n.fy = undefined); // unfix nodes when disabling dag mode
+@@ -240,11 +237,11 @@ export default Kapsule({
+                 const start = link.source;
+                 const end = link.target;
+                 if (!start || !end || !start.hasOwnProperty('x') || !end.hasOwnProperty('x')) return; // skip invalid link
+-  
++
+                 ctx.moveTo(start.x, start.y);
+-  
++
+                 const controlPoints = link.__controlPoints;
+-  
++
+                 if (!controlPoints) { // Straight line
+                   ctx.lineTo(end.x, end.y);
+                 } else {

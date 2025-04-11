@@ -12,6 +12,6 @@ generate()
 	.then(() => {
 		log.success("Successfully generated database.");
 	})
-	.catch((error) => {
+	.catch((error: unknown) => {
 		log.error("Failed to generate database.\n", error);
 	});

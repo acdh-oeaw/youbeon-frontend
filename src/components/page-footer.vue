@@ -18,9 +18,9 @@ import { metadata } from "~/config/metadata.config";
 					</a>
 					{{ new Date().getUTCFullYear() }}
 				</small>
-				<router-link class="text-xs hover:text-neutral-0" :to="{ name: 'imprint' }">
+				<RouterLink class="text-xs hover:text-neutral-0" :to="{ name: 'imprint' }">
 					Impressum
-				</router-link>
+				</RouterLink>
 			</div>
 		</div>
 	</footer>

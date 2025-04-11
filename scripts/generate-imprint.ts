@@ -8,7 +8,7 @@ import { format } from "prettier";
 import { url } from "../config/imprint.config";
 
 async function generate() {
-	const html = (await request(url, { responseType: "text" })) as string;
+	const html = await request(url, { responseType: "text" });
 
 	const view = await format(
 		`
@@ -47,7 +47,7 @@ generate()
 	.then(() => {
 		log.success("Successfully generated imprint.");
 	})
-	.catch((error) => {
+	.catch((error: unknown) => {
 		const message = error instanceof HttpError ? error.response.statusText : String(error);
 		log.error("Failed to generate imprint.\n", message);
 	});

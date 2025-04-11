@@ -9,4 +9,5 @@ import { createApp } from "vue";
 import App from "@/app/app.vue";
 import { router } from "@/app/router";
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 createApp(App).use(router).mount("#app");

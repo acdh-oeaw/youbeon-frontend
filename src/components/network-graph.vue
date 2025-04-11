@@ -151,7 +151,7 @@ graph.nodeCanvasObject((node, ctx, globalScale) => {
 	ctx.fillStyle = "#333";
 	ctx.fillText(label, x, y);
 
-	// @ts-expect-error Used internally for passing dimensions to `nodePointerAreaPaint`.
+	// @ts-expect-error It's fine.
 	node.__dimensions = dimensions;
 });
 graph.nodePointerAreaPaint((node, color, ctx) => {
@@ -265,7 +265,6 @@ watch(
 //
 
 onMounted(() => {
-	// @ts-expect-error It's fine.
 	graph(element.value!);
 });
 
@@ -275,8 +274,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<div ref="element" data-graph="" class="grid h-full w-full" />
-	<zoom-controls @zoom-in="onZoomIn" @zoom-out="onZoomOut" @zoom-reset="onZoomToFit" />
+	<div ref="element" class="grid size-full" data-graph="" />
+	<ZoomControls @zoom-in="onZoomIn" @zoom-out="onZoomOut" @zoom-reset="onZoomToFit" />
 </template>
 
 <style>

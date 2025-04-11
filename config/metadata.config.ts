@@ -1,3 +1,5 @@
+import type { FitEnum } from "sharp";
+
 export const metadata = {
 	locale: "de",
 	title: "Young Believers Online",
@@ -9,7 +11,7 @@ export const metadata = {
 	},
 	image: {
 		href: "./src/assets/images/logo-with-background.png",
-		fit: "contain",
+		fit: "contain" as keyof FitEnum,
 	},
 	twitter: {
 		handle: "",
