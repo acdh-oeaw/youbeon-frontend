@@ -1,20 +1,22 @@
 # YouBeOn
 
-Web frontend for the [YouBeOn - Young Believers Online](https://youbeon.eu) project.
+Frontend for the [YouBeOn - Young Believers Online](https://youbeon.eu) project.
 
 Deployed at <https://app.youbeon.eu>.
 
-Temporarily deployed to <https://youbeon-frontend.acdh-ch-dev.oeaw.ac.at>, because the `youbeon.eu`
-domain has expired.
-
-Made with [`Vue`](https://vuejs.org/), built with [`Vite`](https://vitejs.dev/).
-
 ## Prerequisites
 
-Install [`Node.js v16`](https://nodejs.org/), and install project dependencies with:
+- [node.js v22](https://nodejs.org/en/download)
+- [pnpm v10](https://pnpm.io/installation)
+
+> [!TIP]
+>
+> You can use `pnpm` to install the required node.js version with `pnpm env use 22 --global`.
+
+Install project dependencies with:
 
 ```bash
-npm install
+pnpm install
 ```
 
 This will also generate (i) the JSON "database" in the `src/db` folder from `.xlsx` files in the
@@ -25,13 +27,13 @@ This will also generate (i) the JSON "database" in the `src/db` folder from `.xl
 Run a development server with:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 Preview a production build locally with:
 
 ```bash
-npm run build && npm run preview
+pnpm run build && pnpm run start
 ```
 
 ## Deployment

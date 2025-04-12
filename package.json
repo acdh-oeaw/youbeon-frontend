@@ -23,8 +23,8 @@
 		"lint:styles:check": "stylelint \"**/*.@(css|html|vue)\" --cache --ignore-path ./.gitignore",
 		"lint:styles:fix": "pnpm run lint:styles:check --fix",
 		"prepare": "run-s setup \"generate:*\"",
-		"preview": "vite preview --port 3000",
 		"setup": "is-ci || simple-git-hooks",
+		"start": "vite preview --port 3000",
 		"test": "exit 0",
 		"types:check": "vue-tsc",
 		"validate": "run-s format:check lint:check types:check test"
