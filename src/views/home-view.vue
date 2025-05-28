@@ -11,10 +11,10 @@ import TeamSection from "@/components/team-section.vue";
 <template>
 	<MainContent class="grid grid-rows-[auto_auto_1fr]">
 		<HeroSection />
+		<PreviewSection />
+		<FaqSection />
 		<ProjectSection />
 		<TeamSection />
 		<PublicationsSection />
-		<PreviewSection />
-		<FaqSection />
 	</MainContent>
 </template>
