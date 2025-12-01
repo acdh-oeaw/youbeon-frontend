@@ -5,3 +5,7 @@ onlyBuiltDependencies:
 
 patchedDependencies:
   force-graph: patches/force-graph.patch
+
+shellEmulator: true
+
+strictDepBuilds: true

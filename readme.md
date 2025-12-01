@@ -6,12 +6,12 @@ Deployed at <https://app.youbeon.eu>.
 
 ## Prerequisites
 
-- [node.js v22](https://nodejs.org/en/download)
+- [node.js v24](https://nodejs.org/en/download)
 - [pnpm v10](https://pnpm.io/installation)
 
 > [!TIP]
 >
-> You can use `pnpm` to install the required node.js version with `pnpm env use 22 --global`.
+> You can use `pnpm` to install the required node.js version with `pnpm env use 24 --global`.
 
 Install project dependencies with:
 
