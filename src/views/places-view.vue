@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import type { Map as LeafletMap } from "leaflet";
-import { computed, nextTick, ref, watch } from "vue";
+import type { Map as MapLibreMap } from "maplibre-gl";
+import { computed, nextTick, ref, shallowRef, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import DetailsPanel from "@/components/details-panel.vue";
@@ -200,10 +200,10 @@ const points = computed(() => {
 
 //
 
-const map = ref<LeafletMap | null>(null);
+const map = shallowRef<MapLibreMap | null>(null);
 
-function onMapReady(leaflet: LeafletMap) {
-	map.value = leaflet;
+function onMapReady(maplibre: MapLibreMap) {
+	map.value = maplibre;
 
 	/**
 	 * Center the map when an initial place filter was set via search params.
@@ -212,7 +212,7 @@ function onMapReady(leaflet: LeafletMap) {
 		const id = placeFilters.value.place.values().next().value!;
 		const place = places.get(id);
 		if (place?.coordinates) {
-			map.value.setView(place.coordinates);
+			map.value.setCenter(place.coordinates);
 		}
 	}
 }
@@ -266,10 +266,10 @@ function syncFiltersWithSearchParams() {
 				const place = places.get(id);
 				if (place?.coordinates) {
 					if (map.value != null) {
-						map.value.setView(place.coordinates);
+						map.value.setCenter(place.coordinates);
 					} else {
 						void nextTick(() => {
-							map.value?.setView(place.coordinates);
+							map.value?.setCenter(place.coordinates);
 						});
 					}
 				}
@@ -290,19 +290,19 @@ function syncFiltersWithSearchParams() {
 					if (map.value != null) {
 						map.value.fitBounds(
 							[
-								[Math.min(...lat), Math.min(...lng)],
-								[Math.max(...lat), Math.max(...lng)],
+								[Math.min(...lng), Math.min(...lat)],
+								[Math.max(...lng), Math.max(...lat)],
 							],
-							{ paddingTopLeft: [0, 150] },
+							{ padding: { top: 150, right: 0, bottom: 0, left: 0 } },
 						);
 					} else {
 						void nextTick(() => {
 							map.value?.fitBounds(
 								[
-									[Math.min(...lat), Math.min(...lng)],
-									[Math.max(...lat), Math.max(...lng)],
+									[Math.min(...lng), Math.min(...lat)],
+									[Math.max(...lng), Math.max(...lat)],
 								],
-								{ paddingTopLeft: [0, 150] },
+								{ padding: { top: 150, right: 0, bottom: 0, left: 0 } },
 							);
 						});
 					}
@@ -330,10 +330,10 @@ function syncFiltersWithSearchParams() {
 		const place = places.get(id);
 		if (place?.coordinates) {
 			if (map.value != null) {
-				map.value.setView(place.coordinates);
+				map.value.setCenter(place.coordinates);
 			} else {
 				void nextTick(() => {
-					map.value?.setView(place.coordinates);
+					map.value?.setCenter(place.coordinates);
 				});
 			}
 		}
