@@ -3,15 +3,7 @@ import { range, shuffle } from "d3";
 import { ideas } from "@/db";
 
 export const config = {
-	options: {
-		preferCanvas: true,
-		zoomControl: false,
-	},
-	tileLayer: {
-		url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-		attribution:
-			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-	},
+	styleUrl: "https://tiles.openfreemap.org/styles/positron",
 };
 
 export const initialViewState = {
