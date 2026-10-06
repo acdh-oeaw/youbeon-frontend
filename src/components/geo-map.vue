@@ -82,6 +82,7 @@ onMounted(() => {
 		if (map == null) return;
 
 		isStyleLoaded = true;
+		localizeLabels(map);
 		map.addSource(sourceId, { type: "geojson", data: createFeatureCollection() });
 
 		entries(layerIds).forEach(([key, layerId]) => {
@@ -171,6 +172,27 @@ function createFeatureCollection() {
 			});
 		}),
 	};
+}
+
+function localizeLabels(map: MapLibreMap) {
+	map.getStyle().layers.forEach((layer) => {
+		if (layer.type !== "symbol") return;
+
+		const textField = map.getLayoutProperty(layer.id, "text-field");
+		if (
+			(typeof textField !== "string" && !Array.isArray(textField)) ||
+			!JSON.stringify(textField).includes('"name')
+		) {
+			return;
+		}
+
+		map.setLayoutProperty(layer.id, "text-field", [
+			"coalesce",
+			["get", "name:de"],
+			["get", "name_de"],
+			textField,
+		]);
+	});
 }
 
 //
