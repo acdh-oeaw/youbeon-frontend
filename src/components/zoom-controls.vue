@@ -8,7 +8,6 @@ import {
 import { useScreenColors } from "@/lib/use-screen-colors";
 
 defineEmits<{
-	// eslint-disable-next-line @typescript-eslint/prefer-function-type
 	(event: "zoom-in" | "zoom-out" | "zoom-reset"): void;
 }>();
 

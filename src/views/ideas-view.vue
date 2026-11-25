@@ -2,9 +2,9 @@
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import DetailsPanel from "@/components/details-panel.vue";
 import DetailsPanelQuotes from "@/components/details-panel-quotes.vue";
 import DetailsPanelSection from "@/components/details-panel-section.vue";
+import DetailsPanel from "@/components/details-panel.vue";
 import FiltersPanel from "@/components/filters-panel.vue";
 import InfoDialog from "@/components/info-dialog.vue";
 import MainContent from "@/components/main-content.vue";

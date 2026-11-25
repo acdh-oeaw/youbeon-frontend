@@ -83,7 +83,7 @@ function edgeWidth(edge: LinkObject) {
 }
 
 const element = ref<HTMLElement | null>(null);
-// eslint-disable-next-line vue/no-dupe-keys
+// oxlint-disable-next-line vue/no-dupe-keys
 const graph = ForceGraph();
 
 graph.d3Force("center", null);

@@ -26,7 +26,7 @@ const filterPanelId = "search-filters";
 			:aria-controls="filterPanelId"
 			:aria-expanded="isOpen"
 			aria-label="Suchfilter anzeigen"
-			class="absolute right-4 top-4 grid size-10 place-items-center rounded-full text-neutral-0 shadow-xl"
+			class="absolute top-4 right-4 grid size-10 place-items-center rounded-full text-neutral-0 shadow-xl"
 			:class="colors.backgroundColor[0]"
 			@click="isOpen = true"
 		>
@@ -49,7 +49,7 @@ const filterPanelId = "search-filters";
 				>
 					<button
 						aria-label="Suchfilter verbergen"
-						class="absolute right-0 top-0 z-10 grid size-10 place-items-center"
+						class="absolute top-0 right-0 z-10 grid size-10 place-items-center"
 						@click="isOpen = false"
 					>
 						<CloseIcon aria-hidden="true" class="size-5" />

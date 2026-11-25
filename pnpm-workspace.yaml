@@ -1,7 +1,9 @@
-onlyBuiltDependencies:
-  - esbuild
-  - sharp
-  - simple-git-hooks
+allowBuilds:
+  esbuild: true
+  lefthook: true
+  sharp: true
+
+engineStrict: true
 
 patchedDependencies:
   force-graph: patches/force-graph.patch

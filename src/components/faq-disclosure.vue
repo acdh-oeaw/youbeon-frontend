@@ -14,7 +14,7 @@ const _props = defineProps<{
 			<ChevronDownIcon aria-hidden="true" class="size-5 shrink-0 transition ui-open:rotate-180" />
 		</DisclosureButton>
 		<DisclosurePanel
-			class="grid max-w-3xl gap-2 text-sm font-light leading-relaxed text-neutral-600 sm:text-base sm:leading-relaxed"
+			class="grid max-w-3xl gap-2 text-sm leading-relaxed font-light text-neutral-600 sm:text-base sm:leading-relaxed"
 		>
 			<slot />
 		</DisclosurePanel>

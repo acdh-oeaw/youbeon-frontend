@@ -15,9 +15,9 @@
 }
 
 :root {
-	background-color: theme(colors.background);
-	color: theme(colors.text);
-	font-family: theme(fontFamily.sans);
+	background-color: var(--color-background);
+	color: var(--color-text);
+	font-family: var(--font-sans);
 	overflow-wrap: break-word;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
@@ -37,15 +37,24 @@ body,
 }
 
 a {
+	@apply transition;
+
 	color: currentColor;
-	transition-timing-function: theme(transitionTimingFunction.DEFAULT);
-	transition-duration: theme(transitionDuration.DEFAULT);
-	transition-property: theme(transitionProperty.DEFAULT);
-	text-underline-offset: 0.25em;
 	text-decoration-thickness: from-font;
+	text-underline-offset: 0.25em;
 	text-underline-position: from-font;
 
 	&:hover {
-		color: theme(colors.primary.600);
+		color: var(--color-primary-600);
 	}
+}
+
+/** Preserve defaults from tailwindcss v3. */
+button:not(:disabled),
+[role="button"]:not(:disabled) {
+	cursor: pointer;
+}
+
+::placeholder {
+	color: rgb(156 163 175);
 }

@@ -1,14 +1,13 @@
 {
 	"name": "Frontend",
-	"image": "ghcr.io/acdh-oeaw/devcontainer-frontend:24",
+	"image": "ghcr.io/acdh-oeaw/devcontainer-frontend:26",
 	"customizations": {
 		"vscode": {
 			"extensions": [
 				"bradlc.vscode-tailwindcss",
-				"dbaeumer.vscode-eslint",
 				"editorconfig.editorconfig",
-				"esbenp.prettier-vscode",
 				"mikestead.dotenv",
+				"oxc.oxc-vscode",
 				"stylelint.vscode-stylelint",
 				"vue.volar"
 			]

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* oxlint-disable typescript/restrict-template-expressions */
 
 import { log } from "@acdh-oeaw/lib";
 

@@ -10,7 +10,7 @@ const _props = defineProps<{
 		<div class="relative">
 			<img
 				alt=""
-				class="absolute -left-8 -top-5 w-20 lg:-left-10 lg:-top-7 lg:size-24"
+				class="absolute -top-5 -left-8 w-20 lg:-top-7 lg:-left-10 lg:size-24"
 				src="@/assets/images/bubble.svg"
 			/>
 			<h3
@@ -20,7 +20,7 @@ const _props = defineProps<{
 			</h3>
 			<div :class="[color, 'relative h-1']" />
 		</div>
-		<p class="text-sm font-light leading-relaxed text-neutral-600 sm:text-base sm:leading-relaxed">
+		<p class="text-sm leading-relaxed font-light text-neutral-600 sm:text-base sm:leading-relaxed">
 			<slot />
 		</p>
 	</div>

@@ -1,8 +1,8 @@
 diff --git a/dist/force-graph.js b/dist/force-graph.js
-index 88f1a19838b474a66d3398d3ad89637f5776cffa..d13254aee21288b7ac1b85ba0eb9ab13d4075a5a 100644
+index 0bcea56aca75b7477420dcd3a4771c313cc35be2..8abf788a69b0f6474ba4087705c2ca75958b102d 100644
 --- a/dist/force-graph.js
 +++ b/dist/force-graph.js
-@@ -11301,10 +11301,7 @@
+@@ -11075,10 +11075,7 @@
            nodes: [],
            links: []
          },
@@ -15,10 +15,10 @@ index 88f1a19838b474a66d3398d3ad89637f5776cffa..d13254aee21288b7ac1b85ba0eb9ab13
        dagMode: {
          onChange: function onChange(dagMode, state) {
 diff --git a/dist/force-graph.mjs b/dist/force-graph.mjs
-index 2691ecd053729500badf278f9d98a5ad301f291e..7313a04c12e7525212345a5c19b158e7c3eba98b 100644
+index 9f72e2e4c1cdba53282a277c190093af2525a9d0..e5dc7fe1be93fba4c29bc4334999bc657e4b303e 100644
 --- a/dist/force-graph.mjs
 +++ b/dist/force-graph.mjs
-@@ -292,10 +292,7 @@ var CanvasForceGraph = Kapsule({
+@@ -291,10 +291,7 @@ var CanvasForceGraph = Kapsule({
          nodes: [],
          links: []
        },

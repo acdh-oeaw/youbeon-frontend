@@ -15,12 +15,11 @@ const imageUrl = computed(() => {
 
 <template>
 	<div class="flex flex-col items-center md:flex-row">
-		<img alt="" class="size-60 flex-shrink-0" :src="imageUrl" />
+		<img alt="" class="size-60 shrink-0" :src="imageUrl" />
 		<div class="flex flex-col gap-2">
 			<h3 class="font-display text-base sm:text-lg">{{ name }}</h3>
 			<p>
-				(<a :href="pid">{{ pid }}</a
-				>)
+				(<a :href="pid">{{ pid }}</a>)
 				<br />
 				<br />
 				{{ bio }}

@@ -1,7 +1,8 @@
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { format } from "prettier";
+import { assert } from "@acdh-oeaw/lib";
+import { format } from "oxfmt";
 import serialize from "serialize-javascript";
 
 import type { ResourceBase } from "../../src/db/types";
@@ -21,9 +22,9 @@ export async function saveData(data: TransformedData): Promise<void> {
 		 * We cannot use a `reviver` for `Map` and `Set` when importing json client-side,
 		 * so we dump to javascript, not json.
 		 */
-		await writeFile(
-			filePath,
-			await format(`export const ${key} = ${serialize(sorted)}`, { parser: "typescript" }),
-		);
+		const { code, errors } = await format(filePath, `export const ${key} = ${serialize(sorted)}`);
+		assert(errors.length === 0, `Failed to format ${filePath}.`);
+
+		await writeFile(filePath, code);
 	}
 }

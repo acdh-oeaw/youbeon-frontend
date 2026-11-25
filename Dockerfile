@@ -1,20 +1,27 @@
 # syntax=docker/dockerfile:1
 
-FROM node:24-slim AS build
+FROM node:26-slim AS build
 
-RUN corepack enable
+# install the pnpm version set in `devEngines.packageManager`.
+COPY package.json /tmp/package.json
+RUN npm install --global "pnpm@$(node --print 'require("/tmp/package.json").devEngines.packageManager.version')"
 
 RUN mkdir /app && chown -R node:node /app
 WORKDIR /app
 
 USER node
 
-COPY --chown=node:node .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# avoid installing git hooks.
+ENV CI=true
+# use the node.js version provided by the base image.
+ENV PNPM_CONFIG_RUNTIME=false
+
+COPY --chown=node:node package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY --chown=node:node patches ./patches
 
 RUN pnpm fetch
 
-COPY --chown=node:node env.d.ts index.html tailwind.config.ts tsconfig.json vite.config.ts ./
+COPY --chown=node:node env.d.ts index.html tsconfig.json vite.config.ts ./
 COPY --chown=node:node scripts ./scripts
 COPY --chown=node:node public ./public
 COPY --chown=node:node config ./config

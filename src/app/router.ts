@@ -64,6 +64,8 @@ export const routes = {
 export const router = createRouter({
 	history: createWebHistory(),
 	routes: Object.values(routes),
+	/** The suggested replacement is only available in `vue-router/experimental`. */
+	// oxlint-disable-next-line typescript/no-deprecated
 	scrollBehavior(to) {
 		if (to.hash) {
 			return { el: to.hash };
@@ -77,17 +79,15 @@ let timer: ReturnType<typeof setTimeout> | null = null;
 
 const title = [metadata.shortTitle, metadata.title].join(" - ");
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
 	document.title = `${to.meta.title} | ${title}`;
-	next();
 });
 
-router.beforeResolve((to, from, next) => {
+router.beforeResolve((to) => {
 	if (to.name != null) {
-		// eslint-disable-next-line @typescript-eslint/unbound-method
+		// oxlint-disable-next-line typescript/unbound-method
 		timer = setTimeout(nprogress.start, delay);
 	}
-	next();
 });
 
 router.afterEach((to, from) => {
