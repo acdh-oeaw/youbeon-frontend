@@ -7,7 +7,7 @@
 	top: 0;
 	right: 0;
 	left: 0;
-	z-index: theme(zIndex.nprogress);
+	z-index: var(--z-index-nprogress);
 	height: 2px;
-	background: theme(colors.nprogress);
+	background: var(--color-nprogress);
 }

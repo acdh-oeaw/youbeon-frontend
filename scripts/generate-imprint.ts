@@ -1,20 +1,20 @@
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { HttpError, log, request } from "@acdh-oeaw/lib";
-import config from "@acdh-oeaw/prettier-config";
-import { format } from "prettier";
+import { assert, HttpError, log, request } from "@acdh-oeaw/lib";
+import { format } from "oxfmt";
 
 import { url } from "../config/imprint.config";
 
 async function generate() {
 	const html = await request(url, { responseType: "text" });
 
-	const view = await format(
+	const outputFilePath = join(process.cwd(), "src", "views", "imprint-view.vue");
+
+	const { code, errors } = await format(
+		outputFilePath,
 		`
     <script lang="ts" setup>
-    import '@/styles/prose.css'
-
     import MainContent from '@/components/main-content.vue'
     </script>
 
@@ -35,12 +35,11 @@ async function generate() {
     </main-content>
     </template>
   `,
-		{ ...config, parser: "vue" },
+		{ printWidth: 100, useTabs: true },
 	);
+	assert(errors.length === 0, "Failed to format imprint.");
 
-	const outputFilePath = join(process.cwd(), "src", "views", "imprint-view.vue");
-
-	await writeFile(outputFilePath, view, { encoding: "utf-8" });
+	await writeFile(outputFilePath, code, { encoding: "utf-8" });
 }
 
 generate()

@@ -69,10 +69,10 @@ const label = "Info";
 							'grid w-full max-w-sm gap-4 rounded-lg border-4 bg-neutral-0 p-8 shadow-lg transition',
 						]"
 					>
-						<button aria-label="Close dialog" class="absolute right-4 top-4" @click="toggle">
+						<button aria-label="Close dialog" class="absolute top-4 right-4" @click="toggle">
 							<XMarkIcon aria-hidden="true" class="size-5" />
 						</button>
-						<DialogTitle class="font-display text-lg font-medium leading-tight">
+						<DialogTitle class="font-display text-lg leading-tight font-medium">
 							{{ title }}
 						</DialogTitle>
 						<div class="grid gap-4">

@@ -20,7 +20,7 @@ import hero from "@/assets/images/hero.jpg?format=webp";
 			<div class="grid gap-4">
 				<h1 class="sr-only">YouBeOn Map</h1>
 				<h2
-					class="font-display text-xl font-black leading-normal tracking-tight text-neutral-900 xs:text-2xl xs:leading-normal md:text-3xl md:leading-normal"
+					class="font-display text-xl leading-normal font-black tracking-tight text-neutral-900 xs:text-2xl xs:leading-normal md:text-3xl md:leading-normal"
 				>
 					<a class="underline decoration-dotted" href="https://youbeon.eu" rel="noreferrer">
 						Young Believers Online - Mapping On- and Offline Identifications of Urban Religious
@@ -29,7 +29,7 @@ import hero from "@/assets/images/hero.jpg?format=webp";
 				</h2>
 			</div>
 			<div
-				class="grid max-w-4xl gap-4 text-sm font-medium leading-relaxed text-neutral-700 xs:text-base xs:leading-relaxed sm:text-lg sm:leading-relaxed"
+				class="grid max-w-4xl gap-4 text-sm leading-relaxed font-medium text-neutral-700 xs:text-base xs:leading-relaxed sm:text-lg sm:leading-relaxed"
 			>
 				<p>
 					ist ein innovatives, partizipatives Forschungsprojekt, das gemeinsam mit jungen religiösen

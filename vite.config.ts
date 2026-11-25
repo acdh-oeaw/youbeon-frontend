@@ -1,11 +1,12 @@
 import { join } from "node:path";
 
+import tailwindcss from "@tailwindcss/vite";
 import vue from "@vitejs/plugin-vue";
 import { defineConfig, loadEnv, type Plugin } from "vite";
 import { imagetools } from "vite-imagetools";
 
-import { metadata } from "./config/metadata.config";
-import { createAnalyticsScript } from "./src/app/matomo-analytics";
+import { metadata } from "./config/metadata.config.ts";
+import { createAnalyticsScript } from "./src/app/matomo-analytics.ts";
 
 const env = loadEnv(process.env.NODE_ENV!, process.cwd());
 
@@ -75,7 +76,7 @@ function preloadDatabase(): Plugin {
 			/** Only add in production build. */
 			if (ctx.bundle == null) return;
 			const key = Object.keys(ctx.bundle).find((key) => {
-				return key.startsWith("assets/db.");
+				return key.startsWith("assets/db-");
 			});
 			if (key == null) return undefined;
 			return [{ tag: "link", attrs: { rel: "modulepreload", href: `/${key}` }, injectTo: "head" }];
@@ -111,14 +112,11 @@ function matomoAnalytics(): Plugin | undefined {
 
 export default defineConfig({
 	build: {
-		rollupOptions: {
+		rolldownOptions: {
 			output: {
-				manualChunks(id) {
+				codeSplitting: {
 					/** Could probably be further optimized by putting all idea.quotes in a separete file and chunk. */
-					if (id.includes("/src/db/")) {
-						return "db";
-					}
-					return undefined;
+					groups: [{ name: "db", test: "/src/db/" }],
 				},
 			},
 		},
@@ -126,7 +124,7 @@ export default defineConfig({
 	define: {
 		__VUE_OPTIONS_API__: false,
 	},
-	plugins: [vue(), imagetools(), meta(), preloadDatabase(), matomoAnalytics()],
+	plugins: [vue(), tailwindcss(), imagetools(), meta(), preloadDatabase(), matomoAnalytics()],
 	resolve: {
 		/** Consider using `vite-tsconfig-paths` plugin. */
 		alias: {

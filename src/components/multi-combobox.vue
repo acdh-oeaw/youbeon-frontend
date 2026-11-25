@@ -121,13 +121,13 @@ const virtual = computed<{ options: Array<Item>; disabled: (item: unknown) => bo
 				{{ label }}
 			</ComboboxLabel>
 			<div
-				class="relative flex w-full cursor-default flex-wrap items-center overflow-hidden rounded-lg bg-neutral-0 text-left text-sm shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-0/75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300"
+				class="relative flex w-full cursor-default flex-wrap items-center overflow-hidden rounded-lg bg-neutral-0 text-left text-sm shadow-md focus-visible:ring-2 focus-visible:ring-neutral-0/75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300 focus-visible:outline-hidden"
 			>
 				<ul v-if="modelValue.length > 0" class="flex flex-wrap gap-2 px-2 py-1 text-xs" role="list">
 					<li
 						v-for="key of modelValue"
 						:key="key"
-						class="relative inline-flex items-center gap-1 overflow-hidden rounded bg-primary-200 px-2 py-1 font-medium before:pointer-events-none before:absolute before:inset-0 before:[background-color:_var(--tag-color)]"
+						class="relative inline-flex items-center gap-1 overflow-hidden rounded-sm bg-primary-200 px-2 py-1 font-medium before:pointer-events-none before:absolute before:inset-0 before:[background-color:_var(--tag-color)]"
 						:style="getTagStyle(key)"
 					>
 						<span class="relative block truncate">{{ getDisplayLabel(key) }}</span>
@@ -140,7 +140,7 @@ const virtual = computed<{ options: Array<Item>; disabled: (item: unknown) => bo
 				<div class="relative min-w-48 flex-1">
 					<ComboboxInput
 						autocomplete="off"
-						class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-neutral-900 focus-visible:outline-none"
+						class="w-full border-none py-2 pr-10 pl-3 text-sm leading-5 text-neutral-900 focus-visible:outline-hidden"
 						:placeholder="placeholder"
 						:value="searchTerm"
 						@input="searchTerm = $event.target.value"
@@ -160,12 +160,12 @@ const virtual = computed<{ options: Array<Item>; disabled: (item: unknown) => bo
 		>
 			<ComboboxOptions
 				v-slot="{ option: item }"
-				class="absolute z-overlay mt-1 max-h-80 min-h-[40px] w-full overflow-auto rounded-md bg-neutral-0 py-1 text-sm shadow-lg ring-1 ring-neutral-1000/5 focus:outline-none"
+				class="absolute z-overlay mt-1 max-h-80 min-h-[40px] w-full overflow-auto rounded-md bg-neutral-0 py-1 text-sm shadow-lg ring-1 ring-neutral-1000/5 focus:outline-hidden"
 			>
 				<template v-if="item.empty">
 					<ComboboxOption as="template" disabled :value="item">
 						<div
-							class="relative w-full cursor-default select-none py-2 pl-10 pr-4 italic text-neutral-700"
+							class="relative w-full cursor-default py-2 pr-4 pl-10 text-neutral-700 italic select-none"
 						>
 							{{ item.label }}
 						</div>
@@ -179,7 +179,7 @@ const virtual = computed<{ options: Array<Item>; disabled: (item: unknown) => bo
 						:value="item"
 					>
 						<li
-							class="relative w-full cursor-default select-none py-2 pl-10 pr-4"
+							class="relative w-full cursor-default py-2 pr-4 pl-10 select-none"
 							:class="{ 'bg-primary-100 text-primary-900': active }"
 						>
 							<span class="block truncate" :class="{ 'font-medium': selected }">

@@ -6,12 +6,13 @@ Deployed at <https://app.youbeon.eu>.
 
 ## Prerequisites
 
-- [node.js v24](https://nodejs.org/en/download)
-- [pnpm v10](https://pnpm.io/installation)
+- [node.js v26](https://nodejs.org/en/download)
+- [pnpm v12](https://pnpm.io/installation)
 
 > [!TIP]
 >
-> You can use `pnpm` to install the required node.js version with `pnpm env use 24 --global`.
+> `pnpm` will automatically download the required versions of `node.js` and `pnpm` (see `devEngines`
+> in `package.json`).
 
 Install project dependencies with:
 
@@ -43,5 +44,5 @@ and notifies `rancher` to deploy that image to the ACDH-CH cluster.
 
 ## Validation
 
-Validation scripts for code formatting (`prettier`), linting (`eslint` and `stylelint`), and type
+Validation scripts for code formatting (`oxfmt`), linting (`oxlint` and `stylelint`), and type
 checking (`typescript`) run as `pre-commit` and `pre-push` git hooks.

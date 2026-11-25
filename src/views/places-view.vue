@@ -3,8 +3,8 @@ import type { Map as MapLibreMap } from "maplibre-gl";
 import { computed, nextTick, ref, shallowRef, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import DetailsPanel from "@/components/details-panel.vue";
 import DetailsPanelSection from "@/components/details-panel-section.vue";
+import DetailsPanel from "@/components/details-panel.vue";
 import FiltersPanel from "@/components/filters-panel.vue";
 import GeoMap, { type Point, type PointLayers } from "@/components/geo-map.vue";
 import InfoDialog from "@/components/info-dialog.vue";
